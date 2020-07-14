@@ -1,0 +1,3 @@
+java -cp /Users/marcoschaim/projetos/asmexplore/target/asmexplore-1.0-SNAPSHOT.jar:/Users/marcoschaim/projetos/asmexplore/target/dependency/* br.usp.each.saeg.subsumption.cli.Main reduce -src /Users/marcoschaim/projetos/data/codec_1_buggy/target/classes -dest /Users/marcoschaim/projetos/data/analysis/codec
+
+java -cp /Users/marcoschaim/projetos/asmexplore/target/asmexplore-1.0-SNAPSHOT.jar:/Users/marcoschaim/projetos/asmexplore/target/dependency/* br.usp.each.saeg.subsumption.cli.Main reduce -src /Users/marcoschaim/projetos/data/collections_25_buggy/target/classes -dest /Users/marcoschaim/projetos/data/analysis/collections
