@@ -7,6 +7,7 @@ br/usp/each/saeg/subsumption/cli/Reduce.class
 br/usp/each/saeg/subsumption/cli/Main.class
 br/usp/each/saeg/subsumption/cli/Subsume$1.class
 br/usp/each/saeg/subsumption/cli/Reducer.class
+br/usp/each/saeg/subsumption/cli/EdgeSubsume.class
 br/usp/each/saeg/subsumption/cli/NodeSubsumer.class
 br/usp/each/saeg/subsumption/cli/InstrumentOptions.class
 br/usp/each/saeg/subsumption/analysis/SubsumptionNode.class
@@ -20,10 +21,12 @@ br/usp/each/saeg/opal/Program.class
 br/usp/each/saeg/subsumption/cli/Subsumer.class
 br/usp/each/saeg/subsumption/analysis/SubsumptionAnalyzer.class
 br/usp/each/saeg/subsumption/input/MethodInfo.class
+br/usp/each/saeg/subsumption/cli/EdgeSubsume$1.class
 br/usp/each/saeg/subsumption/cli/Reduce$1.class
 br/usp/each/saeg/subsumption/analysis/ReductionGraph.class
 br/usp/each/saeg/subsumption/cli/NodeSubsume$1.class
 br/usp/each/saeg/subsumption/cli/Analyzer.class
+br/usp/each/saeg/subsumption/cli/EdgeSubsumer.class
 br/usp/each/saeg/subsumption/cli/NodeSubsume.class
 br/usp/each/saeg/subsumption/cli/Main$1.class
 br/usp/each/saeg/subsumption/cli/Analyze$1.class

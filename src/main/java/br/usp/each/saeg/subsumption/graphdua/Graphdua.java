@@ -13,17 +13,35 @@ import java.util.Set;
 public class Graphdua extends Graph<Node> {
 
     private final Dua<Block> dua;
-    Node entryNode;
-    Node exitNode;
+    private final Node entryNode;
+    private final Node exitNode;
+
 
     public Graphdua(Dua<Block> dua, Subgraph<Node> sg1, Subgraph<Node> sg2, Subgraph<Node> sg3, Subgraph<Node> sg4, Subgraph<Node> sg5) {
         this.dua = dua;
-        
+        //System.out.println(sg1);
+//        createNodesEdgesGraphDua(sg1);
+//        //System.out.println(sg2);
+//        createNodesEdgesGraphDua(sg2);
+//        //System.out.println(sg3);
+//        createNodesEdgesGraphDua(sg3);
+//        //System.out.println(sg4);
+//        createNodesEdgesGraphDua(sg4);
+//        //System.out.println(sg5);
+//        createNodesEdgesGraphDua(sg5);
+
+
         addNodesFromSubgraph(sg1);
-        addNodesFromSubgraph(sg2);    
+
+        addNodesFromSubgraph(sg2);
+
         addNodesFromSubgraph(sg3);
+        //cleanUpDanglingPaths(sg3);
+
         addNodesFromSubgraph(sg4);
+
         addNodesFromSubgraph(sg5);
+        //cleanUpDanglingPaths(sg5);
 
         connectSubgraphs(sg1, sg2);
         connectSubgraphs(sg1, sg3);
@@ -32,17 +50,18 @@ public class Graphdua extends Graph<Node> {
         connectSubgraphs(sg3, sg5);
         connectSubgraphs(sg4, sg5);
 
-        if(sg1 != null)
-            entryNode = this.getNode(sg1.entry().block().id(),1);
-        else
-            entryNode = this.getNode(sg3.entry().block().id(),3);
 
-        if(sg5 != null)
-            exitNode = this.getNode(sg5.exit().block().id(),5);
+        if (sg1 != null)
+            entryNode = this.getNode(sg1.entry().block().id(), 1);
         else
-            exitNode = this.getNode(sg3.exit().block().id(),3);
+            entryNode = this.getNode(sg3.entry().block().id(), 3);
 
+        if (sg5 != null)
+            exitNode = this.getNode(sg5.exit().block().id(), 5);
+        else
+            exitNode = this.getNode(sg3.exit().block().id(), 3);
     }
+
 
     private void addNodesFromSubgraph(Subgraph<Node> sg) {
         if (sg == null) return;
@@ -72,22 +91,11 @@ public class Graphdua extends Graph<Node> {
         }
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) return false;
-        if (obj == this) return true;
-        if (!(obj instanceof Graphdua)) return false;
-
-        Graphdua graphdua = (Graphdua) obj;
-        return Objects.equals(graphdua, this);
-//                Objects.equals(graphdua.nodes, this.nodes) &&
-//                Objects.equals(graphdua.edges, this.edges);
-    }
 
     @Override
     public int hashCode() {
         return Objects.hash(this);
-       //         Objects.hash(this.nodes, this.edges);
+        //Objects.hash(this.nodes, this.edges);
     }
 
     @Override
@@ -97,25 +105,25 @@ public class Graphdua extends Graph<Node> {
         sb.append("Graphdua");
         sb.append(dua);
         sb.append(":\n");
-        
+
         while (i.hasNext()) {
             Node k = i.next();
             sb.append(k);
             sb.append("(");
             sb.append(k.idSubgraph());
             sb.append(")");
-			sb.append(" -> ");
+            sb.append(" -> ");
 
             Set<Node> neighbors = this.neighbors(k.id());
-			for (Node kn : neighbors) {
+            for (Node kn : neighbors) {
                 sb.append(kn);
                 sb.append("(");
                 sb.append(kn.idSubgraph());
                 sb.append(")");
-				sb.append(" ");
-			}
+                sb.append(" ");
+            }
 
-			sb.append('\n');
+            sb.append('\n');
         }
 
         return sb.toString();
@@ -215,18 +223,19 @@ public class Graphdua extends Graph<Node> {
         BitSet subsumed = new BitSet(org.getCovered().size());
         subsumed.clear();
 
-                for (Node suc : this.neighbors(org.id())) {
-                    if (suc.equals(trg)) {
-                        subsumed.or(org.getOut());
-                        subsumed.andNot(org.getSleepy());
-                        subsumed.and(trg.getGen());
-                        subsumed.or(trg.getCovered());
-                    }
-                }
+        for (Node suc : this.neighbors(org.id())) {
+            if (suc.equals(trg)) {
+                subsumed.or(org.getOut());
+                subsumed.andNot(org.getSleepy());
+                subsumed.and(trg.getGen());
+                subsumed.or(trg.getCovered());
+            }
+        }
 
 
         return subsumed;
     }
+
     public String toDotEdgeSubsumption(SubsumptionAnalyzer analyzer) {
         final StringBuilder sb = new StringBuilder();
         BitSet allSubsumed = new BitSet(entryNode.getCovered().size());
@@ -254,7 +263,7 @@ public class Graphdua extends Graph<Node> {
 
             Set<Node> neighbors = this.neighbors(k.id());
             for (Node kn : neighbors) {
-                BitSet coveredInEdge = getDuasSubsumedEdge(k,kn);
+                BitSet coveredInEdge = getDuasSubsumedEdge(k, kn);
                 sb.append(" ");
                 sb.append(k.id());
                 sb.append(" -> ");
@@ -269,9 +278,8 @@ public class Graphdua extends Graph<Node> {
                     }
                     sb.append("\"];\n");
                     allSubsumed.or(coveredInEdge);
-                }
-                else
-                sb.append(";\n");
+                } else
+                    sb.append(";\n");
             }
         }
         sb.append('}');
@@ -285,10 +293,15 @@ public class Graphdua extends Graph<Node> {
     }
 
     public Node getNode(int id, int idsubgrph) {
-        int idNode = Node.hash(id,idsubgrph);
+        int idNode = Node.hash(id, idsubgrph);
         return this.get(idNode);
     }
 
-    public Node entry() { return entryNode; }
-    public Node exit() { return exitNode; }
+    public Node entry() {
+        return entryNode;
+    }
+
+    public Node exit() {
+        return exitNode;
+    }
 }

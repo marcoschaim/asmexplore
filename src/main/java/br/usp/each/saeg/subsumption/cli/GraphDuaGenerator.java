@@ -1,7 +1,7 @@
 package br.usp.each.saeg.subsumption.cli;
 
 import br.usp.each.saeg.commons.time.TimeWatch;
-import br.usp.each.saeg.subsumption.analysis.SubsumptionAnalyzer;
+import br.usp.each.saeg.subsumption.graphdua.CoverageAnalyzer;
 import br.usp.each.saeg.subsumption.graphdua.Dua;
 import br.usp.each.saeg.subsumption.graphdua.Graphdua;
 import br.usp.each.saeg.subsumption.input.ClassInfo;
@@ -30,15 +30,15 @@ public class GraphDuaGenerator {
 
                 // Create a name for the files based on the class and method names
 
-                methodname = ci.getName().substring(0).replace(File.separator,".") +"." + mi.getName();
+                methodname = ci.getName().replace(File.separator, ".") + "." + mi.getName();
 
-                SubsumptionAnalyzer duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(),mi.getDuas());
+                //SubsumptionAnalyzer duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(),mi.getDuas());
 
                 int id = 1;  final TimeWatch tw = TimeWatch.start();
                 for (Dua d: mi.getDuas()) {
-
-                    Graphdua grd = duaSubAnalyzer.getGraphdua(d);
-                    writeBufferToFile(path, methodname+ "-grd"+id+".giz",grd.toDot());
+                    CoverageAnalyzer analyzer = new CoverageAnalyzer(mi.getProgram().getGraph(), mi.getProgram().getInvGraph(), d);
+                    Graphdua grd = analyzer.findGraphdua();
+                    //writeBufferToFile(path, methodname+ "-grd"+id+".giz",grd.toDot());
                     ++id;
                 }
                 final long milliseconds = tw.time(TimeUnit.MILLISECONDS);
@@ -47,7 +47,7 @@ public class GraphDuaGenerator {
                 System.out.println(MessageFormat.format(
                         "Method {0} graphduas were calculated in {1} minutes and {2} seconds", methodname, seconds/60,seconds % 60));
 
-                System.out.println("@@ " + methodname + "," + mi.getDuas().size() + "," + milliseconds/1000 + "," + milliseconds + "\n");
+                System.out.println("@@ " + methodname + "," + mi.getProgram().getGraph().size() + "," + mi.getDuas().size() + "," + milliseconds / 1000 + "," + milliseconds + "\n");
 
                 n++;
             }
@@ -61,8 +61,8 @@ public class GraphDuaGenerator {
         // Convert the string to a
         // byte array.
 
-        byte data[] = s.getBytes();
-        Path p = Paths.get(dir+name);
+        byte[] data = s.getBytes();
+        Path p = Paths.get(dir + name);
 
         try (OutputStream out = new BufferedOutputStream(
                 Files.newOutputStream(p))) {

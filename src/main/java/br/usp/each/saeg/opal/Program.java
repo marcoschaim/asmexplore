@@ -31,7 +31,6 @@ package br.usp.each.saeg.opal;
 
 import br.usp.each.saeg.subsumption.graphdua.Flowgraph;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,8 +38,10 @@ import java.util.Map;
 public class Program {
 
     private final Flowgraph<Block> graph = new Flowgraph<Block>();
+    private final Flowgraph<Block> invgraph = new Flowgraph<Block>();
 
     private final Map<Integer, String> ids2variables = new HashMap<Integer, String>();
+
 
     public Flowgraph<Block> getGraph() {
         return this.graph;
@@ -50,11 +51,36 @@ public class Program {
 
     public void addVariable(final String name, final int id) {
 
-        if(!ids2variables.containsKey(id))
-        {
-            ids2variables.put(id,name);
+        if (!ids2variables.containsKey(id)) {
+            ids2variables.put(id, name);
         }
     }
 
-    public int numberOfVars() { return ids2variables.size();}
+    public int numberOfVars() {
+        return ids2variables.size();
+    }
+
+    public Flowgraph<Block> getInvGraph() {
+        return this.invgraph;
+    }
+
+//    public void createInvGraph(Flowgraph<Block> graph) {
+//
+//        invgraph = new Flowgraph<>();
+//        Iterator<Block> it = graph.iterator();
+//
+//        while (it.hasNext()) {
+//            Block node = it.next();
+//            invgraph.add(node);
+//        }
+//
+//        it = graph.iterator();
+//
+//        while (it.hasNext()) {
+//            Block from = it.next();
+//            for (final Block to : graph.neighbors(from.id())) {
+//                invgraph.addEdge(from.id(),to.id());
+//            }
+//        }
+//    }
 }

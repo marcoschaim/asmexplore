@@ -1,17 +1,14 @@
 package br.usp.each.saeg.subsumption.cli;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
+import br.usp.each.saeg.commons.io.Files;
+import br.usp.each.saeg.commons.time.TimeWatch;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+
+import java.io.*;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import br.usp.each.saeg.commons.io.Files;
-import br.usp.each.saeg.commons.time.TimeWatch;
 
 public class GraphDuaGenerate {
 
@@ -95,7 +92,7 @@ public class GraphDuaGenerate {
         }
 
         try {
-            System.out.println("@@ Method, Nduas, Time_s, Time_ms\n");
+            System.out.println("@@ Method, Nodes, Nduas, Time_s, Time_ms\n");
             final TimeWatch tw = TimeWatch.start();
             final int total = new GraphDuaGenerate(options).generate();
             final long seconds = tw.time(TimeUnit.SECONDS);

@@ -1,6 +1,5 @@
 package br.usp.each.saeg.subsumption.analysis;
 
-import br.usp.each.saeg.opal.Block;
 import br.usp.each.saeg.subsumption.graphdua.CoverageAnalyzer;
 import br.usp.each.saeg.subsumption.graphdua.Dua;
 import br.usp.each.saeg.subsumption.graphdua.Graphdua;
@@ -89,6 +88,8 @@ public class DuaSubsumptionTest extends TestCase {
             cl.genAllMethodInfo();
 
             for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
                 if (mi.getDuas().isEmpty())
                     continue;
 
@@ -97,7 +98,7 @@ public class DuaSubsumptionTest extends TestCase {
                 Iterator<Dua> itdua = mi.getDuas().iterator();
 
                 mi.printMethodCFG();
-                writeBufferToFile(dir, mi.getName()+".csv",mi.printMethodDuas());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
 
                 duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(), mi.getDuas());
 
@@ -173,7 +174,7 @@ public class DuaSubsumptionTest extends TestCase {
                         System.out.println("\tNo dua is mandatorily covered in node " + n.block().id() + ".");
                 }
 
-                System.out.println("");
+                System.out.println();
             }
 
 
@@ -330,7 +331,7 @@ public class DuaSubsumptionTest extends TestCase {
                             }
 
                         }
-                        System.out.println("");
+                        System.out.println();
                     }
                 }
                 System.out.println("Total of duas covered by touring only nodes of "+mi.getName()+":"+allSubsumed.cardinality());
@@ -348,7 +349,7 @@ public class DuaSubsumptionTest extends TestCase {
         // Convert the string to a
         // byte array.
 
-        byte data[] = s.getBytes();
+        byte[] data = s.getBytes();
         Path p = Paths.get(dir + name);
 
         try (OutputStream out = new BufferedOutputStream(

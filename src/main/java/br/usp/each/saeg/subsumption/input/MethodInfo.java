@@ -1,11 +1,13 @@
 package br.usp.each.saeg.subsumption.input;
 
 import br.usp.each.saeg.asm.defuse.*;
-
-import br.usp.each.saeg.opal.Program;
 import br.usp.each.saeg.opal.Block;
+import br.usp.each.saeg.opal.Program;
 import br.usp.each.saeg.subsumption.graphdua.Dua;
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.LineNumberNode;
+import org.objectweb.asm.tree.LocalVariableNode;
+import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.analysis.AnalyzerException;
 import org.objectweb.asm.tree.analysis.BasicInterpreter;
 import org.objectweb.asm.tree.analysis.BasicValue;
@@ -23,12 +25,13 @@ public class MethodInfo {
     int[] leaders;
     String path;
     String dir;
-    Variable vars[];
+    Variable[] vars;
     int[] lines;
     DefUseChain[] globalChains;
     DefUseChain[] blockChains;
     List<Dua> duas;
     HashMap<Integer, List<DefUseChain>> dua2DefUseChains;
+
 
     String owner;
 
@@ -76,31 +79,53 @@ public class MethodInfo {
         basicBlocks = analyzer.getBasicBlocks();
         leaders = analyzer.getLeaders();
 
-        boolean visited[] = new boolean[mn.instructions.size()];
+        boolean[] visited = new boolean[mn.instructions.size()];
         for (int i = 0; i < leaders.length; ++i)
             visited[i] = false;
 
         for (int i = 0; i < basicBlocks.length; i++) {
             p.getGraph().add(new Block(i));
+            p.getInvGraph().add(new Block(i));
         }
 
         for (int i = 0; i < mn.instructions.size(); i++) {
-            if (leaders[i] >= 0)
+            if (leaders[i] >= 0) {
                 p.getGraph().get(leaders[i]).line(i);
+                p.getInvGraph().get(leaders[i]).line(i);
+            }
         }
 
+        // Connect nodes through edges
         if (mn.instructions.size() > 0)
             visitInstruction(p, 0, visited);
 
         p.getGraph().setEntry(0);
-        p.getGraph().setExit(new Block(basicBlocks.length));
+        p.getGraph().setExit(new Block(basicBlocks.length)); // added single new exit node
 
-        boolean visitedBlks[] = new boolean[basicBlocks.length];
+        p.getInvGraph().setExit(0);
+        p.getInvGraph().setEntry(new Block(basicBlocks.length)); // added single new entry node
+
+        // Connect all exit (entry) nodes to the new exit (entry) node
+
+        boolean[] visitedBlks = new boolean[basicBlocks.length];
 
         for (int i = 0; i < basicBlocks.length; ++i)
             visitedBlks[i] = false;
 
-        setExitNode(p.getGraph().entry(), visitedBlks);
+        connectNewExitNode(p.getGraph().entry(), visitedBlks);
+
+//        // Find inverse graph
+//        p.createInvGraph(p.getGraph());
+//
+//        p.getInvGraph().setExit(p.getGraph().entry());
+//        p.getInvGraph().setEntry(p.getGraph().exit());
+
+        // Find reverse PostOrder
+
+        p.getGraph().findReversePostOrder();
+//        p.getGraph().ajustSucessorsInReversePostOrder();
+        p.getInvGraph().findReversePostOrder();
+//        p.getInvGraph().ajustSucessorsInReversePostOrder();
     }
 
     void visitInstruction(Program p, int ins, boolean[] vis) {
@@ -110,11 +135,61 @@ public class MethodInfo {
             if (leaders[ins] != leaders[suc]) {
                 if (!p.getGraph().adjacent(leaders[ins], leaders[suc])) {
                     p.getGraph().addEdge(leaders[ins], leaders[suc]);
+                    p.getInvGraph().addEdge(leaders[suc], leaders[ins]);
                 }
             }
             if (!vis[suc])
                 visitInstruction(p, suc, vis);
         }
+    }
+
+
+    void connectNewExitNode(Block node, boolean[] vis) {
+        vis[node.id()] = true;
+
+        for (Block n : p.getGraph().neighbors(node.id())) {
+            if (!vis[n.id()]) {
+                connectNewExitNode(n, vis);
+            }
+        }
+
+        if (p.getGraph().neighbors(node.id()).isEmpty()) {
+            p.getGraph().addEdge(node.id(), p.getGraph().exit().id());
+            p.getInvGraph().addEdge(p.getGraph().exit().id(), node.id());
+        }
+    }
+
+    public void printMethodCFG() {
+
+        System.out.println("CFG(" + mn.name + "):");
+        System.out.println("blocks:");
+        Iterator<Block> it = p.getGraph().iterator();
+        while (it.hasNext()) {
+            Block blk = it.next();
+            System.out.println("Block(" + blk.id() + "):" + blk.lines());
+            System.out.print("\tSuccessors:");
+            for (Block suc : p.getGraph().neighbors(blk.id())) {
+                System.out.print(" " + suc.id());
+            }
+            System.out.print("\n");
+        }
+
+        System.out.println("invCFG(" + mn.name + "):");
+        System.out.println("blocks:");
+        it = p.getInvGraph().iterator();
+        while (it.hasNext()) {
+            Block blk = it.next();
+            System.out.println("Block(" + blk.id() + "):" + blk.lines());
+            System.out.print("\tInv Successors:");
+            for (Block pred : p.getInvGraph().neighbors(blk.id())) {
+                System.out.print(" " + pred.id());
+            }
+            System.out.print("\n");
+        }
+
+        p.getGraph().printReversePostOrder();
+        p.getInvGraph().printReversePostOrder();
+
     }
 
     public void createMethodDuas() throws AnalyzerException {
@@ -171,37 +246,6 @@ public class MethodInfo {
             } else {
                 dua2DefUseChains.get(d.hashCode()).add(c);
             }
-        }
-
-    }
-
-    void setExitNode(Block node, boolean[] vis) {
-        vis[node.id()] = true;
-
-        for (Block n : p.getGraph().neighbors(node.id())) {
-            if (!vis[n.id()]) {
-                setExitNode(n, vis);
-            }
-        }
-
-        if (p.getGraph().neighbors(node.id()).isEmpty()) {
-            p.getGraph().addEdge(node.id(), p.getGraph().exit().id());
-        }
-    }
-
-    public void printMethodCFG() {
-
-        System.out.println("CFG(" + mn.name + "):");
-        System.out.println("blocks:");
-        final Iterator<Block> it = p.getGraph().iterator();
-        while (it.hasNext()) {
-            Block blk = it.next();
-            System.out.println("Block(" + blk.id() + "):" + blk.lines());
-            System.out.print("\tSuccessors:");
-            for (Block suc : p.getGraph().neighbors(blk.id())) {
-                System.out.print(" " + suc.id());
-            }
-            System.out.print("\n");
         }
     }
 

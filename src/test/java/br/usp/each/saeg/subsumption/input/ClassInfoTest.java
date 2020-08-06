@@ -1,7 +1,6 @@
 package br.usp.each.saeg.subsumption.input;
 
 import junit.framework.TestCase;
-import org.junit.Test;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -11,18 +10,41 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class ClassInfoTest extends TestCase {
-ClassInfo cl;
+    ClassInfo cl;
+
     //@Test
-    public void test1(){
+    public void test1() {
         System.out.println("Teste");
         try {
-        cl = new ClassInfo("/Users/marcoschaim/projetos/data/sort/src/main/java/br/usp/each/saeg/", "Sort.class");
-        cl.genAllMethodInfo();
+            cl = new ClassInfo("/Users/marcoschaim/projetos/data/sort/", "Sort.class");
+            cl.genAllMethodInfo();
 
-        for(MethodInfo mi: cl.getMethodsInfo()){
-            mi.printMethodCFG();
-            mi.printMethodDuas();
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+                mi.printMethodCFG();
+                mi.printMethodDuas();
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+    public void test12() {
+        System.out.println("Teste");
+        try {
+            cl = new ClassInfo("/Users/marcoschaim/projetos/data/max/", "Max.class");
+            cl.genAllMethodInfo();
+
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+                mi.printMethodCFG();
+                mi.printMethodDuas();
+                System.out.println(mi.getProgram().getGraph());
+            }
 
 
         } catch (Exception e) {
@@ -38,9 +60,11 @@ ClassInfo cl;
             cl = new ClassInfo(dir, clazzname);
             cl.genAllMethodInfo();
 
-            for(MethodInfo mi: cl.getMethodsInfo()){
+            for(MethodInfo mi: cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
                 mi.printMethodCFG();
-                writeBufferToFile(dir, mi.getName()+".csv", mi.printMethodDuas());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
             }
 
 
@@ -58,9 +82,11 @@ ClassInfo cl;
             cl = new ClassInfo(dir, clazzname);
             cl.genAllMethodInfo();
 
-            for(MethodInfo mi: cl.getMethodsInfo()){
+            for(MethodInfo mi: cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
                 mi.printMethodCFG();
-                writeBufferToFile(dir, mi.getName()+".csv", mi.printMethodDuas());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
             }
 
 
@@ -72,7 +98,7 @@ ClassInfo cl;
         // Convert the string to a
         // byte array.
 
-        byte data[] = s.getBytes();
+        byte[] data = s.getBytes();
         Path p = Paths.get(dir + name);
 
         try (OutputStream out = new BufferedOutputStream(

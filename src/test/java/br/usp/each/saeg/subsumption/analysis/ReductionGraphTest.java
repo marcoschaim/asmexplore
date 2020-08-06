@@ -448,7 +448,7 @@ public class ReductionGraphTest extends TestCase {
         writeBufferToFile("/Users/marcoschaim/projetos/data/analysis/sort-mod/","Sort2-red.dot",rg.toDot());
 
     }
-    @Test
+    //@Test
     public void test1() {
         System.out.println("Sort");
         try {
@@ -675,8 +675,8 @@ public class ReductionGraphTest extends TestCase {
         // Convert the string to a
         // byte array.
 
-        byte data[] = s.getBytes();
-        Path p = Paths.get(dir+name);
+        byte[] data = s.getBytes();
+        Path p = Paths.get(dir + name);
 
         try (OutputStream out = new BufferedOutputStream(
                 Files.newOutputStream(p))) {

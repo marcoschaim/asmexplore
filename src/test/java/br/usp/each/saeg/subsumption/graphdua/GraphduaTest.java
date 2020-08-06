@@ -135,7 +135,22 @@ public class GraphduaTest extends TestCase {
         }
     }
 
-    @Test
+    static void writeBufferToFile(String dir, String name, String s) {
+        // Convert the string to a
+        // byte array.
+
+        byte[] data = s.getBytes();
+        Path p = Paths.get(dir + name);
+
+        try (OutputStream out = new BufferedOutputStream(
+                Files.newOutputStream(p))) {
+            out.write(data, 0, data.length);
+        } catch (IOException x) {
+            System.err.println("Cannot open file " + (dir + name));
+        }
+    }
+
+    //@Test
     public void test4() {
         final Program program = new Program();
         final Block b1 = new Block(1);
@@ -276,7 +291,7 @@ public class GraphduaTest extends TestCase {
         System.out.println(analyzer.toDot(analyzer.sg3()));
 
         System.out.println("SG4 dot :");
-        System.out.println(analyzer.toDot(analyzer.sg4()));
+        //System.out.println(analyzer.toDot(analyzer.sg4()));
 
         System.out.println("SG5 dot :");
         System.out.println(analyzer.toDot(analyzer.sg5()));
@@ -287,6 +302,7 @@ public class GraphduaTest extends TestCase {
         System.out.println("Graphdua:\n"+grf.toDot());
         //writeBufferToFile("/Users/marcoschaim/projetos/data/sort/", "SortPaper"+ ".grd"+d.toString()+".gz",grf.toDot());
     }
+
 
     private void printGraphDefUse(Flowgraph<Block> gfc) {
 
@@ -340,18 +356,45 @@ public class GraphduaTest extends TestCase {
         return sb.toString();
     }
 
-    static void writeBufferToFile(String dir, String name, String s) {
-        // Convert the string to a
-        // byte array.
+    @Test
+    public void test5() {
+        System.out.println("Max");
 
-        byte data[] = s.getBytes();
-        Path p = Paths.get(dir+name);
+        try {
+            cl = new ClassInfo("/Users/marcoschaim/projetos/data/max/", "Max.class");
+            cl.genAllMethodInfo();
 
-        try (OutputStream out = new BufferedOutputStream(
-                Files.newOutputStream(p))) {
-            out.write(data, 0, data.length);
-        } catch (IOException x) {
-            System.err.println("Cannot open file "+(dir+name));
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                Dua d;
+                int counter = 1;
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+                if (mi.getDuas().size() == 0) continue;
+
+                Iterator<Dua> itdua = mi.getDuas().iterator();
+
+                mi.printMethodCFG();
+                System.out.println(mi.graphDefUseToDot());
+
+                if (mi.getDuas().isEmpty())
+                    continue;
+                while (itdua.hasNext()) {
+                    d = itdua.next();
+                    analyzer = new CoverageAnalyzer(mi.getProgram(), d);
+                    System.out.println(counter + ":" + d.toString());
+                    Graphdua grf = analyzer.findGraphdua();
+                    //System.out.println("forward graphdua:\n"+grf);
+                    //System.out.println("backward graphdua:\n"+printInverse(grf.inverse()));
+                    //writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName()+ ".grd"+d.toString()+".gz",grf.toDot());
+                    System.out.println("GraphDua(" + d.toString() + "):");
+                    System.out.println(grf.toDot());
+                    ++counter;
+                }
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
