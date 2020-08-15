@@ -146,17 +146,20 @@ public class DuaSubsumptionTest extends TestCase {
 
                 mi.printMethodCFG();
                 mi.printMethodDuas();
-                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".csv", mi.printMethodDuas());
-                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".gz", mi.graphDefUseToDot());
+//                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".csv", mi.printMethodDuas());
+//                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".gz", mi.graphDefUseToDot());
 
+                System.out.println(mi.graphDefUseToDot());
 
                 duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(), mi.getDuas());
                 Graphdua graphdua = duaSubAnalyzer.findNode2DuasSubsumption();
-                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".ns",graphdua.toDotNodeSubsumption(duaSubAnalyzer));
+//                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".ns",graphdua.toDotNodeSubsumption(duaSubAnalyzer));
 
+                System.out.println(graphdua.toDotNodeSubsumption(duaSubAnalyzer));
                 graphdua = duaSubAnalyzer.findEdge2DuasSubsumption();
-                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".es",graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
+//                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".es",graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
 
+                System.out.println(graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
                 Iterator<Node> itNode = graphdua.iterator();
 
                 while (itNode.hasNext()) {

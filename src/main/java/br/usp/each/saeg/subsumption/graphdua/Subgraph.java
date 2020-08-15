@@ -1,10 +1,10 @@
 package br.usp.each.saeg.subsumption.graphdua;
 
+import br.usp.each.saeg.opal.Identifiable;
+
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
-
-import br.usp.each.saeg.opal.Identifiable;
 
 public class Subgraph<K extends Identifiable> extends Flowgraph<K> implements Identifiable {
 
@@ -48,15 +48,16 @@ public class Subgraph<K extends Identifiable> extends Flowgraph<K> implements Id
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         final Iterator<K> i = iterator();
-        
+
         sb.append("SG");
         sb.append(this.id);
-        sb.append("(");
-        sb.append(this.entry);
-        sb.append(",");
-        sb.append(this.exit);
-        sb.append("):\n");
-        
+        sb.append("\n");
+//        sb.append("(");
+//        sb.append(this.entry);
+//        sb.append(",");
+//        sb.append(this.exit);
+//        sb.append("):\n");
+
         while (i.hasNext()) {
             K k = i.next();
             sb.append(k);

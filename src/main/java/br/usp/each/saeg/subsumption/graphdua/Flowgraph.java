@@ -20,7 +20,6 @@ public class Flowgraph<K extends Identifiable> extends Graph<K> {
         if (get(k.id()) == null) {
             add(k);
         }
-
         this.entry = k;
     }
 
@@ -231,6 +230,11 @@ public class Flowgraph<K extends Identifiable> extends Graph<K> {
         return i - 1;
     }
 
+
+    public Stack<K> getrPostOrderListing() {
+        return rPostOrderListing;
+    }
+
     public boolean isRetreatingEdge(K from, K to) {
         return rPostOrder[from.id()] >= rPostOrder[to.id()];
     }
@@ -243,7 +247,6 @@ public class Flowgraph<K extends Identifiable> extends Graph<K> {
             System.out.println();
         }
     }
-
 
     @Override
     @SuppressWarnings("unchecked")

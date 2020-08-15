@@ -8,6 +8,7 @@ import br.usp.each.saeg.subsumption.graphdua.Node;
 import br.usp.each.saeg.subsumption.input.ClassInfo;
 import br.usp.each.saeg.subsumption.input.MethodInfo;
 import junit.framework.TestCase;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedOutputStream;
@@ -27,18 +28,20 @@ public class ReductionGraphTest extends TestCase {
     private SubsumptionGraph sg;
     private ReductionGraph rg;
 
-    @Test
-    public void test0(){
+    @Ignore
+
+
+    public void test0() {
         final Program program = new Program();
-        final Block b1 = new Block(1);
-        final Block b2 = new Block(2);
-        final Block b3 = new Block(3);
-        final Block b4 = new Block(4);
-        final Block b5 = new Block(5);
-        final Block b6 = new Block(6);
-        final Block b7 = new Block(7);
-        final Block b8 = new Block(8);
-        final Block b9 = new Block(9);
+        final Block b1 = new Block(0);
+        final Block b2 = new Block(1);
+        final Block b3 = new Block(2);
+        final Block b4 = new Block(3);
+        final Block b5 = new Block(4);
+        final Block b6 = new Block(5);
+        final Block b7 = new Block(6);
+        final Block b8 = new Block(7);
+        final Block b9 = new Block(8);
 
         program.getGraph().add(b1);
         program.getGraph().add(b2);
@@ -53,17 +56,17 @@ public class ReductionGraphTest extends TestCase {
         program.getGraph().setEntry(b1);
         program.getGraph().setExit(b9);
 
+        program.getGraph().addEdge(0, 1);
+        program.getGraph().addEdge(1, 8);
         program.getGraph().addEdge(1, 2);
-        program.getGraph().addEdge(2, 9);
         program.getGraph().addEdge(2, 3);
+        program.getGraph().addEdge(3, 7);
+        program.getGraph().addEdge(7, 1);
         program.getGraph().addEdge(3, 4);
-        program.getGraph().addEdge(4, 8);
-        program.getGraph().addEdge(8, 2);
         program.getGraph().addEdge(4, 5);
         program.getGraph().addEdge(5, 6);
-        program.getGraph().addEdge(6, 7);
-        program.getGraph().addEdge(5, 7);
-        program.getGraph().addEdge(7, 4);
+        program.getGraph().addEdge(4, 6);
+        program.getGraph().addEdge(6, 3);
 
         program.addVariable("a", 0);
         program.addVariable("n", 1);
@@ -200,22 +203,24 @@ public class ReductionGraphTest extends TestCase {
         duas.add( new Dua(b7, b5, b6,5, "index"));
         duas.add( new Dua(b7, b5, b7,5, "index"));
         duas.add( new Dua(b7, b4, b5,5, "index"));
-        duas.add( new Dua(b7, b4, b8,5, "index"));
+        duas.add(new Dua(b7, b4, b8, 5, "index"));
 
-        duas.add( new Dua(b3, b6,5, "index"));
-        duas.add( new Dua(b3, b7,5, "index"));
-        duas.add( new Dua(b3, b8,5, "index"));
-        duas.add( new Dua(b7, b6,5, "index"));
-        duas.add( new Dua(b7, b7,5, "index"));
-        duas.add( new Dua(b7, b8,5, "index"));
+        duas.add(new Dua(b3, b6, 5, "index"));
+        duas.add(new Dua(b3, b7, 5, "index"));
+        duas.add(new Dua(b3, b8, 5, "index"));
+        duas.add(new Dua(b7, b6, 5, "index"));
+        duas.add(new Dua(b7, b7, 5, "index"));
+        duas.add(new Dua(b7, b8, 5, "index"));
 
-        MethodInfo mi = new MethodInfo("SortPaper", program,duas);
-        sg = new SubsumptionGraph(mi.getProgram(),mi.getDuas());
+        MethodInfo mi = new MethodInfo("SortPaper", program, duas);
+        mi.getProgram().computeDataFlowSets(duas);
+
+        sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
         //System.out.println(sg);
 
         rg = new ReductionGraph(sg);
         rg.setDua2DefUseChains(mi.getDefChainsMap());
-        if(!mi.getDefChainsMap().isEmpty())
+        if (!mi.getDefChainsMap().isEmpty())
             rg.setLines(mi.getLines());
         System.out.println(rg);
 
@@ -235,21 +240,22 @@ public class ReductionGraphTest extends TestCase {
 
     }
 
+    @Ignore
     @Test
-    public void test01(){
+    public void test01() {
         // Variation of the M&B example to test the existence of particular paths to cover particular duas and
         // the subsmption relationship.
 
         final Program program = new Program();
-        final Block b1 = new Block(1);
-        final Block b2 = new Block(2);
-        final Block b3 = new Block(3);
-        final Block b4 = new Block(4);
-        final Block b5 = new Block(5);
-        final Block b6 = new Block(6);
-        final Block b7 = new Block(7);
-        final Block b8 = new Block(8);
-        final Block b9 = new Block(9);
+        final Block b1 = new Block(0);
+        final Block b2 = new Block(1);
+        final Block b3 = new Block(2);
+        final Block b4 = new Block(3);
+        final Block b5 = new Block(4);
+        final Block b6 = new Block(5);
+        final Block b7 = new Block(6);
+        final Block b8 = new Block(7);
+        final Block b9 = new Block(8);
 
         program.getGraph().add(b1);
         program.getGraph().add(b2);
@@ -264,17 +270,17 @@ public class ReductionGraphTest extends TestCase {
         program.getGraph().setEntry(b1);
         program.getGraph().setExit(b9);
 
+        program.getGraph().addEdge(0, 1);
+        program.getGraph().addEdge(1, 8);
         program.getGraph().addEdge(1, 2);
-        program.getGraph().addEdge(2, 9);
         program.getGraph().addEdge(2, 3);
+        program.getGraph().addEdge(3, 7);
+        program.getGraph().addEdge(7, 1);
         program.getGraph().addEdge(3, 4);
-        program.getGraph().addEdge(4, 8);
-        program.getGraph().addEdge(8, 2);
         program.getGraph().addEdge(4, 5);
         program.getGraph().addEdge(5, 6);
-        program.getGraph().addEdge(6, 7);
-        program.getGraph().addEdge(5, 7);
-        program.getGraph().addEdge(7, 4);
+        program.getGraph().addEdge(4, 6);
+        program.getGraph().addEdge(6, 3);
 
         program.addVariable("a", 0);
         program.addVariable("n", 1);
@@ -413,29 +419,31 @@ public class ReductionGraphTest extends TestCase {
         duas.add( new Dua(b7, b5, b6,5, "index"));
         duas.add( new Dua(b7, b5, b7,5, "index"));
         duas.add( new Dua(b7, b4, b5,5, "index"));
-        duas.add( new Dua(b7, b4, b8,5, "index"));
+        duas.add(new Dua(b7, b4, b8, 5, "index"));
 
-        duas.add( new Dua(b3, b6,5, "index"));
-        duas.add( new Dua(b3, b7,5, "index"));
-        duas.add( new Dua(b3, b8,5, "index"));
-        duas.add( new Dua(b7, b6,5, "index"));
-        duas.add( new Dua(b7, b7,5, "index"));
-        duas.add( new Dua(b7, b8,5, "index"));
+        duas.add(new Dua(b3, b6, 5, "index"));
+        duas.add(new Dua(b3, b7, 5, "index"));
+        duas.add(new Dua(b3, b8, 5, "index"));
+        duas.add(new Dua(b7, b6, 5, "index"));
+        duas.add(new Dua(b7, b7, 5, "index"));
+        duas.add(new Dua(b7, b8, 5, "index"));
 
-        MethodInfo mi = new MethodInfo("SortPaper", program,duas);
-        sg = new SubsumptionGraph(mi.getProgram(),mi.getDuas());
+        MethodInfo mi = new MethodInfo("SortPaper", program, duas);
+        mi.getProgram().computeDataFlowSets(duas);
+
+        sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
         //System.out.println(sg);
 
         rg = new ReductionGraph(sg);
         rg.setDua2DefUseChains(mi.getDefChainsMap());
-        if(!mi.getDefChainsMap().isEmpty())
+        if (!mi.getDefChainsMap().isEmpty())
             rg.setLines(mi.getLines());
         System.out.println(rg);
 
         System.out.println("#"+ "Unconstrained duas:" + rg.unconstrainedNodes().size());
 
         Iterator<ReductionNode> it = rg.unconstrainedNodes().iterator();
-        while (it.hasNext()){
+        while (it.hasNext()) {
             ReductionNode u = it.next();
             System.out.println(u);
         }
@@ -444,27 +452,31 @@ public class ReductionGraphTest extends TestCase {
 
         rg.findTransitiveClosure();
         System.out.println(rg.toDot());
-        writeBufferToFile("/Users/marcoschaim/projetos/data/analysis/sort-mod/","Sort2-grf-anot.dot",mi.graphDefUseToDot());
-        writeBufferToFile("/Users/marcoschaim/projetos/data/analysis/sort-mod/","Sort2-red.dot",rg.toDot());
+        System.out.println(mi.graphDefUseToDot());
+//        writeBufferToFile("/Users/marcoschaim/projetos/data/analysis/sort-mod/","Sort2-grf-anot.dot",mi.graphDefUseToDot());
+//        writeBufferToFile("/Users/marcoschaim/projetos/data/analysis/sort-mod/","Sort2-red.dot",rg.toDot());
 
     }
-    //@Test
+
+    @Test
     public void test1() {
         System.out.println("Sort");
         try {
-            cl = new ClassInfo("/Users/marcoschaim/projetos/data/sort/src/main/java/br/usp/each/saeg/", "Sort.class");
+            cl = new ClassInfo("/Users/marcoschaim/projetos/data/sort/", "Sort.class");
             cl.genAllMethodInfo();
 
             for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
                 if (mi.getDuas().isEmpty())
                     continue;
 
                 mi.printMethodCFG();
                 System.out.println(mi.graphDefUseToDot());
                 mi.printMethodDuas();
-                writeBufferToFile("/Users/marcoschaim/projetos/data/sort/src/main/java/br/usp/each/saeg/",mi.getName()+".gz",mi.graphDefUseToDot());
+//                writeBufferToFile("/Users/marcoschaim/projetos/data/sort/src/",mi.getName()+".gz",mi.graphDefUseToDot());
 
-                sg = new SubsumptionGraph(mi.getProgram(),mi.getDuas());
+                sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
                 //System.out.println(sg);
 
                 rg = new ReductionGraph(sg);
@@ -472,7 +484,7 @@ public class ReductionGraphTest extends TestCase {
                 rg.setLines(mi.getLines());
                 System.out.println(rg);
 
-                System.out.println("#"+mi.getName()+ "Unconstrained duas:" + rg.unconstrainedNodes().size());
+                System.out.println("#" + mi.getName() + "Unconstrained duas: " + rg.unconstrainedNodes().size());
 
                 Iterator<ReductionNode> it = rg.unconstrainedNodes().iterator();
                 while (it.hasNext()){
@@ -484,7 +496,7 @@ public class ReductionGraphTest extends TestCase {
 
                 rg.findTransitiveClosure();
                 System.out.println(rg.toDot());
-                writeBufferToFile("/Users/marcoschaim/projetos/data/sort/src/main/java/br/usp/each/saeg/",mi.getName()+".dot",rg.toDot());
+//                writeBufferToFile("/Users/marcoschaim/projetos/data/sort/",mi.getName()+".dot",rg.toDot());
             }
 
 
@@ -493,11 +505,12 @@ public class ReductionGraphTest extends TestCase {
         }
     }
 
-    //@Test
+
+    @Test
     public void test2() {
         sg = new SubsumptionGraph();
-        for(int i = 1; i <= 8; ++i){
-            Dua<Node> d = new Dua(new Block(i),new Block(i), i,"dummy");
+        for (int i = 1; i <= 8; ++i) {
+            Dua<Node> d = new Dua(new Block(i), new Block(i), i, "dummy");
             SubsumptionNode s = new SubsumptionNode(d);
             s.setId(i);
             sg.add(s);
@@ -530,6 +543,7 @@ public class ReductionGraphTest extends TestCase {
         while (it.hasNext())
             System.out.println(it.next());
     }
+
 
     @Test
     public void test3(){
@@ -571,7 +585,7 @@ public class ReductionGraphTest extends TestCase {
 
                 System.out.println(rg.toDot());
 
-                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".dot", rg.toDot());
+                //writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".dot", rg.toDot());
 
             }
 
@@ -583,19 +597,21 @@ public class ReductionGraphTest extends TestCase {
 
     @Test
     public void test4(){
-        System.out.println("Max");
+        System.out.println("Matrix");
         try {
             cl = new ClassInfo("/Users/marcoschaim/projetos/data/weka-3.8-master/weka/build/classes/weka/core/", "Matrix.class");
             cl.genAllMethodInfo();
 
             for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
                 if (mi.getDuas().isEmpty())
                     continue;
 
                 mi.printMethodCFG();
                 mi.printMethodDuas();
-                writeBufferToFile("/Users/marcoschaim/projetos/data/weka-3.8-master/weka/build/classes/weka/core/",mi.getName()+".gz",mi.graphDefUseToDot());
-                sg = new SubsumptionGraph(mi.getProgram(),mi.getDuas());
+                //writeBufferToFile("/Users/marcoschaim/projetos/data/weka-3.8-master/weka/build/classes/weka/core/",mi.getName()+".gz",mi.graphDefUseToDot());
+                sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
                 //System.out.println(sg);
 
                 rg = new ReductionGraph(sg);
@@ -614,7 +630,7 @@ public class ReductionGraphTest extends TestCase {
                 System.out.println("Transitive Clousure:");
 
                 rg.findTransitiveClosure();
-                writeBufferToFile("/Users/marcoschaim/projetos/data/weka-3.8-master/weka/build/classes/weka/core/",mi.getName()+".dot",rg.toDot());
+                //writeBufferToFile("/Users/marcoschaim/projetos/data/weka-3.8-master/weka/build/classes/weka/core/",mi.getName()+".dot",rg.toDot());
 
                 System.out.println(rg.toDot());
             }
@@ -629,18 +645,20 @@ public class ReductionGraphTest extends TestCase {
     public void test5(){
         System.out.println("BOBYQAOptimizer");
         try {
-            cl = new ClassInfo("/Users/marcoschaim/projetos/data/BOBYQAOptimizer/", "BOBYQAOptimizer.class");
+            cl = new ClassInfo("/Users/marcoschaim/projetos/data/bobyqb/", "BOBYQAOptimizer.class");
             cl.genAllMethodInfo();
 
             for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
                 if (mi.getDuas().isEmpty())
                     continue;
 
                 //mi.printMethodCFG();
                 //mi.printMethodDuas();
-                writeBufferToFile("/Users/marcoschaim/projetos/data/BOBYQAOptimizer/",mi.getName()+".gz",mi.graphDefUseToDot());
+                //writeBufferToFile("/Users/marcoschaim/projetos/data/BOBYQAOptimizer/",mi.getName()+".gz",mi.graphDefUseToDot());
 
-                sg = new SubsumptionGraph(mi.getProgram(),mi.getDuas());
+                sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
                 //System.out.println(sg);
 
                 rg = new ReductionGraph(sg);
@@ -662,7 +680,7 @@ public class ReductionGraphTest extends TestCase {
 //                System.out.println("Transitive Clousure:");
 
                 rg.findTransitiveClosure();
-                writeBufferToFile("/Users/marcoschaim/projetos/data/BOBYQAOptimizer/", mi.getName()+".dot",rg.toDot());
+                //writeBufferToFile("/Users/marcoschaim/projetos/data/BOBYQAOptimizer/", mi.getName()+".dot",rg.toDot());
             }
 
 

@@ -29,10 +29,11 @@
  */
 package br.usp.each.saeg.opal;
 
+import br.usp.each.saeg.subsumption.graphdua.Dua;
 import br.usp.each.saeg.subsumption.graphdua.Flowgraph;
+import br.usp.each.saeg.subsumption.graphdua.Node;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class Program {
@@ -42,6 +43,7 @@ public class Program {
 
     private final Map<Integer, String> ids2variables = new HashMap<Integer, String>();
 
+    private Node[] dataFlowSets;
 
     public Flowgraph<Block> getGraph() {
         return this.graph;
@@ -64,23 +66,98 @@ public class Program {
         return this.invgraph;
     }
 
-//    public void createInvGraph(Flowgraph<Block> graph) {
-//
-//        invgraph = new Flowgraph<>();
-//        Iterator<Block> it = graph.iterator();
-//
-//        while (it.hasNext()) {
-//            Block node = it.next();
-//            invgraph.add(node);
-//        }
-//
-//        it = graph.iterator();
-//
-//        while (it.hasNext()) {
-//            Block from = it.next();
-//            for (final Block to : graph.neighbors(from.id())) {
-//                invgraph.addEdge(from.id(),to.id());
-//            }
-//        }
-//    }
+    public void computeDataFlowSets(List<Dua> duas) {
+
+        dataFlowSets = new Node[getGraph().size()];
+
+        Iterator<Block> itBlock = getGraph().iterator();
+
+        while (itBlock.hasNext()) {
+            Block blk = itBlock.next();
+            Node nn = new Node(blk, 0);
+            nn.initNodeSets(duas.size());
+            dataFlowSets[blk.id()] = nn;
+        }
+
+        itBlock = getGraph().iterator();
+
+        while (itBlock.hasNext()) {
+            Block block = itBlock.next();
+            int blkId = block.id();
+
+            Iterator<Dua> itDua = duas.iterator();
+            int id = 0;
+
+            while (itDua.hasNext()) {
+                Dua dua = itDua.next();
+
+                Node node = dataFlowSets[blkId];
+                if (dua.isCUse()) {
+                    if (dua.use().id() == blkId) {
+                        node.setGen(id);
+                    }
+                }
+
+                if (!dua.isCUse()) {
+                    if (dua.to().id() == blkId)
+                        node.setGen(id);
+                    else {
+                        int from = dua.from().id();
+                        if (from != blkId)
+                            node.setSleepy(id);
+                    }
+                }
+
+                if (dua.def().id() == blkId) {
+                    node.setBorn(id);
+                }
+
+                if (dua.def().id() != blkId && getGraph().get(blkId).isDef(dua.var())) {
+                    node.setKill(id);
+                }
+                ++id;
+            }
+        }
+    }
+
+    public BitSet getGen(Node n) {
+        if (dataFlowSets == null) return null;
+        return dataFlowSets[n.block().id()].getGen();
+    }
+
+    public BitSet getBorn(Node n) {
+        if (dataFlowSets == null) return null;
+        return dataFlowSets[n.block().id()].getBorn();
+    }
+
+    public BitSet getKill(Node n) {
+        if (dataFlowSets == null) return null;
+        return dataFlowSets[n.block().id()].getKill();
+    }
+
+    public BitSet getSleepy(Node n) {
+        if (dataFlowSets == null) return null;
+        return dataFlowSets[n.block().id()].getSleepy();
+    }
+
+    public BitSet getGen(int id) {
+        if (dataFlowSets == null) return null;
+        return dataFlowSets[id].getGen();
+    }
+
+    public BitSet getBorn(int id) {
+        if (dataFlowSets == null) return null;
+        return dataFlowSets[id].getBorn();
+    }
+
+    public BitSet getKill(int id) {
+        if (dataFlowSets == null) return null;
+        return dataFlowSets[id].getKill();
+    }
+
+    public BitSet getSleepy(int id) {
+        if (dataFlowSets == null) return null;
+        return dataFlowSets[id].getSleepy();
+    }
+
 }

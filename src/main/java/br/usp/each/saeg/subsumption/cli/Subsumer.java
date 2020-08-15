@@ -2,8 +2,8 @@ package br.usp.each.saeg.subsumption.cli;
 
 import br.usp.each.saeg.commons.time.TimeWatch;
 import br.usp.each.saeg.subsumption.analysis.SubsumptionGraph;
-import br.usp.each.saeg.subsumption.input.MethodInfo;
 import br.usp.each.saeg.subsumption.input.ClassInfo;
+import br.usp.each.saeg.subsumption.input.MethodInfo;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -29,7 +29,7 @@ public class Subsumer {
 
                 // Create a name for the files based on the class and method names
 
-                String methodname = ci.getName().substring(0).replace(File.separator,".") +"."+ mi.getName();
+                String methodname = ci.getName().replace(File.separator, ".") + "." + mi.getName();
 
                 final TimeWatch tw = TimeWatch.start();
                 sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
@@ -39,7 +39,7 @@ public class Subsumer {
                 System.out.println(MessageFormat.format(
                         "Method {0} subsumption of duas calculated in {1} minutes and {2} seconds", methodname, seconds/60,seconds % 60));
 
-                writeBufferToFile(path, methodname+ ".sub", sg.toString());
+                //writeBufferToFile(path, methodname+ ".sub", sg.toString());
                 n++;
             }
         } catch (Exception e) {
@@ -52,8 +52,8 @@ public class Subsumer {
         // Convert the string to a
         // byte array.
 
-        byte data[] = s.getBytes();
-        Path p = Paths.get(dir+name);
+        byte[] data = s.getBytes();
+        Path p = Paths.get(dir + name);
 
         try (OutputStream out = new BufferedOutputStream(
                 Files.newOutputStream(p))) {

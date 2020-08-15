@@ -64,7 +64,7 @@ public class CoverageAnalyzer {
             this.sg4 = null;
             this.sg5 = null;
         } else {
-            //this.sg4 = findSubgraph(dua.use(), dua.use(), 4, false);
+            this.sg4 = findSubgraph(dua.use(), dua.use(), 4, false);
             this.sg5 = findSubgraph(dua.use(), graph.exit(), 5, true);
         }
     }
@@ -104,10 +104,10 @@ public class CoverageAnalyzer {
         return keep;
     }
 
-    private boolean findNodesEdges(BitSet sucbit, BitSet edsucbit, Block ni, Block nj) {
+    private BitSet findNodesEdges(BitSet sucbit, BitSet edsucbit, Block ni, Block nj) {
         // Find successors and the edges from ni to nj
         final Queue<Block> w = new LinkedList<>();
-        boolean cleanup = false;
+        BitSet toBeChecked = new BitSet(sucbit.size());
 
         w.add(ni);
 
@@ -129,96 +129,14 @@ public class CoverageAnalyzer {
                     }
                 } else { // n_i != n_j && wsuc == n_i
                     // n_i is reachable from n_i. Needs a cleanup
-                    cleanup = true;
-                    edsucbit.set(getEdgeBit(n.id(), wsuc.id()));
-                    //System.out.println("Cleanup is needed");
-                }
-            }
-        }
-        return cleanup;
-    }
-
-
-    private BitSet findDFNodesEdgesCUse(BitSet sucbit, BitSet edsucbit, Block ni, Block nj, int x) {
-        // Find successors and the edges from ni to nj
-        final Queue<Block> w = new LinkedList<>();
-
-        BitSet toBeChecked = new BitSet(sucbit.size());
-
-        w.add(ni);
-
-        while (!w.isEmpty()) {
-            Block n = w.remove();
-            Set<Block> successors = getSuccessors(n);
-
-            for (Block wsuc : successors) {
-                if (!wsuc.equals(ni) && !wsuc.equals(nj) && wsuc.isDef(x)) {
-                    if (wsuc.isDef(x))
-                        toBeChecked.set(n.id()); // n should be checked for dangling paths
-                    continue;
-                }
-
-                if (ni.equals(nj) || !wsuc.equals(ni)) {
-                    edsucbit.set(getEdgeBit(n.id(), wsuc.id()));
-
-                    if (!sucbit.get(wsuc.id())) {
-                        sucbit.set(wsuc.id());
-
-                        if (wsuc.id() != nj.id()) {
-                            w.add(wsuc);
-                        }
-                    }
-                } else { // n_i != n_j && wsuc == n_i
-                    // n_i is reachable from n_i. Needs a cleanup
-                    toBeChecked.set(n.id()); // n should be checked for dangling paths
-                    // edsucbit.set(getEdgeBit(n.id(), wsuc.id()));
+                    //edsucbit.set(getEdgeBit(n.id(), wsuc.id()));
+                    toBeChecked.set(n.id());
                     //System.out.println("Cleanup is needed");
                 }
             }
         }
         return toBeChecked;
     }
-
-
-    private BitSet findDFNodesEdgesPUse(BitSet sucbit, BitSet edsucbit, Block ni, Block newnk, int x) {
-        // Find successors and the edges from ni to nj
-        final Queue<Block> w = new LinkedList<>();
-        BitSet toBeChecked = new BitSet(sucbit.size());
-
-        w.add(ni);
-
-        while (!w.isEmpty()) {
-            Block n = w.remove();
-            Set<Block> successors = getSuccessors(n);
-
-            for (Block wsuc : successors) {
-                if (!wsuc.equals(ni) && !wsuc.equals(newnk) && wsuc.isDef(x)) {
-                    if (wsuc.isDef(x))
-                        toBeChecked.set(n.id()); // n should be checked for dangling paths
-                    continue;
-                }
-
-                if (ni.equals(newnk) || !wsuc.equals(ni)) {
-                    if (wsuc.id() >= 0)
-                        edsucbit.set(getEdgeBit(n.id(), wsuc.id()));
-
-                    if (wsuc.id() >= 0 && !sucbit.get(wsuc.id())) {
-                        sucbit.set(wsuc.id());
-                        sucbit.set(wsuc.id());
-                        w.add(wsuc);
-                    }
-                } else { // n_i != newnk && wsuc == n_i
-                    // n_i is reachable from n_i. Needs a cleanup
-                    toBeChecked.set(n.id()); // n should be checked for dangling paths
-                    // edsucbit.set(getEdgeBit(n.id(), wsuc.id()));
-                    //System.out.println("Cleanup is needed");
-                }
-            }
-        }
-
-        return toBeChecked;
-    }
-
 
 //    private BitSet findDFPredNodesPUse(BitSet predbit, Block ni, Block nj, Block newnk, int x) {
 //        final Queue<Block> w = new LinkedList<>();
@@ -269,6 +187,7 @@ public class CoverageAnalyzer {
         BitSet predbit = new BitSet(getGraphSize());
         BitSet nodesbit;
         BitSet edsucbit = new BitSet(getGraphSize() * getGraphSize());
+        BitSet toBeChecked;
 
         // Find successors and the edges from ni to nj
 
@@ -294,7 +213,7 @@ public class CoverageAnalyzer {
 //            }
 //        }
 
-        findNodesEdges(sucbit, edsucbit, ni, nj);
+        toBeChecked = findNodesEdges(sucbit, edsucbit, ni, nj);
 
         // Find the predecessors
 
@@ -362,9 +281,58 @@ public class CoverageAnalyzer {
         }
 
         sg.setEntry(nodeI);
-        sg.setExit(new Node(nj, i));
+        sg.setExit(sg.get(Node.hash(nj.id(), i)));
+
+        toBeChecked.and(nodesbit);
+        toBeChecked.clear(ni.id());
+        toBeChecked.clear(nj.id());
+
+        if (!toBeChecked.isEmpty()) {
+            //System.out.println("Needs cleanup: "+toBeChecked);
+            cleanUpDanglingPaths(sg, toBeChecked);
+        }
 
         return sg;
+    }
+
+    private BitSet findDFNodesEdgesCUse(BitSet sucbit, BitSet edsucbit, Block ni, Block nj, int x) {
+        // Find successors and the edges from ni to nj
+        final Queue<Block> w = new LinkedList<>();
+
+        BitSet toBeChecked = new BitSet(sucbit.size());
+
+        w.add(ni);
+
+        while (!w.isEmpty()) {
+            Block n = w.remove();
+            Set<Block> successors = getSuccessors(n);
+
+            for (Block wsuc : successors) {
+                if (!wsuc.equals(ni) && !wsuc.equals(nj) && wsuc.isDef(x)) {
+                    if (wsuc.isDef(x))
+                        toBeChecked.set(n.id()); // n should be checked for dangling paths
+                    continue;
+                }
+
+                if (ni.equals(nj) || !wsuc.equals(ni)) {
+                    edsucbit.set(getEdgeBit(n.id(), wsuc.id()));
+
+                    if (!sucbit.get(wsuc.id())) {
+                        sucbit.set(wsuc.id());
+
+                        if (wsuc.id() != nj.id()) {
+                            w.add(wsuc);
+                        }
+                    }
+                } else { // n_i != n_j && wsuc == n_i
+                    // n_i is reachable from n_i. Needs a cleanup
+                    toBeChecked.set(n.id()); // n should be checked for dangling paths
+                    // edsucbit.set(getEdgeBit(n.id(), wsuc.id()));
+                    //System.out.println("Cleanup is needed");
+                }
+            }
+        }
+        return toBeChecked;
     }
 
     public Subgraph<Node> findSubgraphDF(Block ni, Block nj, int x, int i, boolean mandatory) {
@@ -472,7 +440,8 @@ public class CoverageAnalyzer {
         }
 
         sg.setEntry(nodeI);
-        sg.setExit(new Node(nj, i));
+        sg.setExit(sg.get(Node.hash(nj.id(), i)));
+        //sg.setExit(new Node(nj, i));
 
         toBeChecked.and(nodesbit);
         toBeChecked.clear(ni.id());
@@ -483,6 +452,45 @@ public class CoverageAnalyzer {
             cleanUpDanglingPaths(sg, toBeChecked);
         }
         return sg;
+    }
+
+    private BitSet findDFNodesEdgesPUse(BitSet sucbit, BitSet edsucbit, Block ni, Block newnk, int x) {
+        // Find successors and the edges from ni to nj
+        final Queue<Block> w = new LinkedList<>();
+        BitSet toBeChecked = new BitSet(sucbit.size());
+
+        w.add(ni);
+
+        while (!w.isEmpty()) {
+            Block n = w.remove();
+            Set<Block> successors = getSuccessors(n);
+
+            for (Block wsuc : successors) {
+                if (!wsuc.equals(ni) && !wsuc.equals(newnk) && wsuc.isDef(x)) {
+                    if (wsuc.isDef(x))
+                        toBeChecked.set(n.id()); // n should be checked for dangling paths
+                    continue;
+                }
+
+                if (ni.equals(newnk) || !wsuc.equals(ni)) {
+                    if (wsuc.id() >= 0)
+                        edsucbit.set(getEdgeBit(n.id(), wsuc.id()));
+
+                    if (wsuc.id() >= 0 && !sucbit.get(wsuc.id())) {
+                        sucbit.set(wsuc.id());
+                        sucbit.set(wsuc.id());
+                        w.add(wsuc);
+                    }
+                } else { // n_i != newnk && wsuc == n_i
+                    // n_i is reachable from n_i. Needs a cleanup
+                    toBeChecked.set(n.id()); // n should be checked for dangling paths
+                    // edsucbit.set(getEdgeBit(n.id(), wsuc.id()));
+                    //System.out.println("Cleanup is needed");
+                }
+            }
+        }
+
+        return toBeChecked;
     }
 
     public Subgraph<Node> findSubgraphDF(Block ni, Block nj, Block nk, int x, int i, boolean mandatory) {
@@ -610,8 +618,8 @@ public class CoverageAnalyzer {
         }
 
         sg.setEntry(nodeI);
-        sg.setExit(new Node(newnk, i));
-
+        //sg.setExit(new Node(newnk, i));
+        sg.setExit(sg.get(Node.hash(newnk.id(), i)));
 
         // Recover original graph
 
@@ -641,7 +649,9 @@ public class CoverageAnalyzer {
         if (!tobechecked.isEmpty()) {
             int nodeid = -1;
             while ((nodeid = tobechecked.nextSetBit(nodeid + 1)) != -1) {
-                visitReverseSubgraph(sg, sg.get(Node.hash(nodeid, sg.id())), visitedSuspect);
+                Node n = sg.get(Node.hash(nodeid, sg.id()));
+                if (n != null)
+                    visitReverseSubgraph(sg, n, visitedSuspect);
             }
         }
 
@@ -674,12 +684,18 @@ public class CoverageAnalyzer {
             int nodeid = -1;
             while ((nodeid = nodesout.nextSetBit(nodeid + 1)) != -1) {
                 Node nn = sg.get(Node.hash(nodeid, sg.id()));
-                for (Node suc : sg.neighbors(nn.id())) {
+                Node[] neighbors = new Node[sg.neighbors(nn.id()).size()];
+                neighbors = sg.neighbors(nn.id()).toArray(neighbors);
+
+                for (Node suc : neighbors) {
                     if (!sg.removeEdge(nn.id(), suc.id()))
                         System.out.println("Edge(" + nodeid + "," + suc.block().id() + ") not removed!");
                 }
 
-                for (Node pred : sg.revNeighbors(nn.id())) {
+                Node[] revneighbors = new Node[sg.revNeighbors(nn.id()).size()];
+                revneighbors = sg.revNeighbors(nn.id()).toArray(revneighbors);
+
+                for (Node pred : revneighbors) {
                     if (!sg.removeEdge(pred.id(), nn.id()))
                         System.out.println("Edge(" + pred.block().id() + "," + nodeid + ") not removed!");
                 }
@@ -707,7 +723,7 @@ public class CoverageAnalyzer {
     }
 
     private Set<Block> getPredecessors(Block b) {
-        return invgraph.neighbors(b.id());
+        return graph.revNeighbors(b.id());
     }
 
     private int getEdgeBit(int from, int to) {

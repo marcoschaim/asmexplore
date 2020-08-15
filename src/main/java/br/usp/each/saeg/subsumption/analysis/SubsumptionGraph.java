@@ -4,7 +4,10 @@ import br.usp.each.saeg.opal.Graph;
 import br.usp.each.saeg.opal.Program;
 import br.usp.each.saeg.subsumption.graphdua.Dua;
 
-import java.util.*;
+import java.util.BitSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 public class SubsumptionGraph extends Graph<SubsumptionNode> {
     private SubsumptionAnalyzer analyzer;
@@ -15,6 +18,7 @@ public class SubsumptionGraph extends Graph<SubsumptionNode> {
     }
     public SubsumptionGraph(Program p, List<Dua> listDuas) {
         analyzer = new SubsumptionAnalyzer(p, listDuas);
+
         subsumptionVector = analyzer.findAllDuaSubsumption();
 
         Iterator<Dua> itDua = listDuas.iterator();
@@ -27,6 +31,7 @@ public class SubsumptionGraph extends Graph<SubsumptionNode> {
 
         while (itDua.hasNext()) {
             Dua d = itDua.next();
+
             int idDua = analyzer.getDuaId(d);
             if (subsumptionVector[idDua] != null) {
                 if (!subsumptionVector[idDua].isEmpty()) {

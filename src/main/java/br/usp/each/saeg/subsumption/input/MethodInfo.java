@@ -114,6 +114,7 @@ public class MethodInfo {
 
         connectNewExitNode(p.getGraph().entry(), visitedBlks);
 
+        // Find the
 //        // Find inverse graph
 //        p.createInvGraph(p.getGraph());
 //
@@ -122,9 +123,9 @@ public class MethodInfo {
 
         // Find reverse PostOrder
 
-        p.getGraph().findReversePostOrder();
+//        p.getGraph().findReversePostOrder();
 //        p.getGraph().ajustSucessorsInReversePostOrder();
-        p.getInvGraph().findReversePostOrder();
+//        p.getInvGraph().findReversePostOrder();
 //        p.getInvGraph().ajustSucessorsInReversePostOrder();
     }
 
@@ -247,6 +248,9 @@ public class MethodInfo {
                 dua2DefUseChains.get(d.hashCode()).add(c);
             }
         }
+
+        // Find the sets Gen, Born, Kill & Sleepy associated with each block
+        p.computeDataFlowSets(duas);
     }
 
     public String printMethodDuas() {

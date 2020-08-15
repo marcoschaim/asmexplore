@@ -1,10 +1,10 @@
 package br.usp.each.saeg.subsumption.graphdua;
 
+import br.usp.each.saeg.opal.Block;
+import br.usp.each.saeg.opal.Identifiable;
+
 import java.util.BitSet;
 import java.util.Objects;
-
-import br.usp.each.saeg.opal.Identifiable;
-import br.usp.each.saeg.opal.Block;
 
 public class Node implements Identifiable {
 
@@ -20,6 +20,8 @@ public class Node implements Identifiable {
     private BitSet covered;
 
     private final Block block;
+    boolean outpred = false;
+    boolean outsuc = false;
 
     public Node(Block block, int idSubgraph) {
         this.block = block.clone();
@@ -74,11 +76,6 @@ public class Node implements Identifiable {
         return node;
     }
 
-    @Override
-    public String toString() {
-        return String.valueOf(this.block.id());
-    }
-
     public static int hash(int id, int idsg) {
         return 1031 * id + idsg;
     }
@@ -101,27 +98,56 @@ public class Node implements Identifiable {
         return kill;
     }
 
-    public BitSet getBorn() { return born; }
+    public BitSet getBorn() {
+        return born;
+    }
 
     public BitSet getSleepy() {
         return sleepy;
     }
 
-    public BitSet getGen() { return gen; }
+    public BitSet getGen() {
+        return gen;
+    }
 
-    public void setGen(int id){
+    public boolean getOutPred() {
+        return outpred;
+    }
+
+    public void setOutPred(boolean val) {
+        outpred = val;
+    }
+
+    public void setGen(int id) {
         gen.set(id);
     }
 
-    public void setBorn(int id){
+    public void setBorn(int id) {
         born.set(id);
     }
 
-    public void setKill(int id){
+    public void setKill(int id) {
         kill.set(id);
     }
 
     public void setSleepy(int id) {
         sleepy.set(id);
+    }
+
+    public boolean getOutSuc() {
+        return outsuc;
+    }
+
+    public void setOutSuc(boolean val) {
+        outsuc = val;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("[" + this.id() + ":" + this.block.id() + "(" + this.idSubgraph() + ")");
+        sb.append(":" + this.getOutSuc());
+        sb.append(":" + this.getOutPred() + "]");
+        return sb.toString();
     }
 }

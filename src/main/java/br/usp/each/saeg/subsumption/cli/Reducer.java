@@ -1,10 +1,10 @@
 package br.usp.each.saeg.subsumption.cli;
 
 import br.usp.each.saeg.commons.time.TimeWatch;
-import br.usp.each.saeg.subsumption.analysis.SubsumptionGraph;
-import br.usp.each.saeg.subsumption.input.MethodInfo;
 import br.usp.each.saeg.subsumption.analysis.ReductionGraph;
+import br.usp.each.saeg.subsumption.analysis.SubsumptionGraph;
 import br.usp.each.saeg.subsumption.input.ClassInfo;
+import br.usp.each.saeg.subsumption.input.MethodInfo;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -32,7 +32,7 @@ public class Reducer {
 
                 // Create a name for the files based on the class and method names
 
-                String methodname = ci.getName().substring(0).replace(File.separator,".")+ "." + mi.getName();
+                String methodname = ci.getName().replace(File.separator, ".") + "." + mi.getName();
 
                 //writeBufferToFile(path, methodname+ ".csv",mi.printMethodDuas());
                 //writeBufferToFile(path, methodname + ".gz", mi.graphDefUseToDot());
@@ -50,15 +50,15 @@ public class Reducer {
                 final long milliseconds = tw.time(TimeUnit.MILLISECONDS);
 
                 System.out.println(MessageFormat.format(
-                        "Method {0} reduced in {1} minutes and {2} seconds. Total em milliseconds {3}", mi.getName(), (milliseconds/1000)/60,(milliseconds/1000) % 60,milliseconds));
-                System.out.println("# duas: " + mi.getDuas().size());
-                System.out.println("# Unconstrained duas: " + rg.unconstrainedNodes().size());
-                System.out.println("# Reduction nodes: " + rg.size());
-                System.out.println(">> " + methodname + "," + mi.getDuas().size() + "," + rg.unconstrainedNodes().size() + "," + rg.size()+ ","+ ((double)rg.unconstrainedNodes().size()/mi.getDuas().size())*100 + ","+ ((double)rg.size()/mi.getDuas().size())*100 + "," + milliseconds/1000 + "," + milliseconds + "\n");
+                        "Method {0} reduced in {1} minutes and {2} seconds. Total em milliseconds {3}", mi.getName(), (milliseconds / 1000) / 60, (milliseconds / 1000) % 60, milliseconds));
+                System.out.println("## duas: " + mi.getDuas().size());
+                System.out.println("## Unconstrained duas: " + rg.unconstrainedNodes().size());
+                System.out.println("## Reduction nodes: " + rg.size());
+                System.out.println("@@ " + methodname + mi.getProgram().getGraph().size() + "," + mi.getDuas().size() + "," + rg.unconstrainedNodes().size() + "," + rg.size() + "," + ((double) rg.unconstrainedNodes().size() / mi.getDuas().size()) * 100 + "," + ((double) rg.size() / mi.getDuas().size()) * 100 + "," + milliseconds / 1000 + "," + milliseconds + "\n");
 //                sb.append(methodname + ";" + mi.getDuas().size() + ";" + rg.unconstrainedNodes().size() + ";" + rg.size() + ";" + milliseconds + ";\n");
 //                System.out.println("sb:"+sb.toString());
 
-                writeBufferToFile(path, methodname+ ".dot", rg.toDot());
+//                writeBufferToFile(path, methodname+ ".dot", rg.toDot());
                 n++;
             }
            // writeBufferToFile(path,"reduce.csv", sb.toString());
@@ -72,8 +72,8 @@ public class Reducer {
         // Convert the string to a
         // byte array.
 
-        byte data[] = s.getBytes();
-        Path p = Paths.get(dir+name);
+        byte[] data = s.getBytes();
+        Path p = Paths.get(dir + name);
 
         try (OutputStream out = new BufferedOutputStream(
                 Files.newOutputStream(p))) {

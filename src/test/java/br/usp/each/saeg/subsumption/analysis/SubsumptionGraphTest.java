@@ -1,6 +1,5 @@
 package br.usp.each.saeg.subsumption.analysis;
 
-import br.usp.each.saeg.opal.Block;
 import br.usp.each.saeg.subsumption.graphdua.CoverageAnalyzer;
 import br.usp.each.saeg.subsumption.graphdua.Dua;
 import br.usp.each.saeg.subsumption.graphdua.Graphdua;
@@ -19,20 +18,23 @@ public class SubsumptionGraphTest extends TestCase {
     private SubsumptionAnalyzer duaSubAnalyzer;
     private SubsumptionGraph subduagraph;
 
-    @Test
+    //@Test
     public void test1() {
         System.out.println("Sort");
         try {
-            cl = new ClassInfo("/Users/marcoschaim/projetos/data/sort/src/main/java/br/usp/each/saeg/", "Sort.class");
+            cl = new ClassInfo("/Users/marcoschaim/projetos/data/sort/", "Sort.class");
             cl.genAllMethodInfo();
 
             for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+
                 if (mi.getDuas().isEmpty())
                     continue;
 
                 mi.printMethodCFG();
                 mi.printMethodDuas();
-                subduagraph = new SubsumptionGraph(mi.getProgram(),mi.getDuas());
+                subduagraph = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
                 System.out.println(subduagraph);
             }
 
@@ -87,7 +89,7 @@ public class SubsumptionGraphTest extends TestCase {
                             }
 
                         }
-                       System.out.println("");
+                        System.out.println();
                     }
                 }
                 System.out.println("Total of duas covered by edges: "+totalSubsumed.cardinality());

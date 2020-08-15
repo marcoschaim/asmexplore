@@ -33,28 +33,37 @@ public class GraphduaTest extends TestCase {
             cl.genAllMethodInfo();
 
             for (MethodInfo mi : cl.getMethodsInfo()) {
-                Dua d; int counter = 1;
+                Dua d;
+                int counter = 1;
                 mi.createMethodCFG();
                 mi.createMethodDuas();
-                if(mi.getDuas().size() == 0) continue;
+                if (mi.getDuas().size() == 0) continue;
 
                 Iterator<Dua> itdua = mi.getDuas().iterator();
 
 
-
                 mi.printMethodCFG();
-                printGraphDefUse(mi.getProgram().getGraph());
+                //printGraphDefUse(mi.getProgram().getGraph());
+
 
                 if (mi.getDuas().isEmpty())
                     continue;
+
+                System.out.println(mi.graphDefUseToDot());
+
                 while (itdua.hasNext()) {
                     d = itdua.next();
                     analyzer = new CoverageAnalyzer(mi.getProgram().getGraph(), d);
-                    System.out.println(counter+":" + d.toString());
+                    System.out.println(counter + ":" + d.toString());
                     Graphdua grf = analyzer.findGraphdua();
-                    System.out.println("forward graphdua:\n"+grf);
-                    System.out.println("backward graphdua:\n"+printInverse(grf.inverse()));
-                    writeBufferToFile("/Users/marcoschaim/projetos/data/sort/", mi.getName()+ ".grd"+d.toString()+".gz",grf.toDot());
+//                    System.out.println("forward graphdua:\n"+grf);
+//                    System.out.println("backward graphdua:\n"+printInverse(grf.inverse()));
+//                    System.out.println(grf.toDotSubGraph(1));
+//                    System.out.println(grf.toDotSubGraph(2));
+//                    System.out.println(grf.toDotSubGraph(3));
+//                    System.out.println(grf.toDotSubGraph(5));
+
+                    System.out.println(grf.toDot());
                     ++counter;
                 }
             }
@@ -67,10 +76,10 @@ public class GraphduaTest extends TestCase {
 
     @Test
     public void test2() {
-        System.out.println("Method");
+        System.out.println("MaxComplicated");
 
         try {
-            cl = new ClassInfo("/Users/marcoschaim/projetos/data/MethodInfo/", "MethodInfo.class");
+            cl = new ClassInfo("/Users/marcoschaim/projetos/data/max/", "MaxComplicated.class");
             cl.genAllMethodInfo();
 
             for (MethodInfo mi : cl.getMethodsInfo()) {
@@ -100,6 +109,41 @@ public class GraphduaTest extends TestCase {
     }
 
     @Test
+    public void test21() {
+        System.out.println("Max");
+
+        try {
+            cl = new ClassInfo("/Users/marcoschaim/projetos/data/max/", "Max.class");
+            cl.genAllMethodInfo();
+
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                Dua d;
+                int counter = 1;
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+
+                Iterator<Dua> itdua = mi.getDuas().iterator();
+
+                printGraphDefUse(mi.getProgram().getGraph());
+
+                if (mi.getDuas().isEmpty())
+                    continue;
+                while (itdua.hasNext()) {
+                    d = itdua.next();
+                    analyzer = new CoverageAnalyzer(mi.getProgram().getGraph(), d);
+                    System.out.println(counter + ":" + d.toString());
+                    System.out.println(analyzer.findGraphdua().toDot());
+                    ++counter;
+                }
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void test3() {
         System.out.println("SourceMapConsumerV3$UnmappedEntry");
 
@@ -107,7 +151,7 @@ public class GraphduaTest extends TestCase {
             cl = new ClassInfo("/Users/marcoschaim/projetos/data/closure/build/classes/com/google/debugging/sourcemap/", "SourceMapConsumerV2.class");
             cl.genAllMethodInfo();
 
-            System.out.println("Number of Methods:"+cl.getMethodsInfo().size());
+            System.out.println("Number of Methods:" + cl.getMethodsInfo().size());
             for (MethodInfo mi : cl.getMethodsInfo()) {
                 Dua d; int counter = 1;
                 mi.createMethodCFG();
@@ -297,16 +341,58 @@ public class GraphduaTest extends TestCase {
         System.out.println(analyzer.toDot(analyzer.sg5()));
 
         Graphdua grf = analyzer.findGraphdua();
-        System.out.println("forward graphdua:\n"+grf);
-        System.out.println("graph defuse:\n"+ mi.graphDefUseToDot());
-        System.out.println("Graphdua:\n"+grf.toDot());
+        System.out.println("forward graphdua:\n" + grf);
+        System.out.println("graph defuse:\n" + mi.graphDefUseToDot());
+        System.out.println("Graphdua:\n" + grf.toDot());
         //writeBufferToFile("/Users/marcoschaim/projetos/data/sort/", "SortPaper"+ ".grd"+d.toString()+".gz",grf.toDot());
+    }
+
+    @Test
+    public void test5() {
+        System.out.println("Max");
+
+        try {
+            cl = new ClassInfo("/Users/marcoschaim/projetos/data/max/", "Max.class");
+            cl.genAllMethodInfo();
+
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                Dua d;
+                int counter = 1;
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+                if (mi.getDuas().size() == 0) continue;
+
+                Iterator<Dua> itdua = mi.getDuas().iterator();
+
+                mi.printMethodCFG();
+                System.out.println(mi.graphDefUseToDot());
+
+                if (mi.getDuas().isEmpty())
+                    continue;
+                while (itdua.hasNext()) {
+                    d = itdua.next();
+                    analyzer = new CoverageAnalyzer(mi.getProgram(), d);
+                    System.out.println(counter + ":" + d.toString());
+                    Graphdua grf = analyzer.findGraphdua();
+                    //System.out.println("forward graphdua:\n"+grf);
+                    //System.out.println("backward graphdua:\n"+printInverse(grf.inverse()));
+                    //writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName()+ ".grd"+d.toString()+".gz",grf.toDot());
+                    System.out.println("GraphDua(" + d.toString() + "):");
+                    System.out.println(grf.toDot());
+                    ++counter;
+                }
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
     private void printGraphDefUse(Flowgraph<Block> gfc) {
 
-        for(int i = 0; i <= gfc.exit().id();++i) {
+        for (int i = 0; i <= gfc.exit().id(); ++i) {
             Block b = gfc.get(i);
             System.out.println("Node: " + b.id());
             System.out.println("\tDefs:" + printBitSetIterator(b.defs()));
@@ -356,45 +442,5 @@ public class GraphduaTest extends TestCase {
         return sb.toString();
     }
 
-    @Test
-    public void test5() {
-        System.out.println("Max");
 
-        try {
-            cl = new ClassInfo("/Users/marcoschaim/projetos/data/max/", "Max.class");
-            cl.genAllMethodInfo();
-
-            for (MethodInfo mi : cl.getMethodsInfo()) {
-                Dua d;
-                int counter = 1;
-                mi.createMethodCFG();
-                mi.createMethodDuas();
-                if (mi.getDuas().size() == 0) continue;
-
-                Iterator<Dua> itdua = mi.getDuas().iterator();
-
-                mi.printMethodCFG();
-                System.out.println(mi.graphDefUseToDot());
-
-                if (mi.getDuas().isEmpty())
-                    continue;
-                while (itdua.hasNext()) {
-                    d = itdua.next();
-                    analyzer = new CoverageAnalyzer(mi.getProgram(), d);
-                    System.out.println(counter + ":" + d.toString());
-                    Graphdua grf = analyzer.findGraphdua();
-                    //System.out.println("forward graphdua:\n"+grf);
-                    //System.out.println("backward graphdua:\n"+printInverse(grf.inverse()));
-                    //writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName()+ ".grd"+d.toString()+".gz",grf.toDot());
-                    System.out.println("GraphDua(" + d.toString() + "):");
-                    System.out.println(grf.toDot());
-                    ++counter;
-                }
-            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

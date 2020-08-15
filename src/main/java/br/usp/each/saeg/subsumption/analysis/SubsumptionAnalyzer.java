@@ -1,15 +1,11 @@
 package br.usp.each.saeg.subsumption.analysis;
 
 import br.usp.each.saeg.opal.Block;
-import br.usp.each.saeg.opal.Graph;
 import br.usp.each.saeg.opal.Program;
 import br.usp.each.saeg.subsumption.graphdua.CoverageAnalyzer;
 import br.usp.each.saeg.subsumption.graphdua.Dua;
 import br.usp.each.saeg.subsumption.graphdua.Graphdua;
 import br.usp.each.saeg.subsumption.graphdua.Node;
-import br.usp.each.saeg.subsumption.graphdua.*;
-
-import java.util.BitSet;
 
 import java.util.*;
 
@@ -17,8 +13,8 @@ public class SubsumptionAnalyzer {
     List<Dua> duas;
     Program program;
     Map<Dua, Integer> dua2id = new HashMap<>();
-    Dua id2Duas[];
-    BitSet id2Subsumed[];
+    Dua[] id2Duas;
+    BitSet[] id2Subsumed;
     CoverageAnalyzer analyzer;
 
     public SubsumptionAnalyzer(Program p, List<Dua> listDuas) {
@@ -68,52 +64,16 @@ public class SubsumptionAnalyzer {
         while (itNode.hasNext()) {
             Node n = itNode.next();
             int blkId = (n.block().id() >= 0) ? (n.block().id()) : (-n.block().id());
-            for (int i = 0; i < duas.size(); i++) {
-                Dua dua = id2Duas[i];
 
-                if (dua.isCUse()) {
-                    if (dua.use().id() == blkId) {
-                        n.setGen(i);
-                    }
-                }
-                if (!dua.isCUse()) {
-                    if (dua.to().id() == blkId)
-                        n.setGen(i);
-                    else {
-                        int from = dua.from().id();
-                        if (from != blkId)
-                            n.setSleepy(i);
-                    }
-                }
+            n.getGen().clear();
+            n.getGen().or(program.getGen(blkId));
+            n.getBorn().clear();
+            n.getBorn().or(program.getBorn(blkId));
+            n.getKill().clear();
+            n.getKill().or(program.getKill(blkId));
+            n.getSleepy().clear();
+            n.getSleepy().or(program.getSleepy(blkId));
 
-
-                if (dua.def().id() == blkId) {
-                    n.setBorn(i);
-                }
-                if (dua.def().id() != blkId && program.getGraph().get(blkId).isDef(dua.var())) {
-                    n.setKill(i);
-                }
-
-            }
-        }
-
-
-    }
-
-    private void computeInAndOutSubmission(Graphdua graphdua) {
-        BitSet temp = new BitSet(duas.size());
-        BitSet temp2 = new BitSet(duas.size());
-        BitSet oldout = new BitSet(duas.size());
-        BitSet sleepy = new BitSet(duas.size());
-        BitSet covered;
-        Iterator<Node> itNode;
-
-        Graph<Node> inverse = graphdua.inverse();
-
-        itNode = graphdua.iterator();
-
-        while (itNode.hasNext()) {
-            Node n = itNode.next();
             if (n.block().id() == program.getGraph().entry().id()) {
                 n.getOut().clear();
                 // No dua is covered at node 0
@@ -125,10 +85,16 @@ public class SubsumptionAnalyzer {
                 n.getOut().set(0, duas.size(), true);
                 n.getCovered().set(0, duas.size(), true);
             }
-//            System.out.println("Node "+n.block().id()+"("+n.idSubgraph()+")");
-//            System.out.println("Out:"+n.getOut());
-//            System.out.println("Covered:"+n.getCovered());
         }
+    }
+
+    private void computeInAndOutSubmission(Graphdua graphdua) {
+        BitSet temp = new BitSet(duas.size());
+        BitSet temp2 = new BitSet(duas.size());
+        BitSet oldout = new BitSet(duas.size());
+        BitSet sleepy = new BitSet(duas.size());
+        BitSet covered;
+        Iterator<Node> itNode;
 
         boolean changed = true;
         while (changed) {
@@ -137,8 +103,8 @@ public class SubsumptionAnalyzer {
 
             while (itNode.hasNext()) {
                 Node n = itNode.next();
-                //System.out.println("Node "+printNode(n));
-                if (inverse.neighbors(n.id()).isEmpty()) {
+//                System.out.println("Node "+printNode(n));
+                if (graphdua.predecessors(n).isEmpty()) {
                     if (program.getGraph().entry().id() != n.block().id())
                         continue; // Graphnode's dangling node
                     temp.clear();
@@ -149,16 +115,16 @@ public class SubsumptionAnalyzer {
                     temp2.set(0, duas.size(), true);
                 }
 
-                for (Node pred : inverse.neighbors(n.id())) {
+                for (Node pred : graphdua.predecessors(n)) {
                     temp.and(pred.getOut());
-                    //System.out.println("Pred Out "+printNode(pred)+ ":"+pred.getOut());
+//                    System.out.println("Pred Out "+printNode(pred)+ ":"+pred.getOut());
                 }
 
-                //System.out.println("Out: "+temp);
+//                System.out.println("Out: "+temp);
 
-                for (Node pred : inverse.neighbors(n.id())) {
+                for (Node pred : graphdua.predecessors(n)) {
                     temp2.and(pred.getCovered());
-                    //System.out.println("Pred Covered "+printNode(pred)+":"+pred.getCovered());
+//                    System.out.println("Pred Covered "+printNode(pred)+":"+pred.getCovered());
                 }
 
 
@@ -170,7 +136,7 @@ public class SubsumptionAnalyzer {
 
                 sleepy.clear();
 
-                for (Node pred : inverse.neighbors(n.id()))
+                for (Node pred : graphdua.predecessors(n))
                     sleepy.or(pred.getSleepy());
 
                 n.getCovered().clear();
@@ -199,7 +165,7 @@ public class SubsumptionAnalyzer {
                 n.getOut().or(n.getCovered());
 
                 //covered = n.getCovered();
-                //System.out.println("Covered "+printNode(n)+": "+covered);
+//                System.out.println("Covered "+printNode(n)+": "+covered);
 
                 if (!n.getOut().equals(oldout))
                     changed = true;
