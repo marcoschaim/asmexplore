@@ -7,10 +7,10 @@ import br.usp.each.saeg.subsumption.graphdua.Dua;
 import java.util.*;
 
 public class ReductionGraph extends Graph<ReductionNode> {
-    private SubsumptionGraph sbg;
+    private final SubsumptionGraph sbg;
     private Graph<ReductionNode> inv;
     private int index;
-    private Stack<SubsumptionNode> stack = new Stack<>();
+    private final Stack<SubsumptionNode> stack = new Stack<>();
     private BitSet[] subsumptionVector;
     private HashMap<Integer, List<DefUseChain>> dua2DefUseChains;
     private int [] lines;
@@ -91,7 +91,6 @@ public class ReductionGraph extends Graph<ReductionNode> {
                 ReductionNode w = it2.next();
                 if (r.equals(w))
                     continue;
-                ;
 
                 Dua d1, d2;
                 int id1, id2;
@@ -248,28 +247,36 @@ public class ReductionGraph extends Graph<ReductionNode> {
 
         return sb.toString();
     }
+
+
     public void setDua2DefUseChains(HashMap<Integer,List<DefUseChain>> m) { dua2DefUseChains = m;}
 
     public void setLines(int [] lines) { this.lines = lines;}
 
-    private boolean isDefUseChainsMapSet() { return (dua2DefUseChains != null);}
+    private boolean isDefUseChainsMapSet() {
+        return (dua2DefUseChains != null);
+    }
 
-    private List<DefUseChain> getDefUseChains(Dua d) {
+    public List<DefUseChain> getDefUseChains(Dua d) {
         if (isDefUseChainsMapSet()) {
             return dua2DefUseChains.get(d.hashCode());
         }
         return null;
     }
 
-    private String toStringLineDua (Dua d) {
+    public SubsumptionGraph getSubsumptionGraph() {
+        return sbg;
+    }
+
+    private String toStringLineDua(Dua d) {
         final StringBuilder sb = new StringBuilder();
 
-        if(isDefUseChainsMapSet() && lines != null){
+        if (isDefUseChainsMapSet() && lines != null) {
             DefUseChain dc;
             Iterator<DefUseChain> itDefChain = getDefUseChains(d).iterator();
-            while(itDefChain.hasNext()){
+            while (itDefChain.hasNext()) {
                 dc = itDefChain.next();
-                if(dc.isComputationalChain())
+                if (dc.isComputationalChain())
                     sb.append("[" + lines[dc.def] + "," + lines[dc.use] + "," + d.varName() + "]");
                 else
                     sb.append("[" + lines[dc.def] + ",(" + lines[dc.use] + "," + lines[dc.target] + ")," + d.varName() + "]");

@@ -18,6 +18,8 @@ public class Node implements Identifiable {
     private BitSet liveduas;
     private BitSet sleepy;
     private BitSet covered;
+    private BitSet dom;
+    private BitSet postDom;
 
     private final Block block;
     boolean outpred = false;
@@ -51,6 +53,11 @@ public class Node implements Identifiable {
         sleepy = new BitSet(size);
         liveduas = new BitSet(size);
         covered = new BitSet(size);
+    }
+
+    public void initDominanceNodes(int size) {
+        dom = new BitSet(size);
+        postDom = new BitSet(size);
     }
 
     @Override

@@ -81,8 +81,16 @@ public class SubsumptionGraph extends Graph<SubsumptionNode> {
         return sb.toString();
     }
 
-    public BitSet [] getSubsumptionVector() { return subsumptionVector; }
+    public BitSet[] getSubsumptionVector() {
+        return subsumptionVector;
+    }
 
-    public int getDuaId(Dua d) { return analyzer.getDuaId(d); }
+    public int getDuaId(Dua d) {
+        return analyzer.getDuaId(d);
+    }
+
+    public SubsumptionAnalyzer getSubsumptionAnalyzer() {
+        return analyzer;
+    }
 
 }

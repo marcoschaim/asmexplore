@@ -35,7 +35,7 @@ public class SubsumptionAnalyzer {
         }
     }
 
-    BitSet getSubsumedBy(Dua d) {
+    public BitSet getSubsumedBy(Dua d) {
         return id2Subsumed[dua2id.get(d)];
     }
 

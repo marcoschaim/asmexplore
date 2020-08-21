@@ -58,7 +58,7 @@ public class Reducer {
 //                sb.append(methodname + ";" + mi.getDuas().size() + ";" + rg.unconstrainedNodes().size() + ";" + rg.size() + ";" + milliseconds + ";\n");
 //                System.out.println("sb:"+sb.toString());
 
-//                writeBufferToFile(path, methodname+ ".dot", rg.toDot());
+                writeBufferToFile(path, methodname + ".dot", rg.toDot());
                 n++;
             }
            // writeBufferToFile(path,"reduce.csv", sb.toString());

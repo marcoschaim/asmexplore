@@ -37,20 +37,17 @@ public class ClassInfoTest extends TestCase {
         try {
             cl = new ClassInfo("/Users/marcoschaim/projetos/data/max/", "Max.class");
             cl.genAllMethodInfo();
-
             for (MethodInfo mi : cl.getMethodsInfo()) {
                 mi.createMethodCFG();
                 mi.createMethodDuas();
-                mi.printMethodCFG();
-                mi.printMethodDuas();
-                System.out.println(mi.getProgram().getGraph());
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println(cl.toJsonSubsumption());
+        System.out.println(cl.toJsonDuas());
     }
+
     //@Test
     public void test2() {
         System.out.println("MethodInfo");
@@ -60,40 +57,43 @@ public class ClassInfoTest extends TestCase {
             cl = new ClassInfo(dir, clazzname);
             cl.genAllMethodInfo();
 
-            for(MethodInfo mi: cl.getMethodsInfo()) {
+            for (MethodInfo mi : cl.getMethodsInfo()) {
                 mi.createMethodCFG();
                 mi.createMethodDuas();
-                mi.printMethodCFG();
-                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+//                mi.printMethodCFG();
+//                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
             }
 
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println(cl.toJsonSubsumption());
+        System.out.println(cl.toJsonDuas());
     }
 
     //@Test
     public void test3() {
         System.out.println("BOBYQAOptimizer");
-        String dir = "/Users/marcoschaim/projetos/data/BOBYQAOptimizer/";
+        String dir = "/Users/marcoschaim/projetos/data/bobyqb/";
         String clazzname = "BOBYQAOptimizer.class";
         try {
             cl = new ClassInfo(dir, clazzname);
             cl.genAllMethodInfo();
 
-            for(MethodInfo mi: cl.getMethodsInfo()) {
+            for (MethodInfo mi : cl.getMethodsInfo()) {
                 mi.createMethodCFG();
                 mi.createMethodDuas();
-                mi.printMethodCFG();
-                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+//                mi.printMethodCFG();
+                //writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
             }
-
-
+            System.out.println(cl.toJsonSubsumption());
+            System.out.println(cl.toJsonDuas());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     void writeBufferToFile(String dir, String name, String s) {
         // Convert the string to a
         // byte array.

@@ -3,6 +3,10 @@ package br.usp.each.saeg.subsumption.input;
 import br.usp.each.saeg.asm.defuse.*;
 import br.usp.each.saeg.opal.Block;
 import br.usp.each.saeg.opal.Program;
+import br.usp.each.saeg.subsumption.analysis.ReductionGraph;
+import br.usp.each.saeg.subsumption.analysis.ReductionNode;
+import br.usp.each.saeg.subsumption.analysis.SubsumptionAnalyzer;
+import br.usp.each.saeg.subsumption.analysis.SubsumptionGraph;
 import br.usp.each.saeg.subsumption.graphdua.Dua;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LineNumberNode;
@@ -30,8 +34,9 @@ public class MethodInfo {
     DefUseChain[] globalChains;
     DefUseChain[] blockChains;
     List<Dua> duas;
-    HashMap<Integer, List<DefUseChain>> dua2DefUseChains;
-
+    HashMap<Integer, List<DefUseChain>> dua2DefUseChains = new HashMap<>();
+    HashMap<DefUseChain, Integer> idDefUseChain = new HashMap<>();
+    ReductionGraph rg;
 
     String owner;
 
@@ -42,7 +47,7 @@ public class MethodInfo {
         this.signature = mn.signature;
         p = new Program();
         duas = new LinkedList<>();
-        dua2DefUseChains = new HashMap<>();
+        //dua2DefUseChains = new HashMap<>();
     }
 
     public MethodInfo(String name, Program prg, List<Dua> lstduas) {
@@ -50,24 +55,7 @@ public class MethodInfo {
         p = prg;
         vars = new Variable[prg.numberOfVars()];
         duas = lstduas;
-        dua2DefUseChains = new HashMap<>();
-//        lines = new int[prg.getGraph().size()];
-//        for(int i = 1; i <= lines.length;++i) lines[i-1] = i;
-//
-//        Iterator<Dua> it = lstduas.iterator();
-//
-//        while(it.hasNext()) {
-//            DefUseChain dfc;
-//            Dua d = it.next();
-//            if(d.isCUse()) {
-//                dfc = new DefUseChain(d.def().id(), d.use().id(), d.var());
-//            }
-//            else
-//                dfc = new DefUseChain(d.def().id(), d.use().id(), d.to().id(), d.var());
-//            List<DefUseChain> lstdfc = new LinkedList<DefUseChain>();
-//            lstdfc.add(dfc);
-//            dua2DefUseChains.put(d.hashCode(),lstdfc);
-//        }
+        //dua2DefUseChains = new HashMap<>();
     }
 
     public void createMethodCFG() throws AnalyzerException {
@@ -113,20 +101,6 @@ public class MethodInfo {
             visitedBlks[i] = false;
 
         connectNewExitNode(p.getGraph().entry(), visitedBlks);
-
-        // Find the
-//        // Find inverse graph
-//        p.createInvGraph(p.getGraph());
-//
-//        p.getInvGraph().setExit(p.getGraph().entry());
-//        p.getInvGraph().setEntry(p.getGraph().exit());
-
-        // Find reverse PostOrder
-
-//        p.getGraph().findReversePostOrder();
-//        p.getGraph().ajustSucessorsInReversePostOrder();
-//        p.getInvGraph().findReversePostOrder();
-//        p.getInvGraph().ajustSucessorsInReversePostOrder();
     }
 
     void visitInstruction(Program p, int ins, boolean[] vis) {
@@ -221,8 +195,12 @@ public class MethodInfo {
                 flowAnalyzer.getLeaders(), flowAnalyzer.getBasicBlocks());
 
         Dua d;
+        int idDfc = 0;
 
         for (final DefUseChain c : globalChains) {
+            idDefUseChain.put(c, idDfc);
+            idDfc++;
+
             Block defblk, cuseblk, targetblk;
 
             defblk = p.getGraph().get(leaders[c.def]);
@@ -369,11 +347,100 @@ public class MethodInfo {
         return this.p;
     }
 
-    public void setProgram(Program prg) { this.p = prg; }
+    public void setProgram(Program prg) {
+        this.p = prg;
+    }
 
-    public HashMap<Integer,List<DefUseChain>> getDefChainsMap() { return dua2DefUseChains; }
+    public HashMap<Integer, List<DefUseChain>> getDefChainsMap() {
+        return dua2DefUseChains;
+    }
 
-    public String getName() { return this.mn.name;}
+    public String getName() {
+        return this.mn.name;
+    }
+
+    public void setReductionGraph(ReductionGraph rg) {
+        this.rg = rg;
+    }
+
+    public String toJsonSubsumption(StringBuffer sb) {
+        Dua subsumer = null;
+
+        sb.append("{ \"Name\" : \"" + getName() + "\" ,\n");
+
+        sb.append("\"Subsumers\" : " + rg.unconstrainedNodes().size() + ",\n");
+
+        Iterator<ReductionNode> it = rg.unconstrainedNodes().iterator();
+
+        int noSubsumers = 0;
+        while (it.hasNext()) {
+            ReductionNode r = it.next();
+            sb.append("\"" + noSubsumers + "\" : [ ");
+
+            Iterator<Dua> itDua = r.getListDuas().iterator();
+
+            while (itDua.hasNext()) {
+                subsumer = itDua.next();
+                Iterator<DefUseChain> itDfc = dua2DefUseChains.get(subsumer.hashCode()).iterator();
+                while (itDfc.hasNext()) {
+                    DefUseChain dfc = itDfc.next();
+                    sb.append(idDefUseChain.get(dfc) + ", ");
+                }
+            }
+
+            sb.append("],");
+
+            sb.append(" \"S" + noSubsumers + "\" : [");
+
+            SubsumptionGraph sg = rg.getSubsumptionGraph();
+            SubsumptionAnalyzer sa = sg.getSubsumptionAnalyzer();
+
+            int idDua = sg.getDuaId(subsumer);
+
+            BitSet subsumptionVector = sg.getSubsumptionVector()[idDua];
+            if (subsumptionVector != null) {
+                if (!subsumptionVector.isEmpty()) {
+                    int idSubDua = -1;
+                    while ((idSubDua = subsumptionVector.nextSetBit(idSubDua + 1)) != -1) {
+                        Dua subsuming = sa.getDuaFromId(idSubDua);
+                        Iterator<DefUseChain> itDfc = dua2DefUseChains.get(subsuming.hashCode()).iterator();
+                        while (itDfc.hasNext()) {
+                            DefUseChain dfc = itDfc.next();
+                            sb.append(idDefUseChain.get(dfc) + ", ");
+                        }
+                    }
+                    sb.append(" ],");
+                }
+                sb.append("\n");
+            } else
+                System.out.println("Warning: Subsumption vector is null for dua:" + subsumer.toString());
+            noSubsumers++;
+        }
+        sb.append("},");
+        return sb.toString();
+    }
+
+
+    public String toJsonDuas(StringBuffer sb) {
+        sb.append("{ \"Name\" : \"" + getName() + "\" ,\n");
+
+        sb.append("\"Duas\" : " + idDefUseChain.size() + ",\n");
+
+
+        for (int idDfc = 0; idDfc < idDefUseChain.size(); idDfc++) {
+            DefUseChain dfc = globalChains[idDfc];
+
+            sb.append("\"" + idDfc + "\" : ");
+            if (dfc.isComputationalChain())
+                sb.append(" \"(" + lines[dfc.def] + "," + lines[dfc.use] + ", " + p.variable(dfc.var) + ")\",\n");
+            else
+                sb.append(" \"(" + lines[dfc.def] + ",(" + lines[dfc.use] + "," + lines[dfc.target] + "), " + p.variable(dfc.var) + ")\",\n");
+
+        }
+        sb.append("},");
+        return sb.toString();
+    }
+
 
     public String graphDefUseToDot() {
         final StringBuilder sb = new StringBuilder();

@@ -1,5 +1,7 @@
 package br.usp.each.saeg.subsumption.input;
 
+import br.usp.each.saeg.subsumption.analysis.ReductionGraph;
+import br.usp.each.saeg.subsumption.analysis.SubsumptionGraph;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
@@ -28,7 +30,7 @@ public class ClassInfo {
         this.dir = clazzname;
         this.clazzname = clazzname;
 
-        String path = dir+clazzname;
+        String path = dir + clazzname;
 
         try {
 
@@ -63,7 +65,7 @@ public class ClassInfo {
             access = cr.getAccess();
             genAllMethodInfo();
         } catch (IOException | AnalyzerException e) {
-            System.out.println("Failed to open class file:"+cn.name);
+            System.out.println("Failed to open class file:" + cn.name);
         }
     }
 
@@ -73,21 +75,68 @@ public class ClassInfo {
             // 1. Interfaces
             if ((access & Opcodes.ACC_INTERFACE) != 0)
                 return;
-            // 2. Abstract methods
+                // 2. Abstract methods
             else if ((access & Opcodes.ACC_ABSTRACT) != 0)
                 return;
-            // 3. Static class initialization
+                // 3. Static class initialization
             else if (m.name.equals("<clinit>"))
                 return;
 
-            MethodInfo mi = new MethodInfo(cn.name,m);
+            MethodInfo mi = new MethodInfo(cn.name, m);
             methods.add(mi);
-            mapMethod.put(m.signature,mi);
+            mapMethod.put(m.signature, mi);
         }
 
     }
 
-    public List<MethodInfo> getMethodsInfo() { return methods;}
+    public String toJsonSubsumption() {
+        StringBuffer sb = new StringBuffer();
 
-    public String getName() { return cn.name;}
+        String methodname = getName().replace(File.separator, ".");
+
+        sb.append("{\n\"Classe\" : " + "\"" + methodname + "\", \n\"Methods\" : [");
+
+
+        for (MethodInfo mi : getMethodsInfo()) {
+            if (mi.getDuas().isEmpty())
+                continue;
+
+            SubsumptionGraph sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
+
+            ReductionGraph rg = new ReductionGraph(sg);
+
+            mi.setReductionGraph(rg);
+
+            mi.toJsonSubsumption(sb);
+        }
+
+        sb.append("]\n}");
+
+        return sb.toString();
+    }
+
+    public String toJsonDuas() {
+        StringBuffer sb = new StringBuffer();
+
+        String methodname = getName().replace(File.separator, ".");
+
+        sb.append("{\n\"Classe\" : " + "\"" + methodname + "\", \n\"Methods\" : [");
+
+        for (MethodInfo mi : getMethodsInfo()) {
+            if (mi.getDuas().isEmpty()) continue;
+            mi.toJsonDuas(sb);
+        }
+        sb.append("]\n}");
+        return sb.toString();
+    }
+
+    public List<MethodInfo> getMethodsInfo() {
+        return methods;
+    }
+
+    public String getName() {
+        return cn.name;
+    }
+
+
 }
