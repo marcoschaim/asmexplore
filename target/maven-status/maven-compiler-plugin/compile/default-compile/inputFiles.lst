@@ -7,6 +7,7 @@
 /Users/marcoschaim/projetos/asmexplore/src/main/java/br/usp/each/saeg/subsumption/cli/GraphDuaGenerate.java
 /Users/marcoschaim/projetos/asmexplore/src/main/java/br/usp/each/saeg/subsumption/cli/Analyzer.java
 /Users/marcoschaim/projetos/asmexplore/src/main/java/br/usp/each/saeg/subsumption/graphdua/Dua.java
+/Users/marcoschaim/projetos/asmexplore/src/main/java/br/usp/each/saeg/subsumption/analysis/NodeDominance.java
 /Users/marcoschaim/projetos/asmexplore/src/main/java/br/usp/each/saeg/subsumption/input/DataControlFlowInfoGenerator.java
 /Users/marcoschaim/projetos/asmexplore/src/main/java/br/usp/each/saeg/subsumption/graphdua/Subgraph.java
 /Users/marcoschaim/projetos/asmexplore/src/main/java/br/usp/each/saeg/subsumption/graphdua/Flowgraph.java

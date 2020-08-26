@@ -3,12 +3,8 @@
     <output-path>$PROJECT_DIR$/out/artifacts/asmexplore_jar</output-path>
     <root id="archive" name="asmexplore.jar">
       <element id="module-output" name="asmexplore" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/ow2/asm/asm-util/7.3.1/asm-util-7.3.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/junit/junit/4.11/junit-4.11.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/ow2/asm/asm/7.3.1/asm-7.3.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/br/usp/each/saeg/saeg-commons/0.0.5/saeg-commons-0.0.5.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/ow2/asm/asm-tree/7.3.1/asm-tree-7.3.1.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/ow2/asm/asm-analysis/7.3.1/asm-analysis-7.3.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/br/usp/each/saeg/asm-defuse/0.0.6/asm-defuse-0.0.6.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/args4j/args4j/2.32/args4j-2.32.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/br/usp/each/saeg/opal/0.0.4/opal-0.0.4.jar" path-in-jar="/" />

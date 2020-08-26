@@ -3,6 +3,7 @@ package br.usp.each.saeg.subsumption.input;
 import junit.framework.TestCase;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -49,28 +50,28 @@ public class ClassInfoTest extends TestCase {
     }
 
     //@Test
-    public void test2() {
-        System.out.println("MethodInfo");
-        String dir = "/Users/marcoschaim/projetos/data/MethodInfo/";
-        String clazzname = "MethodInfo.class";
-        try {
-            cl = new ClassInfo(dir, clazzname);
-            cl.genAllMethodInfo();
-
-            for (MethodInfo mi : cl.getMethodsInfo()) {
-                mi.createMethodCFG();
-                mi.createMethodDuas();
-//                mi.printMethodCFG();
-//                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
-            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println(cl.toJsonSubsumption());
-        System.out.println(cl.toJsonDuas());
-    }
+//    public void test2() {
+//        System.out.println("MethodInfo");
+//        String dir = "/Users/marcoschaim/projetos/data/MethodInfo/";
+//        String clazzname = "MethodInfo.class";
+//        try {
+//            cl = new ClassInfo(dir, clazzname);
+//            cl.genAllMethodInfo();
+//
+//            for (MethodInfo mi : cl.getMethodsInfo()) {
+//                mi.createMethodCFG();
+//                mi.createMethodDuas();
+////                mi.printMethodCFG();
+////                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+//            }
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(cl.toJsonSubsumption());
+//        System.out.println(cl.toJsonDuas());
+//    }
 
     //@Test
     public void test3() {
@@ -87,8 +88,10 @@ public class ClassInfoTest extends TestCase {
 //                mi.printMethodCFG();
                 //writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
             }
-            System.out.println(cl.toJsonSubsumption());
-            System.out.println(cl.toJsonDuas());
+//            System.out.println(cl.toJsonSubsumption());
+//            System.out.println(cl.toJsonDuas());
+            writeBufferToFile(dir, cl.getName().replace(File.separator, ".") + ".sub.json", cl.toJsonSubsumption());
+            writeBufferToFile(dir, cl.getName().replace(File.separator, ".") + ".dua.json", cl.toJsonDuas());
         } catch (Exception e) {
             e.printStackTrace();
         }

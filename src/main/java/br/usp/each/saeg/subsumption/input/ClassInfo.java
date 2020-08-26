@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -94,10 +95,13 @@ public class ClassInfo {
 
         String methodname = getName().replace(File.separator, ".");
 
-        sb.append("{\n\"Classe\" : " + "\"" + methodname + "\", \n\"Methods\" : [");
+        sb.append("{\n\"Class\" : " + "\"" + methodname + "\", \n\"Methods\" : [");
 
+        boolean first = true;
 
-        for (MethodInfo mi : getMethodsInfo()) {
+        Iterator<MethodInfo> it = getMethodsInfo().iterator();
+        while (it.hasNext()) {
+            MethodInfo mi = it.next();
             if (mi.getDuas().isEmpty())
                 continue;
 
@@ -106,6 +110,11 @@ public class ClassInfo {
             ReductionGraph rg = new ReductionGraph(sg);
 
             mi.setReductionGraph(rg);
+
+            if (first)
+                first = false;
+            else
+                sb.append(",");
 
             mi.toJsonSubsumption(sb);
         }
@@ -120,10 +129,15 @@ public class ClassInfo {
 
         String methodname = getName().replace(File.separator, ".");
 
-        sb.append("{\n\"Classe\" : " + "\"" + methodname + "\", \n\"Methods\" : [");
+        sb.append("{\n\"Class\" : " + "\"" + methodname + "\", \n\"Methods\" : [");
 
+        boolean first = true;
         for (MethodInfo mi : getMethodsInfo()) {
             if (mi.getDuas().isEmpty()) continue;
+            if (first) {
+                first = false;
+            } else
+                sb.append(",");
             mi.toJsonDuas(sb);
         }
         sb.append("]\n}");

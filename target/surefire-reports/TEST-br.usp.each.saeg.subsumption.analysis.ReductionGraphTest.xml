@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="7" failures="0" name="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" time="36.905" errors="0" skipped="0">
+<testsuite tests="7" failures="0" name="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" time="37.196" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="12+33"/>
@@ -56,11 +56,11 @@
     <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
     <property name="sun.cpu.endian" value="little"/>
   </properties>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test01" time="0.034"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test0" time="0.022"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test1" time="0.038"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test2" time="0"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test3" time="0.022"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test4" time="0.233"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5" time="36.556"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test01" time="0.025"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test0" time="0.028"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test1" time="0.044"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test2" time="0.002"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test3" time="0.033"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test4" time="0.191"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5" time="36.873"/>
 </testsuite>

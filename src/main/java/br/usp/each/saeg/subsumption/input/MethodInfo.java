@@ -368,6 +368,8 @@ public class MethodInfo {
 
         sb.append("{ \"Name\" : \"" + getName() + "\" ,\n");
 
+        sb.append("\"Duas\" : \"" + idDefUseChain.size() + "\" ,\n");
+
         sb.append("\"Subsumers\" : " + rg.unconstrainedNodes().size() + ",\n");
 
         Iterator<ReductionNode> it = rg.unconstrainedNodes().iterator();
@@ -378,13 +380,18 @@ public class MethodInfo {
             sb.append("\"" + noSubsumers + "\" : [ ");
 
             Iterator<Dua> itDua = r.getListDuas().iterator();
+            boolean first = true;
 
             while (itDua.hasNext()) {
                 subsumer = itDua.next();
                 Iterator<DefUseChain> itDfc = dua2DefUseChains.get(subsumer.hashCode()).iterator();
                 while (itDfc.hasNext()) {
                     DefUseChain dfc = itDfc.next();
-                    sb.append(idDefUseChain.get(dfc) + ", ");
+                    if (first)
+                        first = false;
+                    else
+                        sb.append(", ");
+                    sb.append(idDefUseChain.get(dfc));
                 }
             }
 
@@ -401,22 +408,31 @@ public class MethodInfo {
             if (subsumptionVector != null) {
                 if (!subsumptionVector.isEmpty()) {
                     int idSubDua = -1;
+                    first = true;
+
                     while ((idSubDua = subsumptionVector.nextSetBit(idSubDua + 1)) != -1) {
                         Dua subsuming = sa.getDuaFromId(idSubDua);
                         Iterator<DefUseChain> itDfc = dua2DefUseChains.get(subsuming.hashCode()).iterator();
                         while (itDfc.hasNext()) {
                             DefUseChain dfc = itDfc.next();
-                            sb.append(idDefUseChain.get(dfc) + ", ");
+                            if (first) {
+                                first = false;
+                            } else
+                                sb.append(", ");
+                            sb.append(idDefUseChain.get(dfc));
                         }
                     }
-                    sb.append(" ],");
+                    if (noSubsumers != (rg.unconstrainedNodes().size() - 1))
+                        sb.append(" ],");
+                    else
+                        sb.append(" ]");
                 }
                 sb.append("\n");
             } else
                 System.out.println("Warning: Subsumption vector is null for dua:" + subsumer.toString());
             noSubsumers++;
         }
-        sb.append("},");
+        sb.append("}");
         return sb.toString();
     }
 
@@ -430,14 +446,18 @@ public class MethodInfo {
         for (int idDfc = 0; idDfc < idDefUseChain.size(); idDfc++) {
             DefUseChain dfc = globalChains[idDfc];
 
+            if (idDfc != 0)
+                sb.append(",\n");
+
             sb.append("\"" + idDfc + "\" : ");
+
             if (dfc.isComputationalChain())
-                sb.append(" \"(" + lines[dfc.def] + "," + lines[dfc.use] + ", " + p.variable(dfc.var) + ")\",\n");
+                sb.append(" \"(" + lines[dfc.def] + "," + lines[dfc.use] + ", " + p.variable(dfc.var) + ")\"");
             else
-                sb.append(" \"(" + lines[dfc.def] + ",(" + lines[dfc.use] + "," + lines[dfc.target] + "), " + p.variable(dfc.var) + ")\",\n");
+                sb.append(" \"(" + lines[dfc.def] + ",(" + lines[dfc.use] + "," + lines[dfc.target] + "), " + p.variable(dfc.var) + ")\"");
 
         }
-        sb.append("},");
+        sb.append("}");
         return sb.toString();
     }
 
