@@ -18,7 +18,6 @@ public class SubsumptionGraph extends Graph<SubsumptionNode> {
     }
     public SubsumptionGraph(Program p, List<Dua> listDuas) {
         analyzer = new SubsumptionAnalyzer(p, listDuas);
-
         subsumptionVector = analyzer.findAllDuaSubsumption();
 
         Iterator<Dua> itDua = listDuas.iterator();
@@ -33,10 +32,12 @@ public class SubsumptionGraph extends Graph<SubsumptionNode> {
             Dua d = itDua.next();
 
             int idDua = analyzer.getDuaId(d);
-            if (subsumptionVector[idDua] != null) {
-                if (!subsumptionVector[idDua].isEmpty()) {
+            BitSet subsumed = subsumptionVector[idDua];
+
+            if (subsumed != null) {
+                if (!subsumed.isEmpty()) {
                     int idSubDua = -1;
-                    while ((idSubDua = subsumptionVector[idDua].nextSetBit(idSubDua + 1)) != -1) {
+                    while ((idSubDua = subsumed.nextSetBit(idSubDua + 1)) != -1) {
                         Dua sub = analyzer.getDuaFromId(idSubDua);
                         addEgde(sub, d);
                     }

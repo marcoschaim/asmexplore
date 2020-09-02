@@ -642,10 +642,12 @@ public class ReductionGraphTest extends TestCase {
     }
 
     @Test
-    public void test5(){
+    public void test5() {
         System.out.println("BOBYQAOptimizer");
+        String dir = "/Users/marcoschaim/projetos/data/bobyqb/";
+        String clazz = "BOBYQAOptimizer.class";
         try {
-            cl = new ClassInfo("/Users/marcoschaim/projetos/data/bobyqb/", "BOBYQAOptimizer.class");
+            cl = new ClassInfo(dir, clazz);
             cl.genAllMethodInfo();
 
             for (MethodInfo mi : cl.getMethodsInfo()) {
@@ -654,41 +656,167 @@ public class ReductionGraphTest extends TestCase {
                 if (mi.getDuas().isEmpty())
                     continue;
 
-                //mi.printMethodCFG();
-                //mi.printMethodDuas();
-                //writeBufferToFile("/Users/marcoschaim/projetos/data/BOBYQAOptimizer/",mi.getName()+".gz",mi.graphDefUseToDot());
-
                 sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
-                //System.out.println(sg);
 
                 rg = new ReductionGraph(sg);
                 rg.setDua2DefUseChains(mi.getDefChainsMap());
                 rg.setLines(mi.getLines());
-                //System.out.println(rg);
 
-                System.out.println("#"+mi.getName()+ "Data method on "+ mi.getName() + ":");
-                System.out.println("#"+mi.getName()+ "# duas:" + mi.getDuas().size());
-                System.out.println("#"+mi.getName()+ "# Unconstrained duas:" + rg.unconstrainedNodes().size());
-                System.out.println("#"+mi.getName()+ "# Reduction nodes:" + rg.size());
+                System.out.println("#" + mi.getName() + "Data method on " + mi.getName() + ":");
+                System.out.println("#" + mi.getName() + "# duas:" + mi.getDuas().size());
+                System.out.println("#" + mi.getName() + "# Unconstrained duas:" + rg.unconstrainedNodes().size());
+                System.out.println("#" + mi.getName() + "# Reduction nodes:" + rg.size());
 
-//                Iterator<ReductionNode> it = rg.unconstrainedNodes().iterator();
-//                while (it.hasNext()){
-//                    ReductionNode u = it.next();
-//                    System.out.println(u);
-//                }
-//
-//                System.out.println("Transitive Clousure:");
 
                 rg.findTransitiveClosure();
-                //writeBufferToFile("/Users/marcoschaim/projetos/data/BOBYQAOptimizer/", mi.getName()+".dot",rg.toDot());
+                //writeBufferToFile(dir, mi.getName()+".dot",rg.toDot());
             }
 
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        }
+    }
 
+    @Test
+    public void test5_1() {
+        System.out.println("RandomDataGenerator");
+        try {
+            String dir = "/Users/marcoschaim/projetos/data/RandomDataGenerator/";
+            String clazz = "RandomDataGenerator.class";
+            cl = new ClassInfo(dir, clazz);
+            cl.genAllMethodInfo();
+
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+                if (mi.getDuas().isEmpty())
+                    continue;
+
+                writeBufferToFile(dir, mi.getName() + ".gdu", mi.graphDefUseToDot());
+
+                sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
+
+
+                rg = new ReductionGraph(sg);
+                rg.setDua2DefUseChains(mi.getDefChainsMap());
+                rg.setLines(mi.getLines());
+
+                System.out.println("#" + mi.getName() + "Data method on " + mi.getName() + ":");
+                System.out.println("#" + mi.getName() + "# duas:" + mi.getDuas().size());
+                System.out.println("#" + mi.getName() + "# Unconstrained duas:" + rg.unconstrainedNodes().size());
+                System.out.println("#" + mi.getName() + "# Reduction nodes:" + rg.size());
+
+                rg.findTransitiveClosure();
+                writeBufferToFile(dir, mi.getName() + ".dot", rg.toDot());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void test5_2() {
+        System.out.println("ContinuousOutputModel");
+        try {
+            String dir = "/Users/marcoschaim/projetos/data/ContinuousOutputModel/";
+            String clazz = "ContinuousOutputModel.class";
+            cl = new ClassInfo(dir, clazz);
+            cl.genAllMethodInfo();
+
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+                if (mi.getDuas().isEmpty())
+                    continue;
+
+                writeBufferToFile(dir, mi.getName() + ".gdu", mi.graphDefUseToDot());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+                sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
+
+                rg = new ReductionGraph(sg);
+                rg.setDua2DefUseChains(mi.getDefChainsMap());
+                rg.setLines(mi.getLines());
+
+                System.out.println("#" + mi.getName() + "Data method on " + mi.getName() + ":");
+                System.out.println("#" + mi.getName() + "# duas:" + mi.getDuas().size());
+                System.out.println("#" + mi.getName() + "# Unconstrained duas:" + rg.unconstrainedNodes().size());
+                System.out.println("#" + mi.getName() + "# Reduction nodes:" + rg.size());
+
+                rg.findTransitiveClosure();
+                writeBufferToFile(dir, mi.getName() + ".dot", rg.toDot());
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void test5_3() {
+        System.out.println("AggregateSummaryStatistics");
+        try {
+            String dir = "/Users/marcoschaim/projetos/data/AggregateSummaryStatistics/";
+            String clazz = "AggregateSummaryStatistics.class";
+            cl = new ClassInfo(dir, clazz);
+            cl.genAllMethodInfo();
+
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+                if (mi.getDuas().isEmpty())
+                    continue;
+
+                writeBufferToFile(dir, mi.getName() + ".gdu", mi.graphDefUseToDot());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+                sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
+
+                rg = new ReductionGraph(sg);
+                rg.setDua2DefUseChains(mi.getDefChainsMap());
+                rg.setLines(mi.getLines());
+
+                System.out.println("#" + mi.getName() + "Data method on " + mi.getName() + ":");
+                System.out.println("#" + mi.getName() + "# duas:" + mi.getDuas().size());
+                System.out.println("#" + mi.getName() + "# Unconstrained duas:" + rg.unconstrainedNodes().size());
+                System.out.println("#" + mi.getName() + "# Reduction nodes:" + rg.size());
+
+                rg.findTransitiveClosure();
+                writeBufferToFile(dir, mi.getName() + ".dot", rg.toDot());
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void test6() {
+        System.out.println("Fibonacci");
+        String dir = "/Users/marcoschaim/projetos/fibonacci/";
+        String clazzname = "Fibonacci.class";
+        try {
+            cl = new ClassInfo(dir, clazzname);
+            cl.genAllMethodInfo();
+
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+                sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
+                //System.out.println(sg);
+
+                rg = new ReductionGraph(sg);
+                rg.setDua2DefUseChains(mi.getDefChainsMap());
+                rg.setLines(mi.getLines());
+                rg.findTransitiveClosure();
+                System.out.println(rg.toDot());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     void writeBufferToFile(String dir, String name, String s) {
         // Convert the string to a
         // byte array.

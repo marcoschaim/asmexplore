@@ -94,6 +94,11 @@ public class SubsumptionAnalyzer {
         BitSet oldout = new BitSet(duas.size());
         BitSet sleepy = new BitSet(duas.size());
         BitSet covered;
+
+        NodeDominance<Node> dominanceGraphdua = new NodeDominance<Node>(graphdua, null);
+        dominanceGraphdua.findDominanceGraphdua();
+//        System.out.println(dominanceGraphdua.toStringGraphduaDominance());
+
         Iterator<Node> itNode;
 
         boolean changed = true;
@@ -136,8 +141,15 @@ public class SubsumptionAnalyzer {
 
                 sleepy.clear();
 
-                for (Node pred : graphdua.predecessors(n))
-                    sleepy.or(pred.getSleepy());
+                for (Node pred : graphdua.predecessors(n)) {
+                    if (!dominanceGraphdua.isDominatorInGraphdua(n, pred)) {
+                        sleepy.or(pred.getSleepy());
+                    }
+//                    else
+//                    {
+//                        System.out.println("Back arc(" + pred.block().id()+"("+pred.idSubgraph()+")" + "," + n.block().id()+"("+n.idSubgraph() + "))");
+//                    }
+                }
 
                 n.getCovered().clear();
 
@@ -164,7 +176,7 @@ public class SubsumptionAnalyzer {
                 n.getOut().or(temp);
                 n.getOut().or(n.getCovered());
 
-                //covered = n.getCovered();
+//                covered = n.getCovered();
 //                System.out.println("Covered "+printNode(n)+": "+covered);
 
                 if (!n.getOut().equals(oldout))
@@ -177,9 +189,9 @@ public class SubsumptionAnalyzer {
 
 
     public BitSet findDua2DuasSubsumption(Dua d) {
-        analyzer = new CoverageAnalyzer(program.getGraph(), d);
+        analyzer = new CoverageAnalyzer(program.getGraph(), program.getInvGraph(), d);
         Graphdua graphdua = analyzer.findGraphdua();
-
+//        System.out.println(graphdua.toDot());
         computeNodeSets(graphdua);
         computeInAndOutSubmission(graphdua);
 

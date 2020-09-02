@@ -145,15 +145,17 @@ public class GraphduaTest extends TestCase {
 
     @Test
     public void test3() {
-        System.out.println("SourceMapConsumerV3$UnmappedEntry");
+        System.out.println("RandomDataGenerator");
+        String dir = "/Users/marcoschaim/projetos/data/RandomDataGenerator/";
 
         try {
-            cl = new ClassInfo("/Users/marcoschaim/projetos/data/closure/build/classes/com/google/debugging/sourcemap/", "SourceMapConsumerV2.class");
+            cl = new ClassInfo(dir, "RandomDataGenerator.class");
             cl.genAllMethodInfo();
 
             System.out.println("Number of Methods:" + cl.getMethodsInfo().size());
             for (MethodInfo mi : cl.getMethodsInfo()) {
-                Dua d; int counter = 1;
+                Dua d;
+                int counter = 1;
                 mi.createMethodCFG();
                 mi.createMethodDuas();
 
@@ -167,8 +169,46 @@ public class GraphduaTest extends TestCase {
                 while (itdua.hasNext()) {
                     d = itdua.next();
                     analyzer = new CoverageAnalyzer(mi.getProgram().getGraph(), d);
-                    System.out.println(counter+":" + d.toString());
-                    System.out.println(analyzer.findGraphdua());
+                    System.out.println(counter + ":" + d.toString());
+                    System.out.println(analyzer.findGraphdua().toDot());
+                    ++counter;
+                }
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void test3_1() {
+        System.out.println("AggregateSummaryStatistics");
+        String dir = "/Users/marcoschaim/projetos/data/AggregateSummaryStatistics/";
+        String clazz = "AggregateSummaryStatistics.class";
+
+        try {
+            cl = new ClassInfo(dir, clazz);
+            cl.genAllMethodInfo();
+
+            System.out.println("Number of Methods:" + cl.getMethodsInfo().size());
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                Dua d;
+                int counter = 1;
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+
+                Iterator<Dua> itdua = mi.getDuas().iterator();
+
+                mi.printMethodCFG();
+                printGraphDefUse(mi.getProgram().getGraph());
+
+                if (mi.getDuas().isEmpty())
+                    continue;
+                while (itdua.hasNext()) {
+                    d = itdua.next();
+                    analyzer = new CoverageAnalyzer(mi.getProgram().getGraph(), d);
+                    System.out.println(counter + ":" + d.toString());
+                    System.out.println(analyzer.findGraphdua().toDot());
                     ++counter;
                 }
             }

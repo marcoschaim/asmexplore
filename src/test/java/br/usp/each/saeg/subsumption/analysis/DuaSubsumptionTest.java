@@ -337,9 +337,62 @@ public class DuaSubsumptionTest extends TestCase {
                         System.out.println();
                     }
                 }
-                System.out.println("Total of duas covered by touring only nodes of "+mi.getName()+":"+allSubsumed.cardinality());
+                System.out.println("Total of duas covered by touring only nodes of " + mi.getName() + ":" + allSubsumed.cardinality());
                 //writeBufferToFile(dir, mi.getName() + ".ns", graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
                 System.out.println(graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void test7() {
+        System.out.println("AggregateSummaryStatistics");
+        String dir = "/Users/marcoschaim/projetos/data/AggregateSummaryStatistics/";
+        String clazzname = "AggregateSummaryStatistics.class";
+        try {
+            cl = new ClassInfo(dir, clazzname);
+            cl.genAllMethodInfo();
+
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+                if (mi.getDuas().isEmpty())
+                    if (!mi.getName().equals("Aggregate"))
+                        continue;
+
+                Dua d;
+                int counter = 1;
+                Iterator<Dua> itdua = mi.getDuas().iterator();
+
+
+                duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(), mi.getDuas());
+
+                while (itdua.hasNext()) {
+                    d = itdua.next();
+                    if (counter == 34) {
+                        flowAnalyzer = new CoverageAnalyzer(mi.getProgram().getGraph(), d);
+                        System.out.println(counter + ":" + d.toString());
+                        Graphdua grf = flowAnalyzer.findGraphdua();
+                        System.out.println("forward graphdua:\n" + grf.toDot());
+                        BitSet subsumed = duaSubAnalyzer.findDua2DuasSubsumption(d);
+//
+                        System.out.println(counter + ":" + d.toString() + ":" + subsumed);
+
+                        if (!subsumed.isEmpty()) {
+                            int idDua = -1;
+                            while ((idDua = subsumed.nextSetBit(idDua + 1)) != -1) {
+                                Dua subDua = duaSubAnalyzer.getDuaFromId(idDua);
+                                System.out.println("\t" + subDua.toString());
+                            }
+                        } else
+                            System.out.println("\tUnconstrained");
+                    }
+                    ++counter;
+                }
+
             }
 
 

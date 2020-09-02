@@ -241,6 +241,10 @@ public class Graphdua extends Graph<Node> {
         return rPostOrderArray;
     }
 
+    public boolean isRetreatingEdge(Node from, Node to) {
+        return rPostOrder[node2bit.get(from)] >= rPostOrder[node2bit.get(to)];
+    }
+
     public Iterator<Node> iterator() {
         return rPostOrderList.iterator();
     }

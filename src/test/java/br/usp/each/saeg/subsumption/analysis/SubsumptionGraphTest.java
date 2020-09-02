@@ -92,7 +92,7 @@ public class SubsumptionGraphTest extends TestCase {
                         System.out.println();
                     }
                 }
-                System.out.println("Total of duas covered by edges: "+totalSubsumed.cardinality());
+                System.out.println("Total of duas covered by edges: " + totalSubsumed.cardinality());
             }
 
 
@@ -100,4 +100,30 @@ public class SubsumptionGraphTest extends TestCase {
             e.printStackTrace();
         }
     }
+
+    public void test3() {
+        System.out.println("AggregateSummaryStatistics");
+        try {
+            cl = new ClassInfo("/Users/marcoschaim/projetos/data/AggregateSummaryStatistics/", "AggregateSummaryStatistics.class");
+            cl.genAllMethodInfo();
+
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+
+                if (mi.getDuas().isEmpty())
+                    continue;
+
+                mi.printMethodCFG();
+                mi.printMethodDuas();
+                subduagraph = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
+                System.out.println(subduagraph);
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

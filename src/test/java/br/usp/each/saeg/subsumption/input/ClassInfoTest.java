@@ -33,10 +33,12 @@ public class ClassInfoTest extends TestCase {
         }
     }
 
-    public void test12() {
-        System.out.println("Teste");
+    public void test1_2() {
+        System.out.println("Max");
+        String dir = "/Users/marcoschaim/projetos/data/max/";
+        String clazz = "Max.class";
         try {
-            cl = new ClassInfo("/Users/marcoschaim/projetos/data/max/", "Max.class");
+            cl = new ClassInfo(dir, clazz);
             cl.genAllMethodInfo();
             for (MethodInfo mi : cl.getMethodsInfo()) {
                 mi.createMethodCFG();
@@ -50,34 +52,10 @@ public class ClassInfoTest extends TestCase {
     }
 
     //@Test
-//    public void test2() {
-//        System.out.println("MethodInfo");
-//        String dir = "/Users/marcoschaim/projetos/data/MethodInfo/";
-//        String clazzname = "MethodInfo.class";
-//        try {
-//            cl = new ClassInfo(dir, clazzname);
-//            cl.genAllMethodInfo();
-//
-//            for (MethodInfo mi : cl.getMethodsInfo()) {
-//                mi.createMethodCFG();
-//                mi.createMethodDuas();
-////                mi.printMethodCFG();
-////                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
-//            }
-//
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(cl.toJsonSubsumption());
-//        System.out.println(cl.toJsonDuas());
-//    }
-
-    //@Test
-    public void test3() {
-        System.out.println("BOBYQAOptimizer");
-        String dir = "/Users/marcoschaim/projetos/data/bobyqb/";
-        String clazzname = "BOBYQAOptimizer.class";
+    public void test2() {
+        System.out.println("Fibonacci");
+        String dir = "/Users/marcoschaim/projetos/Fibonacci/";
+        String clazzname = "Fibonacci.class";
         try {
             cl = new ClassInfo(dir, clazzname);
             cl.genAllMethodInfo();
@@ -85,8 +63,84 @@ public class ClassInfoTest extends TestCase {
             for (MethodInfo mi : cl.getMethodsInfo()) {
                 mi.createMethodCFG();
                 mi.createMethodDuas();
-//                mi.printMethodCFG();
-                //writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+                if (mi.getDuas().isEmpty())
+                    continue;
+                System.out.println(mi.graphDefUseToDot());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(cl.toJsonSubsumption());
+        System.out.println(cl.toJsonDuas());
+    }
+
+    public void test2_1() {
+        System.out.println("ContinousOutputModel");
+        String dir = "/Users/marcoschaim/projetos/data/ContinuousOutputModel/";
+        String clazzname = "ContinuousOutputModel.class";
+        try {
+            cl = new ClassInfo(dir, clazzname);
+            cl.genAllMethodInfo();
+
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+                if (mi.getDuas().isEmpty())
+                    continue;
+                System.out.println(mi.graphDefUseToDot());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(cl.toJsonSubsumption());
+        System.out.println(cl.toJsonDuas());
+    }
+
+    public void test2_2() {
+        System.out.println("RandomDataGenerator");
+        String dir = "/Users/marcoschaim/projetos/data/RandomDataGenerator/";
+        String clazzname = "RandomDataGenerator.class";
+        try {
+            cl = new ClassInfo(dir, clazzname);
+            cl.genAllMethodInfo();
+
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+                if (mi.getDuas().isEmpty())
+                    continue;
+                System.out.println(mi.graphDefUseToDot());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(cl.toJsonSubsumption());
+        System.out.println(cl.toJsonDuas());
+    }
+
+    //@Test
+    public void test3() {
+        System.out.println("AggregateSummaryStatistics");
+        String dir = "/Users/marcoschaim/projetos/data/AggregateSummaryStatistics/";
+        String clazzname = "AggregateSummaryStatistics.class";
+        try {
+            cl = new ClassInfo(dir, clazzname);
+            cl.genAllMethodInfo();
+
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+//              mi.printMethodCFG();
+//              writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
             }
 //            System.out.println(cl.toJsonSubsumption());
 //            System.out.println(cl.toJsonDuas());

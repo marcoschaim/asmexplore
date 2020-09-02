@@ -36,6 +36,7 @@ public class MethodInfo {
     List<Dua> duas;
     HashMap<Integer, List<DefUseChain>> dua2DefUseChains = new HashMap<>();
     HashMap<DefUseChain, Integer> idDefUseChain = new HashMap<>();
+    HashMap<Integer, List<Integer>> dua2idDefUseChains = new HashMap<>();
     ReductionGraph rg;
 
     String owner;
@@ -199,7 +200,6 @@ public class MethodInfo {
 
         for (final DefUseChain c : globalChains) {
             idDefUseChain.put(c, idDfc);
-            idDfc++;
 
             Block defblk, cuseblk, targetblk;
 
@@ -220,11 +220,16 @@ public class MethodInfo {
             if (!dua2DefUseChains.containsKey(d.hashCode())) {
                 List<DefUseChain> l = new LinkedList<>();
                 l.add(c);
+                List<Integer> lid = new LinkedList<>();
+                lid.add(idDfc);
                 dua2DefUseChains.put(d.hashCode(), l);
+                dua2idDefUseChains.put(d.hashCode(), lid);
                 duas.add(d);
             } else {
                 dua2DefUseChains.get(d.hashCode()).add(c);
+                dua2idDefUseChains.get(d.hashCode()).add(idDfc);
             }
+            idDfc++;
         }
 
         // Find the sets Gen, Born, Kill & Sleepy associated with each block
@@ -384,14 +389,14 @@ public class MethodInfo {
 
             while (itDua.hasNext()) {
                 subsumer = itDua.next();
-                Iterator<DefUseChain> itDfc = dua2DefUseChains.get(subsumer.hashCode()).iterator();
+                Iterator<Integer> itDfc = dua2idDefUseChains.get(subsumer.hashCode()).iterator();
                 while (itDfc.hasNext()) {
-                    DefUseChain dfc = itDfc.next();
+                    int dfc = itDfc.next();
                     if (first)
                         first = false;
                     else
                         sb.append(", ");
-                    sb.append(idDefUseChain.get(dfc));
+                    sb.append(dfc);
                 }
             }
 
@@ -412,14 +417,14 @@ public class MethodInfo {
 
                     while ((idSubDua = subsumptionVector.nextSetBit(idSubDua + 1)) != -1) {
                         Dua subsuming = sa.getDuaFromId(idSubDua);
-                        Iterator<DefUseChain> itDfc = dua2DefUseChains.get(subsuming.hashCode()).iterator();
+                        Iterator<Integer> itDfc = dua2idDefUseChains.get(subsuming.hashCode()).iterator();
                         while (itDfc.hasNext()) {
-                            DefUseChain dfc = itDfc.next();
+                            int dfc = itDfc.next();
                             if (first) {
                                 first = false;
                             } else
                                 sb.append(", ");
-                            sb.append(idDefUseChain.get(dfc));
+                            sb.append(dfc);
                         }
                     }
                     if (noSubsumers != (rg.unconstrainedNodes().size() - 1))
@@ -464,7 +469,7 @@ public class MethodInfo {
 
     public String graphDefUseToDot() {
         final StringBuilder sb = new StringBuilder();
-        final boolean printLines = false;
+        final boolean printLines = true;
         sb.append("digraph " + this.name + " {\n");
 
         Iterator<Block> it = p.getGraph().iterator();
