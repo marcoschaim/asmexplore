@@ -71,17 +71,18 @@ public class ClassInfo {
     }
 
     public void genAllMethodInfo() throws AnalyzerException {
+        // Does not analyze:
+        // 1. Interfaces
+        if ((access & Opcodes.ACC_INTERFACE) != 0)
+            return;
+
         for (MethodNode m : cn.methods) {
-            // Does not analyze:
-            // 1. Interfaces
-            if ((access & Opcodes.ACC_INTERFACE) != 0)
-                return;
-                // 2. Abstract methods
-            else if ((access & Opcodes.ACC_ABSTRACT) != 0)
-                return;
+            // 2. Abstract methods
+            if ((m.access & Opcodes.ACC_ABSTRACT) != 0)
+                continue;
                 // 3. Static class initialization
             else if (m.name.equals("<clinit>"))
-                return;
+                continue;
 
             MethodInfo mi = new MethodInfo(cn.name, m);
             methods.add(mi);

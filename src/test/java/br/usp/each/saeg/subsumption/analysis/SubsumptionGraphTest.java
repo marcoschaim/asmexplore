@@ -102,9 +102,9 @@ public class SubsumptionGraphTest extends TestCase {
     }
 
     public void test3() {
-        System.out.println("AggregateSummaryStatistics");
+        System.out.println("Scanner");
         try {
-            cl = new ClassInfo("/Users/marcoschaim/projetos/data/AggregateSummaryStatistics/", "AggregateSummaryStatistics.class");
+            cl = new ClassInfo("/Users/marcoschaim/projetos/data/Scanner/", "Scanner.class");
             cl.genAllMethodInfo();
 
             for (MethodInfo mi : cl.getMethodsInfo()) {

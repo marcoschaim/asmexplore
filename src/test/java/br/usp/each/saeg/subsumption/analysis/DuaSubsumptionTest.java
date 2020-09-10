@@ -349,22 +349,25 @@ public class DuaSubsumptionTest extends TestCase {
     }
 
     public void test7() {
-        System.out.println("AggregateSummaryStatistics");
-        String dir = "/Users/marcoschaim/projetos/data/AggregateSummaryStatistics/";
-        String clazzname = "AggregateSummaryStatistics.class";
+        System.out.println("Scanner");
+        String dir = "/Users/marcoschaim/projetos/data/Scanner/";
+        String clazzname = "Scanner.class";
         try {
             cl = new ClassInfo(dir, clazzname);
             cl.genAllMethodInfo();
+            System.out.println(cl.getName());
 
             for (MethodInfo mi : cl.getMethodsInfo()) {
                 mi.createMethodCFG();
                 mi.createMethodDuas();
                 if (mi.getDuas().isEmpty())
-                    if (!mi.getName().equals("Aggregate"))
-                        continue;
+                    continue;
+                else if (!mi.getName().equals("zzUnpackAction"))
+                    continue;
 
+                System.out.println(mi.getName());
                 Dua d;
-                int counter = 1;
+                int counter = 0;
                 Iterator<Dua> itdua = mi.getDuas().iterator();
 
 
@@ -372,7 +375,7 @@ public class DuaSubsumptionTest extends TestCase {
 
                 while (itdua.hasNext()) {
                     d = itdua.next();
-                    if (counter == 34) {
+                    if (counter != 100) {
                         flowAnalyzer = new CoverageAnalyzer(mi.getProgram().getGraph(), d);
                         System.out.println(counter + ":" + d.toString());
                         Graphdua grf = flowAnalyzer.findGraphdua();

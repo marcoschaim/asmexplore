@@ -199,6 +199,12 @@ public class MethodInfo {
         int idDfc = 0;
 
         for (final DefUseChain c : globalChains) {
+
+            // Check if the DefUseChain variable is null. If so, skip it.
+
+            if (getVar(c, vars) == null)
+                continue;
+
             idDefUseChain.put(c, idDfc);
 
             Block defblk, cuseblk, targetblk;
@@ -282,7 +288,7 @@ public class MethodInfo {
             while (it2.hasNext()) {
                 DefUseChain c = it2.next();
                 if (c.isComputationalChain()) {
-                    sb.append(";" + lines[c.def] + ";;" + lines[c.use] + ";" + c.var + ";" + getVar(c, vars) + ";\n");
+                    sb.append(";" + lines[c.def] + ";" + lines[c.use] + ";" + c.var + ";" + getVar(c, vars) + ";\n");
                 } else {
                     sb.append(";" + lines[c.def] + ";" + lines[c.use] + ";" + lines[c.target] + ";" + c.var+ ";" + getVar(c, vars) + ";\n");
                     }
@@ -457,9 +463,9 @@ public class MethodInfo {
             sb.append("\"" + idDfc + "\" : ");
 
             if (dfc.isComputationalChain())
-                sb.append(" \"(" + lines[dfc.def] + "," + lines[dfc.use] + ", " + p.variable(dfc.var) + ")\"");
+                sb.append(" \"(" + lines[dfc.def] + "," + lines[dfc.use] + ", " + getVar(dfc, vars) + ")\"");
             else
-                sb.append(" \"(" + lines[dfc.def] + ",(" + lines[dfc.use] + "," + lines[dfc.target] + "), " + p.variable(dfc.var) + ")\"");
+                sb.append(" \"(" + lines[dfc.def] + ",(" + lines[dfc.use] + "," + lines[dfc.target] + "), " + getVar(dfc, vars) + ")\"");
 
         }
         sb.append("}");

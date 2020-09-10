@@ -757,12 +757,13 @@ public class ReductionGraphTest extends TestCase {
     }
 
     public void test5_3() {
-        System.out.println("AggregateSummaryStatistics");
+        System.out.println("PiePlot");
         try {
-            String dir = "/Users/marcoschaim/projetos/data/AggregateSummaryStatistics/";
-            String clazz = "AggregateSummaryStatistics.class";
+            String dir = "/Users/marcoschaim/projetos/data/PiePlot/";
+            String clazz = "PiePlot.class";
             cl = new ClassInfo(dir, clazz);
             cl.genAllMethodInfo();
+            System.out.println(cl.getName());
 
             for (MethodInfo mi : cl.getMethodsInfo()) {
                 mi.createMethodCFG();
@@ -787,16 +788,16 @@ public class ReductionGraphTest extends TestCase {
                 writeBufferToFile(dir, mi.getName() + ".dot", rg.toDot());
             }
 
-
+            writeBufferToFile(dir, "PiePlot.sub.json", cl.toJsonSubsumption());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void test6() {
-        System.out.println("Fibonacci");
-        String dir = "/Users/marcoschaim/projetos/fibonacci/";
-        String clazzname = "Fibonacci.class";
+        System.out.println("XYDatasetTableModel");
+        String dir = "/Users/marcoschaim/projetos/data/XYDatasetTableModel/";
+        String clazzname = "XYDatasetTableModel.class";
         try {
             cl = new ClassInfo(dir, clazzname);
             cl.genAllMethodInfo();
@@ -804,6 +805,9 @@ public class ReductionGraphTest extends TestCase {
             for (MethodInfo mi : cl.getMethodsInfo()) {
                 mi.createMethodCFG();
                 mi.createMethodDuas();
+
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+                writeBufferToFile(dir, mi.getName() + ".gdu", mi.graphDefUseToDot());
                 sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
                 //System.out.println(sg);
 
@@ -811,8 +815,10 @@ public class ReductionGraphTest extends TestCase {
                 rg.setDua2DefUseChains(mi.getDefChainsMap());
                 rg.setLines(mi.getLines());
                 rg.findTransitiveClosure();
-                System.out.println(rg.toDot());
+                writeBufferToFile(dir, mi.getName() + ".dot", rg.toDot());
+
             }
+            writeBufferToFile(dir, "XYDatasetTableModel.sub.json", cl.toJsonSubsumption());
         } catch (Exception e) {
             e.printStackTrace();
         }

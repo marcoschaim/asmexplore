@@ -78,9 +78,9 @@ public class ClassInfoTest extends TestCase {
     }
 
     public void test2_1() {
-        System.out.println("ContinousOutputModel");
-        String dir = "/Users/marcoschaim/projetos/data/ContinuousOutputModel/";
-        String clazzname = "ContinuousOutputModel.class";
+        System.out.println("GammaDistribution");
+        String dir = "/Users/marcoschaim/projetos/data/GammaDistribution/";
+        String clazzname = "GammaDistribution.class";
         try {
             cl = new ClassInfo(dir, clazzname);
             cl.genAllMethodInfo();
@@ -94,7 +94,7 @@ public class ClassInfoTest extends TestCase {
                 writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
             }
 
-
+            writeBufferToFile(dir, "GammaDistribution.duas.json", cl.toJsonDuas());
         } catch (Exception e) {
             e.printStackTrace();
         }
