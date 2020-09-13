@@ -210,18 +210,23 @@ public class MethodInfo {
             Block defblk, cuseblk, targetblk;
 
             defblk = p.getGraph().get(leaders[c.def]);
-            p.addVariable(getVar(c, vars), c.var);
 
-            defblk.def(c.var);
+//            System.out.println("Name:"+getVar(c,vars)+"; Unique name: "+getVarUnique(c,vars));
+
+            int varId = p.getVariableId(getVarUnique(c, vars), getVar(c, vars));
+
+//            p.addVariable(getVar(c, vars), c.var);
+
+            defblk.def(varId);
             cuseblk = p.getGraph().get(leaders[c.use]);
 
             if (c.isComputationalChain()) {
                 cuseblk.cuse(c.var);
-                d = new Dua(defblk, cuseblk, c.var, getVar(c, vars));
+                d = new Dua(defblk, cuseblk, varId, getVar(c, vars));
             } else {
                 cuseblk.puse(c.var);
                 targetblk = p.getGraph().get(leaders[c.target]);
-                d = new Dua(defblk, cuseblk, targetblk, c.var, getVar(c, vars));
+                d = new Dua(defblk, cuseblk, targetblk, varId, getVar(c, vars));
             }
             if (!dua2DefUseChains.containsKey(d.hashCode())) {
                 List<DefUseChain> l = new LinkedList<>();
@@ -242,56 +247,58 @@ public class MethodInfo {
         p.computeDataFlowSets(duas);
     }
 
-    public String printMethodDuas() {
+    public String toDuasCSV() {
         final StringBuilder sb = new StringBuilder();
 
-        sb.append("Number of Variables;"+ vars.length+";\n");
+        sb.append("Number of Variables;" + p.numberOfVars() + ";\n");
         sb.append("Variables:;\n");
 
-        for (int id = 0; id < vars.length; ++id) {
-            sb.append(id+";"+vars[id]+";"+p.variable(id)+";\n");
+        for (int id = 0; id < p.numberOfVars(); ++id) {
+            sb.append(id + ";;" + p.variable(id) + ";\n");
         }
 
-        sb.append("\nNumber of Block duas;"+ duas.size() +";\n");
-        sb.append("Line Duas for method; " + mn.name +";\n");
+        sb.append("\nNumber of Block duas;" + duas.size() + ";\n");
+        sb.append("Line Duas for method; " + mn.name + ";\n");
         sb.append("Number;Def Line; Origin Line; Use Line; Var Id; Var Name;\n");
 
         int counter = 0;
 
         for (final DefUseChain c : globalChains) {
-            sb.append(++counter+";");
+            // TODO: delete duas with var == null
+
+            sb.append(++counter + ";");
             if (c.isComputationalChain()) {
                 //System.out.println("("+lines[c.def] + "," + lines[c.use] + "," +getVar(c, vars)+")");
-                sb.append(lines[c.def] + ";;" + lines[c.use] + ";" + c.var+ ";" + getVar(c, vars) + ";\n");
+                sb.append(lines[c.def] + ";;" + lines[c.use] + ";" + c.var + ";" + getVar(c, vars) + ";\n");
             } else {
                 //p.getGraph().get(leaders[c.use]).puse(c.var);
                 //System.out.println("("+lines[c.def]+",(" + lines[c.use]+"," +  lines[c.target] + ")," + getVar(c, vars)+")");
-                sb.append(lines[c.def] + ";" + lines[c.use] + ";" + lines[c.target] + ";" + c.var+ ";"+ getVar(c, vars) + ";\n");
+                sb.append(lines[c.def] + ";" + lines[c.use] + ";" + lines[c.target] + ";" + c.var + ";" + getVar(c, vars) + ";\n");
             }
         }
 
-        sb.append("\nBlock Duas for method; "+ mn.name+";\n");
+        sb.append("\nBlock Duas for method; " + mn.name + ";\n");
         sb.append("Number;Def Block; Origin Block; Use Block; Var Id; Var Name;\n");
 
         final Iterator<Dua> it = duas.iterator();
         counter = 0;
 
         while (it.hasNext()) {
-            sb.append(++counter+";");
+            sb.append(++counter + ";");
             Dua d = it.next();
             if (d.isCUse())
-                sb.append(d.def().id() + ";;" + d.use().id() + ";" +d.var()+";" + d.varName() + ";\n");
+                sb.append(d.def().id() + ";;" + d.use().id() + ";" + d.var() + ";" + d.varName() + ";\n");
             else
-                sb.append(d.def().id() + ";" + d.from().id() + ";" + d.to().id() + ";" + d.var()+";" + d.varName() + ";\n");
+                sb.append(d.def().id() + ";" + d.from().id() + ";" + d.to().id() + ";" + d.var() + ";" + d.varName() + ";\n");
 
             final Iterator<DefUseChain> it2 = dua2DefUseChains.get(d.hashCode()).iterator();
             while (it2.hasNext()) {
                 DefUseChain c = it2.next();
                 if (c.isComputationalChain()) {
-                    sb.append(";" + lines[c.def] + ";" + lines[c.use] + ";" + c.var + ";" + getVar(c, vars) + ";\n");
+                    sb.append(";" + lines[c.def] + ";;" + lines[c.use] + ";" + c.var + ";" + getVar(c, vars) + ";\n");
                 } else {
-                    sb.append(";" + lines[c.def] + ";" + lines[c.use] + ";" + lines[c.target] + ";" + c.var+ ";" + getVar(c, vars) + ";\n");
-                    }
+                    sb.append(";" + lines[c.def] + ";" + lines[c.use] + ";" + lines[c.target] + ";" + c.var + ";" + getVar(c, vars) + ";\n");
+                }
             }
         }
 
@@ -311,8 +318,11 @@ public class MethodInfo {
     }
 
     public String getVar(final DefUseChain c, final Variable[] vars) {
-        //System.out.println("Variables[" + c.var + "]: " + vars[c.var].getVariables());
         return getVar(vars[c.var], c.use);
+    }
+
+    public String getVarUnique(final DefUseChain c, final Variable[] vars) {
+        return getVarUnique(vars[c.var], c.use);
     }
 
     public String getVar(final Value v, final int insn) {
@@ -330,6 +340,21 @@ public class MethodInfo {
         return null;
     }
 
+    public String getVarUnique(final Value v, final int insn) {
+        if (v instanceof StaticField) {
+            return ((StaticField) v).name;
+        } else if (v instanceof ObjectField) {
+            final ObjectField objField = (ObjectField) v;
+            final String var = getVar(objField.getRoot(), insn);
+            if (var != null) {
+                return String.format("%s.%s", var, objField.name);
+            }
+        } else if (v instanceof Local) {
+            return getVarUnique((Local) v, insn);
+        }
+        return null;
+    }
+
     public String getVar(final Local local, final int insn) {
         for (final LocalVariableNode lvn : mn.localVariables) {
             if (lvn.index == local.var
@@ -341,15 +366,17 @@ public class MethodInfo {
         return null;
     }
 
-
-    public String getVar(final Local local) {
+    public String getVarUnique(final Local local, final int insn) {
         for (final LocalVariableNode lvn : mn.localVariables) {
-            if (lvn.index == local.var) {
-                return lvn.name;
+            if (lvn.index == local.var
+                    && insn >= mn.instructions.indexOf(lvn.start)
+                    && insn < mn.instructions.indexOf(lvn.end)) {
+                return lvn.name + "-" + lvn.start + "-" + lvn.end;
             }
         }
         return null;
     }
+
     public List<Dua> getDuas() {
         return this.duas;
     }
@@ -452,10 +479,11 @@ public class MethodInfo {
         sb.append("{ \"Name\" : \"" + getName() + "\" ,\n");
 
         sb.append("\"Duas\" : " + idDefUseChain.size() + ",\n");
+        int idDfc = 0;
+        for (DefUseChain dfc : globalChains) {
 
-
-        for (int idDfc = 0; idDfc < idDefUseChain.size(); idDfc++) {
-            DefUseChain dfc = globalChains[idDfc];
+            if (getVar(dfc, vars) == null)
+                continue;
 
             if (idDfc != 0)
                 sb.append(",\n");
@@ -467,7 +495,9 @@ public class MethodInfo {
             else
                 sb.append(" \"(" + lines[dfc.def] + ",(" + lines[dfc.use] + "," + lines[dfc.target] + "), " + getVar(dfc, vars) + ")\"");
 
+            idDfc++;
         }
+
         sb.append("}");
         return sb.toString();
     }
@@ -483,18 +513,17 @@ public class MethodInfo {
         while (it.hasNext()) {
             Block blk = it.next();
 
-            if(!p.getGraph().get(blk.id()).lines().isEmpty()) {
+            if (!p.getGraph().get(blk.id()).lines().isEmpty()) {
                 Object[] instr = p.getGraph().get(blk.id()).lines().toArray();
 
                 int firstLine = lines[(int) instr[0]];
                 int lastLine = lines[(int) instr[instr.length - 1]];
 
                 if (printLines)
-                    sb.append(blk.id() + " [label=\"" + blk.id() + "\\n" + firstLine + "-"+lastLine+"\"]");
+                    sb.append(blk.id() + " [label=\"" + blk.id() + "\\n" + firstLine + "-" + lastLine + "\"]");
                 else
                     sb.append(blk.id() + " [label=\"" + blk.id() + "\"]");
-            }
-            else
+            } else
                 sb.append(blk.id() + " [label=\"" + blk.id() + "\"]");
             sb.append("\n");
         }
@@ -506,12 +535,11 @@ public class MethodInfo {
             Block blk = it.next();
             if (blk.defs().size() == 0 && blk.cuses().size() == 0)
                 continue;
-            sb.append("setsNode_"+blk.id());
+            sb.append("setsNode_" + blk.id());
             sb.append(" [label=\"");
-            if(blk.defs().size() != 0)
+            if (blk.defs().size() != 0)
                 sb.append(printDefSet(blk));
-            if(blk.cuses().size() != 0)
-            {
+            if (blk.cuses().size() != 0) {
                 if (blk.defs().size() != 0)
                     sb.append("\\n");
                 sb.append(printCuseSet(blk));
@@ -526,20 +554,20 @@ public class MethodInfo {
             if (blk.defs().size() == 0 && blk.cuses().size() == 0)
                 continue;
             sb.append("{rank = same; ");
-            sb.append(blk.id()+" ; "+" setsNode_"+blk.id());
+            sb.append(blk.id() + " ; " + " setsNode_" + blk.id());
             sb.append("}\n");
         }
 
         it = p.getGraph().iterator();
         while (it.hasNext()) {
             Block blk = it.next();
-            if(!p.getGraph().neighbors(blk.id()).isEmpty()) {
+            if (!p.getGraph().neighbors(blk.id()).isEmpty()) {
                 for (Block suc : p.getGraph().neighbors(blk.id())) {
                     sb.append(blk.id() + " -> ");
                     sb.append(suc.id());
-                    if(blk.puses().size() != 0){
+                    if (blk.puses().size() != 0) {
                         sb.append("[label=\"");
-                        sb.append(printPuseSet(blk,suc));
+                        sb.append(printPuseSet(blk, suc));
                         sb.append("\",fontsize=14]");
                     }
 
@@ -556,23 +584,22 @@ public class MethodInfo {
     private String printDefSet(Block blk) {
         final StringBuilder sb = new StringBuilder();
 
-        if(blk.defs().size() == 0)
+        if (blk.defs().size() == 0)
             return null;
 
-        sb.append("def("+blk.id()+")={");
+        sb.append("def(" + blk.id() + ")={");
 
         boolean first = true;
 
-        for(int id = 0; id < vars.length; ++id){
-            if(blk.isDef(id)) {
-                if(first){
+        for (int id = 0; id < vars.length; ++id) {
+            if (blk.isDef(id)) {
+                if (first) {
                     first = false;
-                }
-                else
+                } else
                     sb.append(",");
                 sb.append(p.variable(id));
             }
-       }
+        }
 
         sb.append("}");
 
@@ -582,19 +609,18 @@ public class MethodInfo {
     private String printCuseSet(Block blk) {
         final StringBuilder sb = new StringBuilder();
 
-        if(blk.cuses().size() == 0)
+        if (blk.cuses().size() == 0)
             return null;
 
-        sb.append("use("+blk.id()+")={");
+        sb.append("use(" + blk.id() + ")={");
 
         boolean first = true;
 
-        for(int id = 0; id < vars.length; ++id){
-            if(blk.isCUse(id)) {
-                if(first){
+        for (int id = 0; id < vars.length; ++id) {
+            if (blk.isCUse(id)) {
+                if (first) {
                     first = false;
-                }
-                else
+                } else
                     sb.append(",");
                 sb.append(p.variable(id));
             }
@@ -608,19 +634,18 @@ public class MethodInfo {
     private String printPuseSet(Block blk, Block suc) {
         final StringBuilder sb = new StringBuilder();
 
-        if(blk.puses().size() == 0)
+        if (blk.puses().size() == 0)
             return null;
 
-        sb.append("use("+blk.id()+","+suc.id()+")={");
+        sb.append("use(" + blk.id() + "," + suc.id() + ")={");
 
         boolean first = true;
 
-        for(int id = 0; id < vars.length; ++id){
-            if(blk.isPUse(id)) {
-                if(first){
+        for (int id = 0; id < vars.length; ++id) {
+            if (blk.isPUse(id)) {
+                if (first) {
                     first = false;
-                }
-                else
+                } else
                     sb.append(",");
                 sb.append(p.variable(id));
             }

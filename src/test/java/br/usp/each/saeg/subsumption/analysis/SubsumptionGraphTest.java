@@ -33,7 +33,7 @@ public class SubsumptionGraphTest extends TestCase {
                     continue;
 
                 mi.printMethodCFG();
-                mi.printMethodDuas();
+                mi.toDuasCSV();
                 subduagraph = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
                 System.out.println(subduagraph);
             }
@@ -115,7 +115,7 @@ public class SubsumptionGraphTest extends TestCase {
                     continue;
 
                 mi.printMethodCFG();
-                mi.printMethodDuas();
+                mi.toDuasCSV();
                 subduagraph = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
                 System.out.println(subduagraph);
             }

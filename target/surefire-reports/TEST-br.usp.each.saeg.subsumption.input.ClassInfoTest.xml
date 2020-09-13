@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="6" failures="0" name="br.usp.each.saeg.subsumption.input.ClassInfoTest" time="0.165" errors="0" skipped="0">
+<testsuite tests="6" failures="0" name="br.usp.each.saeg.subsumption.input.ClassInfoTest" time="0.441" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="12+33"/>
@@ -56,10 +56,10 @@
     <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
     <property name="sun.cpu.endian" value="little"/>
   </properties>
-  <testcase classname="br.usp.each.saeg.subsumption.input.ClassInfoTest" name="test1_2" time="0.016"/>
-  <testcase classname="br.usp.each.saeg.subsumption.input.ClassInfoTest" name="test2_1" time="0.038"/>
-  <testcase classname="br.usp.each.saeg.subsumption.input.ClassInfoTest" name="test2_2" time="0.067"/>
-  <testcase classname="br.usp.each.saeg.subsumption.input.ClassInfoTest" name="test1" time="0.008"/>
-  <testcase classname="br.usp.each.saeg.subsumption.input.ClassInfoTest" name="test2" time="0.01"/>
-  <testcase classname="br.usp.each.saeg.subsumption.input.ClassInfoTest" name="test3" time="0.026"/>
+  <testcase classname="br.usp.each.saeg.subsumption.input.ClassInfoTest" name="test1_2" time="0.239"/>
+  <testcase classname="br.usp.each.saeg.subsumption.input.ClassInfoTest" name="test2_1" time="0.002"/>
+  <testcase classname="br.usp.each.saeg.subsumption.input.ClassInfoTest" name="test2_2" time="0.099"/>
+  <testcase classname="br.usp.each.saeg.subsumption.input.ClassInfoTest" name="test1" time="0.1"/>
+  <testcase classname="br.usp.each.saeg.subsumption.input.ClassInfoTest" name="test2" time="0.001"/>
+  <testcase classname="br.usp.each.saeg.subsumption.input.ClassInfoTest" name="test3" time="0"/>
 </testsuite>

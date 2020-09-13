@@ -44,7 +44,7 @@ public class DuaSubsumptionTest extends TestCase {
                 Iterator<Dua> itdua = mi.getDuas().iterator();
 
                 mi.printMethodCFG();
-                writeBufferToFile(dir,mi.getName()+".csv", mi.printMethodDuas());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
                 writeBufferToFile(dir, mi.getName() + ".gz", mi.graphDefUseToDot());
 
                 duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(), mi.getDuas());
@@ -98,7 +98,7 @@ public class DuaSubsumptionTest extends TestCase {
                 Iterator<Dua> itdua = mi.getDuas().iterator();
 
                 mi.printMethodCFG();
-                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
 
                 duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(), mi.getDuas());
 
@@ -145,7 +145,7 @@ public class DuaSubsumptionTest extends TestCase {
                     continue;
 
                 mi.printMethodCFG();
-                mi.printMethodDuas();
+                mi.toDuasCSV();
 //                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".csv", mi.printMethodDuas());
 //                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".gz", mi.graphDefUseToDot());
 
@@ -205,7 +205,7 @@ public class DuaSubsumptionTest extends TestCase {
                 Iterator<Dua> itdua = mi.getDuas().iterator();
 
                 mi.printMethodCFG();
-                writeBufferToFile(dir,mi.getName()+".csv", mi.printMethodDuas());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
                 writeBufferToFile(dir, mi.getName() + ".gz", mi.graphDefUseToDot());
 
                 duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(), mi.getDuas());
@@ -265,7 +265,7 @@ public class DuaSubsumptionTest extends TestCase {
                 if (mi.getDuas().isEmpty())
                     continue;
 
-                writeBufferToFile(dir,mi.getName()+".csv", mi.printMethodDuas());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
                 writeBufferToFile(dir, mi.getName() + ".gz", mi.graphDefUseToDot());
 
                 SubsumptionGraph sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());

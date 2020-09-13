@@ -1,7 +1,7 @@
 package br.usp.each.saeg.subsumption.cli;
 
-import br.usp.each.saeg.subsumption.input.MethodInfo;
 import br.usp.each.saeg.subsumption.input.ClassInfo;
+import br.usp.each.saeg.subsumption.input.MethodInfo;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -25,10 +25,10 @@ public class Analyzer {
 
                 // Create a name for the files based on the class and method names
 
-                methodname = ci.getName().substring(0).replace(File.separator,".") + mi.getName();
+                methodname = ci.getName().replace(File.separator, ".") + mi.getName();
 
-                System.out.println(methodname+" "+"#Nodes: "+mi.getProgram().getGraph().size());
-                writeBufferToFile(path, methodname+ ".csv",mi.printMethodDuas());
+                System.out.println(methodname + " " + "#Nodes: " + mi.getProgram().getGraph().size());
+                writeBufferToFile(path, methodname + ".csv", mi.toDuasCSV());
                 writeBufferToFile(path, methodname + ".gz", mi.graphDefUseToDot());
 
                 n++;
@@ -43,8 +43,8 @@ public class Analyzer {
         // Convert the string to a
         // byte array.
 
-        byte data[] = s.getBytes();
-        Path p = Paths.get(dir+name);
+        byte[] data = s.getBytes();
+        Path p = Paths.get(dir + name);
 
         try (OutputStream out = new BufferedOutputStream(
                 Files.newOutputStream(p))) {

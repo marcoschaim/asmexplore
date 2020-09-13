@@ -473,7 +473,7 @@ public class ReductionGraphTest extends TestCase {
 
                 mi.printMethodCFG();
                 System.out.println(mi.graphDefUseToDot());
-                mi.printMethodDuas();
+                mi.toDuasCSV();
 //                writeBufferToFile("/Users/marcoschaim/projetos/data/sort/src/",mi.getName()+".gz",mi.graphDefUseToDot());
 
                 sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
@@ -560,7 +560,7 @@ public class ReductionGraphTest extends TestCase {
                     continue;
 
                 mi.printMethodCFG();
-                mi.printMethodDuas();
+                mi.toDuasCSV();
                 writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".gz", mi.graphDefUseToDot());
 
                 sg = new SubsumptionGraph(mi.getProgram(),mi.getDuas());
@@ -609,7 +609,7 @@ public class ReductionGraphTest extends TestCase {
                     continue;
 
                 mi.printMethodCFG();
-                mi.printMethodDuas();
+                mi.toDuasCSV();
                 //writeBufferToFile("/Users/marcoschaim/projetos/data/weka-3.8-master/weka/build/classes/weka/core/",mi.getName()+".gz",mi.graphDefUseToDot());
                 sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
                 //System.out.println(sg);
@@ -709,7 +709,7 @@ public class ReductionGraphTest extends TestCase {
 
                 rg.findTransitiveClosure();
                 writeBufferToFile(dir, mi.getName() + ".dot", rg.toDot());
-                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
             }
 
 
@@ -720,21 +720,24 @@ public class ReductionGraphTest extends TestCase {
 
     @Test
     public void test5_2() {
-        System.out.println("ContinuousOutputModel");
+        System.out.println("ResizableDoubleArray");
         try {
-            String dir = "/Users/marcoschaim/projetos/data/ContinuousOutputModel/";
-            String clazz = "ContinuousOutputModel.class";
+            String dir = "/Users/marcoschaim/projetos/data/ResizableDoubleArray/";
+            String clazz = "ResizableDoubleArray.class";
             cl = new ClassInfo(dir, clazz);
             cl.genAllMethodInfo();
 
             for (MethodInfo mi : cl.getMethodsInfo()) {
+                if (mi.getName().equals("equals"))
+                    System.out.println();
+
                 mi.createMethodCFG();
                 mi.createMethodDuas();
                 if (mi.getDuas().isEmpty())
                     continue;
 
                 writeBufferToFile(dir, mi.getName() + ".gdu", mi.graphDefUseToDot());
-                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
                 sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
 
                 rg = new ReductionGraph(sg);
@@ -750,7 +753,8 @@ public class ReductionGraphTest extends TestCase {
                 writeBufferToFile(dir, mi.getName() + ".dot", rg.toDot());
             }
 
-
+            writeBufferToFile(dir, "ResizableDoubleArray.sub.json", cl.toJsonSubsumption());
+            writeBufferToFile(dir, "ResizableDoubleArray.duas.json", cl.toJsonDuas());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -772,7 +776,7 @@ public class ReductionGraphTest extends TestCase {
                     continue;
 
                 writeBufferToFile(dir, mi.getName() + ".gdu", mi.graphDefUseToDot());
-                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
                 sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
 
                 rg = new ReductionGraph(sg);
@@ -806,7 +810,7 @@ public class ReductionGraphTest extends TestCase {
                 mi.createMethodCFG();
                 mi.createMethodDuas();
 
-                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
                 writeBufferToFile(dir, mi.getName() + ".gdu", mi.graphDefUseToDot());
                 sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
                 //System.out.println(sg);

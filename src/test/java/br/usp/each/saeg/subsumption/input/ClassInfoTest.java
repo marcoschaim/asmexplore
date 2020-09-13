@@ -24,7 +24,7 @@ public class ClassInfoTest extends TestCase {
                 mi.createMethodCFG();
                 mi.createMethodDuas();
                 mi.printMethodCFG();
-                mi.printMethodDuas();
+                mi.toDuasCSV();
             }
 
 
@@ -66,7 +66,7 @@ public class ClassInfoTest extends TestCase {
                 if (mi.getDuas().isEmpty())
                     continue;
                 System.out.println(mi.graphDefUseToDot());
-                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
             }
 
 
@@ -91,7 +91,7 @@ public class ClassInfoTest extends TestCase {
                 if (mi.getDuas().isEmpty())
                     continue;
                 System.out.println(mi.graphDefUseToDot());
-                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
             }
 
             writeBufferToFile(dir, "GammaDistribution.duas.json", cl.toJsonDuas());
@@ -116,7 +116,7 @@ public class ClassInfoTest extends TestCase {
                 if (mi.getDuas().isEmpty())
                     continue;
                 System.out.println(mi.graphDefUseToDot());
-                writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
             }
 
 

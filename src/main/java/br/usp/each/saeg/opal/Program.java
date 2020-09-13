@@ -42,6 +42,7 @@ public class Program {
     private final Flowgraph<Block> invgraph = new Flowgraph<Block>();
 
     private final Map<Integer, String> ids2variables = new HashMap<Integer, String>();
+    private final Map<String, Integer> variables2Ids = new HashMap<String, Integer>();
 
     private Node[] dataFlowSets;
 
@@ -49,17 +50,39 @@ public class Program {
         return this.graph;
     }
 
-    public String variable(int id) {return ids2variables.get(id); }
+    public String variable(int id) {
+        return ids2variables.get(id);
+    }
+
+    int idcounter = 0;
 
     public void addVariable(final String name, final int id) {
 
         if (!ids2variables.containsKey(id)) {
             ids2variables.put(id, name);
+            if (!variables2Ids.containsKey(name)) {
+                variables2Ids.put(name, id);
+            }
         }
     }
 
+    public int getVariableId(final String uname, String name) {
+        int id = -1;
+        if (!variables2Ids.containsKey(uname)) {
+            variables2Ids.put(uname, idcounter);
+            if (!ids2variables.containsKey(idcounter)) {
+                ids2variables.put(idcounter, name);
+                id = idcounter;
+            }
+            ++idcounter;
+        } else
+            id = variables2Ids.get(uname);
+
+        return id;
+    }
+
     public int numberOfVars() {
-        return ids2variables.size();
+        return variables2Ids.size();
     }
 
     public Flowgraph<Block> getInvGraph() {
