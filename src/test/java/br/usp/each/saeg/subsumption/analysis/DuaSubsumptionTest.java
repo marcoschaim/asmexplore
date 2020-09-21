@@ -349,9 +349,9 @@ public class DuaSubsumptionTest extends TestCase {
     }
 
     public void test7() {
-        System.out.println("Scanner");
-        String dir = "/Users/marcoschaim/projetos/data/Scanner/";
-        String clazzname = "Scanner.class";
+        System.out.println("MaxRogue");
+        String dir = "/Users/marcoschaim/projetos/data/max/";
+        String clazzname = "MaxRogue.class";
         try {
             cl = new ClassInfo(dir, clazzname);
             cl.genAllMethodInfo();
@@ -361,8 +361,6 @@ public class DuaSubsumptionTest extends TestCase {
                 mi.createMethodCFG();
                 mi.createMethodDuas();
                 if (mi.getDuas().isEmpty())
-                    continue;
-                else if (!mi.getName().equals("zzUnpackAction"))
                     continue;
 
                 System.out.println(mi.getName());

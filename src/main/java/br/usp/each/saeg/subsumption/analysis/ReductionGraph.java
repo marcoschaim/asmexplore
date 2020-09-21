@@ -209,7 +209,7 @@ public class ReductionGraph extends Graph<ReductionNode> {
                 sb.append(r.id());
 
                 if (this.unconstrainedNodes().contains(r))
-                    sb.append(" [shape=box,style=filled,color=\".7 .3 1.0\",label=\"");
+                    sb.append(" [shape=box,style=filled,color=\".0 .0 .83\",label=\"");
                 else
                     sb.append(" [label=\"");
 

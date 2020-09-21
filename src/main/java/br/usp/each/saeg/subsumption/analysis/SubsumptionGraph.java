@@ -41,7 +41,8 @@ public class SubsumptionGraph extends Graph<SubsumptionNode> {
                         Dua sub = analyzer.getDuaFromId(idSubDua);
                         addEgde(sub, d);
                     }
-                }
+                } else
+                    System.out.println("Warning: dua does not subsume itself:" + d.toString());
             } else
                 System.out.println("Warning: Subsumption vector is null for dua:" + d.toString());
         }

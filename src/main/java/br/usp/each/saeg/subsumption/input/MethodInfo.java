@@ -258,7 +258,8 @@ public class MethodInfo {
         }
 
         sb.append("\nNumber of Block duas;" + duas.size() + ";\n");
-        sb.append("Line Duas for method; " + mn.name + ";\n");
+        if (mn != null)
+            sb.append("Line Duas for method; " + mn.name + ";\n");
         sb.append("Number;Def Line; Origin Line; Use Line; Var Id; Var Name;\n");
 
         int counter = 0;
@@ -394,6 +395,8 @@ public class MethodInfo {
     }
 
     public String getName() {
+        if (mn == null)
+            return null;
         return this.mn.name;
     }
 

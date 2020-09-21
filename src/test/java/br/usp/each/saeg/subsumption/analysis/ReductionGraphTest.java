@@ -224,7 +224,8 @@ public class ReductionGraphTest extends TestCase {
             rg.setLines(mi.getLines());
         System.out.println(rg);
 
-        System.out.println("#"+ "Unconstrained duas:" + rg.unconstrainedNodes().size());
+        System.out.println("#" + "Unconstrained duas:" + rg.unconstrainedNodes().size());
+        writeBufferToFile("/Users/marcoschaim/projetos/data/analysis/sort/", "Sort.gdu", mi.graphDefUseToDot());
 
         Iterator<ReductionNode> it = rg.unconstrainedNodes().iterator();
         while (it.hasNext()){
@@ -236,7 +237,7 @@ public class ReductionGraphTest extends TestCase {
 
         rg.findTransitiveClosure();
         System.out.println(rg.toDot());
-        //writeBufferToFile("/Users/marcoschaim/projetos/data/sort/src/main/java/br/usp/each/saeg/",mi.getName()+".dot",rg.toDot());
+        writeBufferToFile("/Users/marcoschaim/projetos/data/analysis/sort/", "Sort.red", rg.toDot());
 
     }
 
@@ -596,10 +597,12 @@ public class ReductionGraphTest extends TestCase {
     }
 
     @Test
-    public void test4(){
-        System.out.println("Matrix");
+    public void test4() {
+        System.out.println("MaxRogue");
+        String dir = "/Users/marcoschaim/projetos/data/max/";
+        String clazzname = "MaxRogue.class";
         try {
-            cl = new ClassInfo("/Users/marcoschaim/projetos/data/weka-3.8-master/weka/build/classes/weka/core/", "Matrix.class");
+            cl = new ClassInfo(dir, clazzname);
             cl.genAllMethodInfo();
 
             for (MethodInfo mi : cl.getMethodsInfo()) {
@@ -610,7 +613,7 @@ public class ReductionGraphTest extends TestCase {
 
                 mi.printMethodCFG();
                 mi.toDuasCSV();
-                //writeBufferToFile("/Users/marcoschaim/projetos/data/weka-3.8-master/weka/build/classes/weka/core/",mi.getName()+".gz",mi.graphDefUseToDot());
+                writeBufferToFile(dir, mi.getName() + ".gdu", mi.graphDefUseToDot());
                 sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
                 //System.out.println(sg);
 
@@ -622,7 +625,7 @@ public class ReductionGraphTest extends TestCase {
                 System.out.println("#"+mi.getName()+ "Unconstrained duas:" + rg.unconstrainedNodes().size());
 
                 Iterator<ReductionNode> it = rg.unconstrainedNodes().iterator();
-                while (it.hasNext()){
+                while (it.hasNext()) {
                     ReductionNode u = it.next();
                     System.out.println(u);
                 }
@@ -630,8 +633,8 @@ public class ReductionGraphTest extends TestCase {
                 System.out.println("Transitive Clousure:");
 
                 rg.findTransitiveClosure();
-                //writeBufferToFile("/Users/marcoschaim/projetos/data/weka-3.8-master/weka/build/classes/weka/core/",mi.getName()+".dot",rg.toDot());
-
+                writeBufferToFile(dir, mi.getName() + ".red", rg.toDot());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
                 System.out.println(rg.toDot());
             }
 
