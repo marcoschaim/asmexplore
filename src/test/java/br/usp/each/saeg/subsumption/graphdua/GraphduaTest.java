@@ -145,11 +145,11 @@ public class GraphduaTest extends TestCase {
 
     @Test
     public void test3() {
-        System.out.println("RandomDataGenerator");
-        String dir = "/Users/marcoschaim/projetos/data/RandomDataGenerator/";
+        System.out.println("Tracer");
+        String dir = "/Users/marcoschaim/projetos/data/Tracer/";
 
         try {
-            cl = new ClassInfo(dir, "RandomDataGenerator.class");
+            cl = new ClassInfo(dir, "Tracer.class");
             cl.genAllMethodInfo();
 
             System.out.println("Number of Methods:" + cl.getMethodsInfo().size());

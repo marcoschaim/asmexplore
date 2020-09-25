@@ -17,6 +17,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -683,10 +684,10 @@ public class ReductionGraphTest extends TestCase {
 
     @Test
     public void test5_1() {
-        System.out.println("RandomDataGenerator");
+        System.out.println("ReaderBasedJsonParser");
         try {
-            String dir = "/Users/marcoschaim/projetos/data/RandomDataGenerator/";
-            String clazz = "RandomDataGenerator.class";
+            String dir = "/Users/marcoschaim/projetos/data/ReaderBasedJsonParser/";
+            String clazz = "ReaderBasedJsonParser.class";
             cl = new ClassInfo(dir, clazz);
             cl.genAllMethodInfo();
 
@@ -697,6 +698,7 @@ public class ReductionGraphTest extends TestCase {
                     continue;
 
                 writeBufferToFile(dir, mi.getName() + ".gdu", mi.graphDefUseToDot());
+                writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
 
                 sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
 
@@ -711,7 +713,7 @@ public class ReductionGraphTest extends TestCase {
                 System.out.println("#" + mi.getName() + "# Reduction nodes:" + rg.size());
 
                 rg.findTransitiveClosure();
-                writeBufferToFile(dir, mi.getName() + ".dot", rg.toDot());
+                writeBufferToFile(dir, mi.getName() + ".red", rg.toDot());
                 writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
             }
 
@@ -723,10 +725,13 @@ public class ReductionGraphTest extends TestCase {
 
     @Test
     public void test5_2() {
-        System.out.println("ResizableDoubleArray");
+        System.out.println("TextBuffer");
+        HashSet<String> methodNames = new HashSet<>();
+        int methodId = 0;
+
         try {
-            String dir = "/Users/marcoschaim/projetos/data/ResizableDoubleArray/";
-            String clazz = "ResizableDoubleArray.class";
+            String dir = "/Users/marcoschaim/projetos/data/TextBuffer/";
+            String clazz = "TextBuffer.class";
             cl = new ClassInfo(dir, clazz);
             cl.genAllMethodInfo();
 
@@ -753,11 +758,15 @@ public class ReductionGraphTest extends TestCase {
                 System.out.println("#" + mi.getName() + "# Reduction nodes:" + rg.size());
 
                 rg.findTransitiveClosure();
-                writeBufferToFile(dir, mi.getName() + ".dot", rg.toDot());
+                if (methodNames.contains(mi.getName())) {
+                    writeBufferToFile(dir, mi.getName() + methodId + ".red", rg.toDot());
+                    methodId++;
+                } else
+                    writeBufferToFile(dir, mi.getName() + ".red", rg.toDot());
             }
 
-            writeBufferToFile(dir, "ResizableDoubleArray.sub.json", cl.toJsonSubsumption());
-            writeBufferToFile(dir, "ResizableDoubleArray.duas.json", cl.toJsonDuas());
+//            writeBufferToFile(dir, "ResizableDoubleArray.sub.json", cl.toJsonSubsumption());
+//            writeBufferToFile(dir, "ResizableDoubleArray.duas.json", cl.toJsonDuas());
         } catch (Exception e) {
             e.printStackTrace();
         }

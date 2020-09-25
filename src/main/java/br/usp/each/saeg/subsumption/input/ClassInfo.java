@@ -99,12 +99,14 @@ public class ClassInfo {
         sb.append("{\n\"Class\" : " + "\"" + methodname + "\", \n\"Methods\" : [");
 
         boolean first = true;
+        System.out.println(methodname + ":");
 
         Iterator<MethodInfo> it = getMethodsInfo().iterator();
         while (it.hasNext()) {
             MethodInfo mi = it.next();
             if (mi.getDuas().isEmpty())
                 continue;
+            System.out.println(mi.getName() + ":");
 
             SubsumptionGraph sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
 

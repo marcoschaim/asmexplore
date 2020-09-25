@@ -17,16 +17,14 @@ public class Reducer {
     static private SubsumptionGraph sg;
     static private ReductionGraph rg;
 
-    public static int reduceAll(InputStream input, String path) {
+    public static int reduceAll(File src, InputStream input, String path) {
         int n = 0; // # of methods analyzed
         StringBuffer sb = new StringBuffer();
-        boolean printReductionInfo = false;
+        boolean printReductionInfo = true;
+
         try {
             ClassInfo ci = new ClassInfo(input);
             path = path + File.separator;
-
-            if (ci.getName().replaceAll(File.separator, ".").equals("org.apache.commons.math3.genetics.RandomKey"))
-                System.out.println();
 
             for (MethodInfo mi : ci.getMethodsInfo()) {
                 mi.createMethodCFG();
@@ -34,13 +32,12 @@ public class Reducer {
 
                 if (mi.getDuas().isEmpty())
                     continue;
-                else if (mi.getName().equals("zzUnpackAction"))
-                    System.out.println();
 
                 if (printReductionInfo) {
                     // Create a name for the files based on the class and method names
 
                     String methodname = ci.getName().replace(File.separator, ".") + "." + mi.getName();
+
 
                     System.out.println("\n#" + ci.getName() + File.separator + mi.getName() + ":");
 
@@ -75,7 +72,7 @@ public class Reducer {
             }
             // writeBufferToFile(path,"reduce.csv", sb.toString());
         } catch (Exception e) {
-            System.err.println("Failed to analyze: " + path);
+            System.out.println("Fail to analyze: " + src.getPath());
         }
         return n;
     }

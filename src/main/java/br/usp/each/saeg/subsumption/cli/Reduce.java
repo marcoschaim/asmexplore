@@ -65,7 +65,7 @@ public class Reduce {
         }
         final InputStream input = new FileInputStream(src);
         try {
-                return Reducer.reduceAll(input, dest.getPath());
+                return Reducer.reduceAll(src, input, dest.getPath());
             } finally {
             input.close();
         }

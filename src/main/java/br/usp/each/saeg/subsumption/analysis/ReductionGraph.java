@@ -100,7 +100,7 @@ public class ReductionGraph extends Graph<ReductionNode> {
                 id1 = sbg.getDuaId(d1);
                 id2 = sbg.getDuaId(d2);
 
-                if (subsumptionVector[id1].get(id2)) {
+                if (subsumptionVector[id1] != null && subsumptionVector[id1].get(id2)) {
                     this.addEdge(w.id(), r.id());
                 }
             }
