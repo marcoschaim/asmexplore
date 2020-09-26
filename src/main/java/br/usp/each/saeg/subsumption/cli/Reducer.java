@@ -20,7 +20,7 @@ public class Reducer {
     public static int reduceAll(File src, InputStream input, String path) {
         int n = 0; // # of methods analyzed
         StringBuffer sb = new StringBuffer();
-        boolean printReductionInfo = true;
+        boolean printReductionInfo = false;
 
         try {
             ClassInfo ci = new ClassInfo(input);
@@ -33,25 +33,35 @@ public class Reducer {
                 if (mi.getDuas().isEmpty())
                     continue;
 
+                String methodname = ci.getName().replace(File.separator, ".") + "." + mi.getName();
+
+                if (mi.getHasIncomingEdges()) {
+                    System.out.println("Warning: Method:" + methodname + " has incoming edges.");
+                    continue;
+                }
+
+                if (mi.getHasAutoEdge()) {
+                    System.out.println("Warning: Method:" + methodname + " has auto edges.");
+                    continue;
+                }
+
+                // Create a name for the files based on the class and method names
+
+                final TimeWatch tw = TimeWatch.start();
+                sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
+
+                rg = new ReductionGraph(sg);
+                rg.setDua2DefUseChains(mi.getDefChainsMap());
+                rg.setLines(mi.getLines());
+
+                rg.findTransitiveClosure();
+                final long milliseconds = tw.time(TimeUnit.MILLISECONDS);
+
+                mi.setSubsumptionGraph(sg);
+                mi.setReductionGraph(rg);
+                System.out.println("\n#" + ci.getName() + File.separator + mi.getName() + ":");
+
                 if (printReductionInfo) {
-                    // Create a name for the files based on the class and method names
-
-                    String methodname = ci.getName().replace(File.separator, ".") + "." + mi.getName();
-
-
-                    System.out.println("\n#" + ci.getName() + File.separator + mi.getName() + ":");
-
-                    final TimeWatch tw = TimeWatch.start();
-                    sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
-
-                    rg = new ReductionGraph(sg);
-                    rg.setDua2DefUseChains(mi.getDefChainsMap());
-                    rg.setLines(mi.getLines());
-
-                    rg.findTransitiveClosure();
-                    final long milliseconds = tw.time(TimeUnit.MILLISECONDS);
-
-                    mi.setReductionGraph(rg);
 
                     System.out.println(MessageFormat.format(
                             "Method {0} reduced in {1} minutes and {2} seconds. Total em milliseconds {3}", mi.getName(), (milliseconds / 1000) / 60, (milliseconds / 1000) % 60, milliseconds));
@@ -62,7 +72,6 @@ public class Reducer {
                     sb.append(methodname + ";" + mi.getDuas().size() + ";" + rg.unconstrainedNodes().size() + ";" + rg.size() + ";" + milliseconds + ";\n");
                     System.out.println("sb:" + sb.toString());
 
-                    //writeBufferToFile(path, methodname + ".red", rg.toDot());
                 }
                 n++;
             }
@@ -72,7 +81,9 @@ public class Reducer {
             }
             // writeBufferToFile(path,"reduce.csv", sb.toString());
         } catch (Exception e) {
-            System.out.println("Fail to analyze: " + src.getPath());
+            String failfile = src.getPath();
+            if (failfile.contains(".class"))
+                System.out.println("Fail to analyze: " + failfile);
         }
         return n;
     }

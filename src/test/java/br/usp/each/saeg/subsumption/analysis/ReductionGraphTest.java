@@ -685,6 +685,7 @@ public class ReductionGraphTest extends TestCase {
     @Test
     public void test5_1() {
         System.out.println("ReaderBasedJsonParser");
+        String methodname = null;
         try {
             String dir = "/Users/marcoschaim/projetos/data/ReaderBasedJsonParser/";
             String clazz = "ReaderBasedJsonParser.class";
@@ -697,15 +698,29 @@ public class ReductionGraphTest extends TestCase {
                 if (mi.getDuas().isEmpty())
                     continue;
 
+                methodname = mi.getName();
+
+                if (mi.getHasIncomingEdges()) {
+                    System.out.println("Warning: Method:" + methodname + " has incoming edges.");
+                    continue;
+                }
+
+                if (mi.getHasAutoEdge()) {
+                    System.out.println("Warning: Method:" + methodname + " has auto edges.");
+                    continue;
+                }
+
                 writeBufferToFile(dir, mi.getName() + ".gdu", mi.graphDefUseToDot());
                 writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
 
                 sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
 
-
                 rg = new ReductionGraph(sg);
                 rg.setDua2DefUseChains(mi.getDefChainsMap());
                 rg.setLines(mi.getLines());
+
+                mi.setReductionGraph(rg);
+                mi.setSubsumptionGraph(sg);
 
                 System.out.println("#" + mi.getName() + "Data method on " + mi.getName() + ":");
                 System.out.println("#" + mi.getName() + "# duas:" + mi.getDuas().size());
@@ -717,7 +732,8 @@ public class ReductionGraphTest extends TestCase {
                 writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
             }
 
-
+            writeBufferToFile(dir, "ReaderBasedJsonParser.sub.json", cl.toJsonSubsumption());
+            writeBufferToFile(dir, "ReaderBasedJsonParser.duas.json", cl.toJsonDuas());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -725,24 +741,34 @@ public class ReductionGraphTest extends TestCase {
 
     @Test
     public void test5_2() {
-        System.out.println("TextBuffer");
+        System.out.println("ReaderToTextPane");
         HashSet<String> methodNames = new HashSet<>();
         int methodId = 0;
-
+        String dir = "/Users/marcoschaim/projetos/data/ReaderToTextPane/";
+        String clazz = "ReaderToTextPane$1.class";
+        String methodname = null;
         try {
-            String dir = "/Users/marcoschaim/projetos/data/TextBuffer/";
-            String clazz = "TextBuffer.class";
             cl = new ClassInfo(dir, clazz);
             cl.genAllMethodInfo();
 
             for (MethodInfo mi : cl.getMethodsInfo()) {
-                if (mi.getName().equals("equals"))
-                    System.out.println();
+
 
                 mi.createMethodCFG();
                 mi.createMethodDuas();
                 if (mi.getDuas().isEmpty())
                     continue;
+                methodname = mi.getName();
+
+                if (mi.getHasIncomingEdges()) {
+                    System.out.println("Warning: Method:" + methodname + " has incoming edges.");
+                    continue;
+                }
+
+                if (mi.getHasAutoEdge()) {
+                    System.out.println("Warning: Method:" + methodname + " has auto edges.");
+                    continue;
+                }
 
                 writeBufferToFile(dir, mi.getName() + ".gdu", mi.graphDefUseToDot());
                 writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
@@ -769,6 +795,8 @@ public class ReductionGraphTest extends TestCase {
 //            writeBufferToFile(dir, "ResizableDoubleArray.duas.json", cl.toJsonDuas());
         } catch (Exception e) {
             e.printStackTrace();
+            String failfile = dir + clazz;
+            System.out.println("Fail to analyze: " + failfile + ":" + methodname);
         }
     }
 

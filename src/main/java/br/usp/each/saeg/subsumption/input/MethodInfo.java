@@ -37,9 +37,13 @@ public class MethodInfo {
     HashMap<Integer, List<DefUseChain>> dua2DefUseChains = new HashMap<>();
     HashMap<DefUseChain, Integer> idDefUseChain = new HashMap<>();
     HashMap<Integer, List<Integer>> dua2idDefUseChains = new HashMap<>();
-    ReductionGraph rg;
+    ReductionGraph rg = null;
+    SubsumptionGraph sg = null;
 
+    boolean hasIncomingEdges = false;
+    boolean hasAutoEdge = false;
     String owner;
+
 
     public MethodInfo(String owner, MethodNode mn) {
         this.owner = owner;
@@ -102,6 +106,10 @@ public class MethodInfo {
             visitedBlks[i] = false;
 
         connectNewExitNode(p.getGraph().entry(), visitedBlks);
+
+        if (!p.getGraph().revNeighbors(0).isEmpty()) {
+            hasIncomingEdges = true;
+        }
     }
 
     void visitInstruction(Program p, int ins, boolean[] vis) {
@@ -226,6 +234,10 @@ public class MethodInfo {
             } else {
                 cuseblk.puse(c.var);
                 targetblk = p.getGraph().get(leaders[c.target]);
+
+                if (cuseblk.id() == targetblk.id())
+                    hasAutoEdge = true;
+
                 d = new Dua(defblk, cuseblk, targetblk, varId, getVar(c, vars));
             }
             if (!dua2DefUseChains.containsKey(d.hashCode())) {
@@ -400,8 +412,24 @@ public class MethodInfo {
         return this.mn.name;
     }
 
+    public boolean getHasIncomingEdges() {
+        return this.hasIncomingEdges;
+    }
+
+    public boolean getHasAutoEdge() {
+        return this.hasAutoEdge;
+    }
+
     public void setReductionGraph(ReductionGraph rg) {
         this.rg = rg;
+    }
+
+    public ReductionGraph getReductionGraph() {
+        return this.rg;
+    }
+
+    public void setSubsumptionGraph(SubsumptionGraph sg) {
+        this.sg = sg;
     }
 
     public String toJsonSubsumption(StringBuffer sb) {
@@ -440,7 +468,7 @@ public class MethodInfo {
 
             sb.append(" \"S" + noSubsumers + "\" : [");
 
-            SubsumptionGraph sg = rg.getSubsumptionGraph();
+            //SubsumptionGraph sg = rg.getSubsumptionGraph();
             SubsumptionAnalyzer sa = sg.getSubsumptionAnalyzer();
 
             int idDua = sg.getDuaId(subsumer);
@@ -658,4 +686,5 @@ public class MethodInfo {
 
         return sb.toString();
     }
+
 }

@@ -1,7 +1,5 @@
 package br.usp.each.saeg.subsumption.input;
 
-import br.usp.each.saeg.subsumption.analysis.ReductionGraph;
-import br.usp.each.saeg.subsumption.analysis.SubsumptionGraph;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
@@ -104,15 +102,8 @@ public class ClassInfo {
         Iterator<MethodInfo> it = getMethodsInfo().iterator();
         while (it.hasNext()) {
             MethodInfo mi = it.next();
-            if (mi.getDuas().isEmpty())
+            if (mi.getDuas().isEmpty() || mi.getReductionGraph() == null)
                 continue;
-            System.out.println(mi.getName() + ":");
-
-            SubsumptionGraph sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
-
-            ReductionGraph rg = new ReductionGraph(sg);
-
-            mi.setReductionGraph(rg);
 
             if (first)
                 first = false;
