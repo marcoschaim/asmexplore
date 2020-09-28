@@ -145,11 +145,11 @@ public class GraphduaTest extends TestCase {
 
     @Test
     public void test3() {
-        System.out.println("Tracer");
-        String dir = "/Users/marcoschaim/projetos/data/Tracer/";
+        System.out.println("filterForAdjacentSiblings");
+        String dir = "/Users/marcoschaim/projetos/data/filterForAdjacentSiblings/";
 
         try {
-            cl = new ClassInfo(dir, "Tracer.class");
+            cl = new ClassInfo(dir, "Selector.class");
             cl.genAllMethodInfo();
 
             System.out.println("Number of Methods:" + cl.getMethodsInfo().size());

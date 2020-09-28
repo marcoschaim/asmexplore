@@ -684,11 +684,11 @@ public class ReductionGraphTest extends TestCase {
 
     @Test
     public void test5_1() {
-        System.out.println("ReaderBasedJsonParser");
+        System.out.println("filterForAdjacentSiblings");
         String methodname = null;
         try {
-            String dir = "/Users/marcoschaim/projetos/data/ReaderBasedJsonParser/";
-            String clazz = "ReaderBasedJsonParser.class";
+            String dir = "/Users/marcoschaim/projetos/data/filterForAdjacentSiblings/";
+            String clazz = "Selector.class";
             cl = new ClassInfo(dir, clazz);
             cl.genAllMethodInfo();
 
@@ -732,8 +732,8 @@ public class ReductionGraphTest extends TestCase {
                 writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
             }
 
-            writeBufferToFile(dir, "ReaderBasedJsonParser.sub.json", cl.toJsonSubsumption());
-            writeBufferToFile(dir, "ReaderBasedJsonParser.duas.json", cl.toJsonDuas());
+            writeBufferToFile(dir, "Selector.sub.json", cl.toJsonSubsumption());
+            writeBufferToFile(dir, "Selector.duas.json", cl.toJsonDuas());
         } catch (Exception e) {
             e.printStackTrace();
         }

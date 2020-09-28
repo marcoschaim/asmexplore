@@ -88,15 +88,16 @@ public class SubsumptionAnalyzer {
         }
     }
 
-    private void computeInAndOutSubmission(Graphdua graphdua) {
+    private void computeInAndOutSubmission(Graphdua graphdua, NodeDominance<Node> dominanceGraphdua) {
         BitSet temp = new BitSet(duas.size());
         BitSet temp2 = new BitSet(duas.size());
         BitSet oldout = new BitSet(duas.size());
+        BitSet oldcov = new BitSet(duas.size());
         BitSet sleepy = new BitSet(duas.size());
         BitSet covered;
 
-        NodeDominance<Node> dominanceGraphdua = new NodeDominance<Node>(graphdua, null);
-        dominanceGraphdua.findDominanceGraphdua();
+//        NodeDominance<Node> dominanceGraphdua = new NodeDominance<Node>(graphdua, null);
+//        dominanceGraphdua.findDominanceGraphdua();
 //        System.out.println(dominanceGraphdua.toStringGraphduaDominance());
 
         Iterator<Node> itNode;
@@ -150,6 +151,8 @@ public class SubsumptionAnalyzer {
 //                        System.out.println("Back arc(" + pred.block().id()+"("+pred.idSubgraph()+")" + "," + n.block().id()+"("+n.idSubgraph() + "))");
 //                    }
                 }
+//                oldcov.clear();
+//                oldcov.or(n.getCovered());
 
                 n.getCovered().clear();
 
@@ -178,8 +181,12 @@ public class SubsumptionAnalyzer {
 
 //                covered = n.getCovered();
 //                System.out.println("Covered "+printNode(n)+": "+covered);
+//                System.out.println("OldCove "+printNode(n)+": "+oldcov);
+//                System.out.println("Out     "+printNode(n)+": "+n.getOut());
+//                System.out.println("Oldout  "+printNode(n)+": "+oldout);
 
                 if (!n.getOut().equals(oldout))
+                    // if (!n.getCovered().equals(oldcov))
                     changed = true;
 
             }
@@ -187,13 +194,93 @@ public class SubsumptionAnalyzer {
         }
     }
 
+    private void computeCoveredSets(Graphdua graphdua, NodeDominance<Node> dominanceGraphdua) {
+        BitSet temp = new BitSet(duas.size());
+        BitSet temp2 = new BitSet(duas.size());
+        BitSet oldout = new BitSet(duas.size());
+        BitSet oldcov = new BitSet(duas.size());
+        BitSet sleepy = new BitSet(duas.size());
+        BitSet covered;
+
+        Iterator<Node> itNode;
+
+        itNode = graphdua.iterator();
+
+        while (itNode.hasNext()) {
+            Node n = itNode.next();
+//                System.out.println("Node "+printNode(n));
+            if (graphdua.predecessors(n).isEmpty()) {
+                if (program.getGraph().entry().id() != n.block().id())
+                    continue; // Graphnode's dangling node
+                temp.clear();
+                temp.or(n.getIn());
+                temp2.clear();
+            } else {
+                temp.set(0, duas.size(), true);
+                temp2.set(0, duas.size(), true);
+            }
+
+            for (Node pred : graphdua.predecessors(n)) {
+                temp.and(pred.getOut());
+//                    System.out.println("Pred Out "+printNode(pred)+ ":"+pred.getOut());
+            }
+
+//                System.out.println("Out: "+temp);
+
+            for (Node pred : graphdua.predecessors(n)) {
+                temp2.and(pred.getCovered());
+//                    System.out.println("Pred Covered "+printNode(pred)+":"+pred.getCovered());
+            }
+
+
+            n.getIn().clear();
+            n.getIn().or(temp);
+
+            n.getLiveDuas().clear();
+            n.getLiveDuas().or(n.getIn());
+
+            sleepy.clear();
+
+            for (Node pred : graphdua.predecessors(n)) {
+                if (!dominanceGraphdua.isDominatorInGraphdua(n, pred)) {
+                    sleepy.or(pred.getSleepy());
+                }
+//                    else
+//                    {
+//                        System.out.println("Back arc(" + pred.block().id()+"("+pred.idSubgraph()+")" + "," + n.block().id()+"("+n.idSubgraph() + "))");
+//                    }
+            }
+            n.getCovered().clear();
+
+            n.getCovered().or(n.getLiveDuas());
+            n.getCovered().andNot(sleepy);
+            n.getCovered().and(n.getGen());
+
+            temp2.or(n.getCovered());
+            n.getCovered().clear();
+            n.getCovered().or(temp2);
+
+//                covered = n.getCovered();
+//                System.out.println("Covered "+printNode(n)+": "+covered);
+//                System.out.println("OldCove "+printNode(n)+": "+oldcov);
+//                System.out.println("Out     "+printNode(n)+": "+n.getOut());
+//                System.out.println("Oldout  "+printNode(n)+": "+oldout);
+
+        }
+
+    }
 
     public BitSet findDua2DuasSubsumption(Dua d) {
         analyzer = new CoverageAnalyzer(program.getGraph(), program.getInvGraph(), d);
         Graphdua graphdua = analyzer.findGraphdua();
-//        System.out.println(graphdua.toDot());
+
         computeNodeSets(graphdua);
-        computeInAndOutSubmission(graphdua);
+
+        NodeDominance<Node> dominanceGraphdua = new NodeDominance<Node>(graphdua, null);
+        dominanceGraphdua.findDominanceGraphdua();
+
+        computeInAndOutSubmission(graphdua, dominanceGraphdua);
+        computeCoveredSets(graphdua, dominanceGraphdua);
 
         return graphdua.exit().getCovered();
     }
@@ -211,7 +298,13 @@ public class SubsumptionAnalyzer {
         Graphdua graphdua = analyzer.findGraphdua();
 
         computeNodeSets(graphdua);
-        computeInAndOutSubmission(graphdua);
+
+        NodeDominance<Node> dominanceGraphdua = new NodeDominance<Node>(graphdua, null);
+        dominanceGraphdua.findDominanceGraphdua();
+
+        computeInAndOutSubmission(graphdua, dominanceGraphdua);
+        // Todo: add covered sets calculation
+
         // Covered bitset contains the duas covered at each node
         return graphdua;
     }
@@ -228,7 +321,14 @@ public class SubsumptionAnalyzer {
         Graphdua graphdua = analyzer.findGraphdua();
 
         computeNodeSets(graphdua);
-        computeInAndOutSubmission(graphdua);
+
+        NodeDominance<Node> dominanceGraphdua = new NodeDominance<Node>(graphdua, null);
+        dominanceGraphdua.findDominanceGraphdua();
+
+        computeInAndOutSubmission(graphdua, dominanceGraphdua);
+        // Todo: add covered sets calculation
+
+
         // Covered bitset contains the duas covered at each node
 
         // This method just find the nodes covered in each node; to get the subsumed by an edge

@@ -50,11 +50,11 @@ public class Program {
         return this.graph;
     }
 
+    int idcounter = 0;
+
     public String variable(int id) {
         return ids2variables.get(id);
     }
-
-    int idcounter = 0;
 
     public void addVariable(final String name, final int id) {
 

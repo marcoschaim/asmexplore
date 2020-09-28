@@ -102,7 +102,7 @@ public class ClassInfo {
         Iterator<MethodInfo> it = getMethodsInfo().iterator();
         while (it.hasNext()) {
             MethodInfo mi = it.next();
-            if (mi.getDuas().isEmpty() || mi.getReductionGraph() == null)
+            if (mi.getDuas().isEmpty())
                 continue;
 
             if (first)

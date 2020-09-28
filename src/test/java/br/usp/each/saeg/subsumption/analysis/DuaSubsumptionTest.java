@@ -349,9 +349,9 @@ public class DuaSubsumptionTest extends TestCase {
     }
 
     public void test7() {
-        System.out.println("MaxRogue");
-        String dir = "/Users/marcoschaim/projetos/data/max/";
-        String clazzname = "MaxRogue.class";
+        System.out.println("Selector");
+        String dir = "/Users/marcoschaim/projetos/data/filterForAdjacentSiblings/";
+        String clazzname = "Selector.class";
         try {
             cl = new ClassInfo(dir, clazzname);
             cl.genAllMethodInfo();
@@ -364,6 +364,10 @@ public class DuaSubsumptionTest extends TestCase {
                     continue;
 
                 System.out.println(mi.getName());
+
+                if (!mi.getName().equals("filterForAdjacentSiblings"))
+                    continue;
+
                 Dua d;
                 int counter = 0;
                 Iterator<Dua> itdua = mi.getDuas().iterator();
@@ -373,7 +377,7 @@ public class DuaSubsumptionTest extends TestCase {
 
                 while (itdua.hasNext()) {
                     d = itdua.next();
-                    if (counter != 100) {
+                    if (counter == 17) {
                         flowAnalyzer = new CoverageAnalyzer(mi.getProgram().getGraph(), d);
                         System.out.println(counter + ":" + d.toString());
                         Graphdua grf = flowAnalyzer.findGraphdua();
@@ -386,7 +390,7 @@ public class DuaSubsumptionTest extends TestCase {
                             int idDua = -1;
                             while ((idDua = subsumed.nextSetBit(idDua + 1)) != -1) {
                                 Dua subDua = duaSubAnalyzer.getDuaFromId(idDua);
-                                System.out.println("\t" + subDua.toString());
+                                System.out.println("\t" + idDua + ":" + subDua.toString());
                             }
                         } else
                             System.out.println("\tUnconstrained");

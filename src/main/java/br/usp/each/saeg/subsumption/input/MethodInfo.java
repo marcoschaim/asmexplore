@@ -439,67 +439,71 @@ public class MethodInfo {
 
         sb.append("\"Duas\" : \"" + idDefUseChain.size() + "\" ,\n");
 
-        sb.append("\"Subsumers\" : " + rg.unconstrainedNodes().size() + ",\n");
+        if (getReductionGraph() != null) {
+            sb.append("\"Subsumers\" : " + rg.unconstrainedNodes().size() + ",\n");
 
-        Iterator<ReductionNode> it = rg.unconstrainedNodes().iterator();
+            Iterator<ReductionNode> it = rg.unconstrainedNodes().iterator();
 
-        int noSubsumers = 0;
-        while (it.hasNext()) {
-            ReductionNode r = it.next();
-            sb.append("\"" + noSubsumers + "\" : [ ");
+            int noSubsumers = 0;
+            while (it.hasNext()) {
+                ReductionNode r = it.next();
+                sb.append("\"" + noSubsumers + "\" : [ ");
 
-            Iterator<Dua> itDua = r.getListDuas().iterator();
-            boolean first = true;
+                Iterator<Dua> itDua = r.getListDuas().iterator();
+                boolean first = true;
 
-            while (itDua.hasNext()) {
-                subsumer = itDua.next();
-                Iterator<Integer> itDfc = dua2idDefUseChains.get(subsumer.hashCode()).iterator();
-                while (itDfc.hasNext()) {
-                    int dfc = itDfc.next();
-                    if (first)
-                        first = false;
-                    else
-                        sb.append(", ");
-                    sb.append(dfc);
-                }
-            }
-
-            sb.append("],");
-
-            sb.append(" \"S" + noSubsumers + "\" : [");
-
-            //SubsumptionGraph sg = rg.getSubsumptionGraph();
-            SubsumptionAnalyzer sa = sg.getSubsumptionAnalyzer();
-
-            int idDua = sg.getDuaId(subsumer);
-
-            BitSet subsumptionVector = sg.getSubsumptionVector()[idDua];
-            if (subsumptionVector != null) {
-                if (!subsumptionVector.isEmpty()) {
-                    int idSubDua = -1;
-                    first = true;
-
-                    while ((idSubDua = subsumptionVector.nextSetBit(idSubDua + 1)) != -1) {
-                        Dua subsuming = sa.getDuaFromId(idSubDua);
-                        Iterator<Integer> itDfc = dua2idDefUseChains.get(subsuming.hashCode()).iterator();
-                        while (itDfc.hasNext()) {
-                            int dfc = itDfc.next();
-                            if (first) {
-                                first = false;
-                            } else
-                                sb.append(", ");
-                            sb.append(dfc);
-                        }
+                while (itDua.hasNext()) {
+                    subsumer = itDua.next();
+                    Iterator<Integer> itDfc = dua2idDefUseChains.get(subsumer.hashCode()).iterator();
+                    while (itDfc.hasNext()) {
+                        int dfc = itDfc.next();
+                        if (first)
+                            first = false;
+                        else
+                            sb.append(", ");
+                        sb.append(dfc);
                     }
-                    if (noSubsumers != (rg.unconstrainedNodes().size() - 1))
-                        sb.append(" ],");
-                    else
-                        sb.append(" ]");
                 }
-                sb.append("\n");
-            } else
-                System.out.println("Warning: Subsumption vector is null for dua:" + subsumer.toString());
-            noSubsumers++;
+
+                sb.append("],");
+
+                sb.append(" \"S" + noSubsumers + "\" : [");
+
+                //SubsumptionGraph sg = rg.getSubsumptionGraph();
+                SubsumptionAnalyzer sa = sg.getSubsumptionAnalyzer();
+
+                int idDua = sg.getDuaId(subsumer);
+
+                BitSet subsumptionVector = sg.getSubsumptionVector()[idDua];
+                if (subsumptionVector != null) {
+                    if (!subsumptionVector.isEmpty()) {
+                        int idSubDua = -1;
+                        first = true;
+
+                        while ((idSubDua = subsumptionVector.nextSetBit(idSubDua + 1)) != -1) {
+                            Dua subsuming = sa.getDuaFromId(idSubDua);
+                            Iterator<Integer> itDfc = dua2idDefUseChains.get(subsuming.hashCode()).iterator();
+                            while (itDfc.hasNext()) {
+                                int dfc = itDfc.next();
+                                if (first) {
+                                    first = false;
+                                } else
+                                    sb.append(", ");
+                                sb.append(dfc);
+                            }
+                        }
+                        if (noSubsumers != (rg.unconstrainedNodes().size() - 1))
+                            sb.append(" ],");
+                        else
+                            sb.append(" ]");
+                    }
+                    sb.append("\n");
+                } else
+                    System.out.println("Warning: Subsumption vector is null for dua:" + subsumer.toString());
+                noSubsumers++;
+            }
+        } else {
+            sb.append("\"Subsumers\" : 0 \n");
         }
         sb.append("}");
         return sb.toString();
@@ -622,7 +626,7 @@ public class MethodInfo {
 
         boolean first = true;
 
-        for (int id = 0; id < vars.length; ++id) {
+        for (int id = 0; id < p.numberOfVars(); ++id) {
             if (blk.isDef(id)) {
                 if (first) {
                     first = false;
@@ -647,7 +651,7 @@ public class MethodInfo {
 
         boolean first = true;
 
-        for (int id = 0; id < vars.length; ++id) {
+        for (int id = 0; id < p.numberOfVars(); ++id) {
             if (blk.isCUse(id)) {
                 if (first) {
                     first = false;
@@ -672,7 +676,7 @@ public class MethodInfo {
 
         boolean first = true;
 
-        for (int id = 0; id < vars.length; ++id) {
+        for (int id = 0; id < p.numberOfVars(); ++id) {
             if (blk.isPUse(id)) {
                 if (first) {
                     first = false;

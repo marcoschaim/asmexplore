@@ -102,9 +102,9 @@ public class SubsumptionGraphTest extends TestCase {
     }
 
     public void test3() {
-        System.out.println("TestBuffer");
+        System.out.println("Selector");
         try {
-            cl = new ClassInfo("/Users/marcoschaim/projetos/data/TextBuffer/", "TextBuffer.class");
+            cl = new ClassInfo("/Users/marcoschaim/projetos/data/filterForAdjacentSiblings/", "Selector.class");
             cl.genAllMethodInfo();
 
             for (MethodInfo mi : cl.getMethodsInfo()) {
