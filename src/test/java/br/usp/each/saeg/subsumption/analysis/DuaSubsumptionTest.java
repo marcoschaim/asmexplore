@@ -45,7 +45,7 @@ public class DuaSubsumptionTest extends TestCase {
 
                 mi.printMethodCFG();
                 writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
-                writeBufferToFile(dir, mi.getName() + ".gz", mi.graphDefUseToDot());
+                writeBufferToFile(dir, mi.getName() + ".gdu", mi.graphDefUseToDot());
 
                 duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(), mi.getDuas());
                 Graphdua graphdua = duaSubAnalyzer.findNode2DuasSubsumption();
@@ -156,6 +156,7 @@ public class DuaSubsumptionTest extends TestCase {
 //                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".ns",graphdua.toDotNodeSubsumption(duaSubAnalyzer));
 
                 System.out.println(graphdua.toDotNodeSubsumption(duaSubAnalyzer));
+
                 graphdua = duaSubAnalyzer.findEdge2DuasSubsumption();
 //                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".es",graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
 
@@ -206,7 +207,7 @@ public class DuaSubsumptionTest extends TestCase {
 
                 mi.printMethodCFG();
                 writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
-                writeBufferToFile(dir, mi.getName() + ".gz", mi.graphDefUseToDot());
+                writeBufferToFile(dir, mi.getName() + ".gdu", mi.graphDefUseToDot());
 
                 duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(), mi.getDuas());
                 Graphdua graphdua = duaSubAnalyzer.findNode2DuasSubsumption();
@@ -266,7 +267,7 @@ public class DuaSubsumptionTest extends TestCase {
                     continue;
 
                 writeBufferToFile(dir, mi.getName() + ".csv", mi.toDuasCSV());
-                writeBufferToFile(dir, mi.getName() + ".gz", mi.graphDefUseToDot());
+                writeBufferToFile(dir, mi.getName() + ".gdu", mi.graphDefUseToDot());
 
                 SubsumptionGraph sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
                 ReductionGraph rg = new ReductionGraph(sg);
@@ -308,13 +309,15 @@ public class DuaSubsumptionTest extends TestCase {
                 int counter = 1;
                 Iterator<Dua> itdua = mi.getDuas().iterator();
 
-                mi.printMethodCFG();
+
+                //mi.printMethodCFG();
                 //writeBufferToFile(dir,mi.getName()+".csv", mi.printMethodDuas());
-                //writeBufferToFile(dir, mi.getName() + ".gz", mi.graphDefUseToDot());
+                System.out.println(mi.graphDefUseToDot());
 
                 duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(), mi.getDuas());
                 Graphdua graphdua = duaSubAnalyzer.findEdge2DuasSubsumption();
 
+                System.out.println(graphdua.toDot());
 
                 BitSet allSubsumed = new BitSet(mi.getDuas().size());
                 allSubsumed.clear();
@@ -337,6 +340,7 @@ public class DuaSubsumptionTest extends TestCase {
                         System.out.println();
                     }
                 }
+                System.out.println(graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
                 System.out.println("Total of duas covered by touring only nodes of " + mi.getName() + ":" + allSubsumed.cardinality());
                 //writeBufferToFile(dir, mi.getName() + ".ns", graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
                 System.out.println(graphdua.toDotEdgeSubsumption(duaSubAnalyzer));

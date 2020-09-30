@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="7" failures="0" name="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" time="0.39" errors="0" skipped="0">
+<testsuite tests="7" failures="0" name="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" time="0.102" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="12+33"/>
@@ -56,11 +56,11 @@
     <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
     <property name="sun.cpu.endian" value="little"/>
   </properties>
-  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test3_1" time="0.283"/>
-  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test21" time="0.006"/>
-  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test1" time="0.036"/>
-  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test2" time="0.013"/>
-  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test3" time="0.047"/>
+  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test3_1" time="0.025"/>
+  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test21" time="0.004"/>
+  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test1" time="0.01"/>
+  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test2" time="0.006"/>
+  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test3" time="0.053"/>
   <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test4" time="0.001"/>
-  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test5" time="0.004"/>
+  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test5" time="0.003"/>
 </testsuite>

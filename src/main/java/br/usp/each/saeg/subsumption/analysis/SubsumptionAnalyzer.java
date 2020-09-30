@@ -288,10 +288,11 @@ public class SubsumptionAnalyzer {
     public Graphdua findNode2DuasSubsumption() {
         Block entry, exit;
 
-        // Create fake dua
         entry = program.getGraph().entry();
         exit = program.getGraph().exit();
-        Dua fakedua = new Dua(entry, exit, 0, "this");
+
+        // Create fake dua to clone the GFC
+        Dua fakedua = new Dua(entry, exit, -2, "");
 
         // Create graphdua equals to CFG
         analyzer = new CoverageAnalyzer(program.getGraph(), fakedua);
@@ -303,7 +304,7 @@ public class SubsumptionAnalyzer {
         dominanceGraphdua.findDominanceGraphdua();
 
         computeInAndOutSubmission(graphdua, dominanceGraphdua);
-        // Todo: add covered sets calculation
+        computeCoveredSets(graphdua, dominanceGraphdua);
 
         // Covered bitset contains the duas covered at each node
         return graphdua;
@@ -314,7 +315,9 @@ public class SubsumptionAnalyzer {
         // Create fake dua
         entry = program.getGraph().entry();
         exit = program.getGraph().exit();
-        Dua fakedua = new Dua(entry, exit, 0, "this");
+
+        // Create fake dua to clone the GFC
+        Dua fakedua = new Dua(entry, exit, -2, "");
 
         // Create graphdua equals to CFG
         analyzer = new CoverageAnalyzer(program.getGraph(), fakedua);
@@ -326,8 +329,7 @@ public class SubsumptionAnalyzer {
         dominanceGraphdua.findDominanceGraphdua();
 
         computeInAndOutSubmission(graphdua, dominanceGraphdua);
-        // Todo: add covered sets calculation
-
+        computeCoveredSets(graphdua, dominanceGraphdua);
 
         // Covered bitset contains the duas covered at each node
 

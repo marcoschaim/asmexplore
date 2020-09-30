@@ -46,11 +46,11 @@ public class Program {
 
     private Node[] dataFlowSets;
 
+    int idcounter = 0;
+
     public Flowgraph<Block> getGraph() {
         return this.graph;
     }
-
-    int idcounter = 0;
 
     public String variable(int id) {
         return ids2variables.get(id);

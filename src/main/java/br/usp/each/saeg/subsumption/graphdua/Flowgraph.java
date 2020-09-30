@@ -177,6 +177,14 @@ public class Flowgraph<K extends Identifiable> extends Graph<K> {
         return localnodes.size();
     }
 
+    public int sizeEdges() {
+        int total = 0;
+        for (Set<K> list : localedges.values()) {
+            total += list.size();
+        }
+        return total;
+    }
+
     @Override
     public Iterator<K> iterator() {
         return localedges.keySet().iterator();

@@ -29,20 +29,6 @@ public class Graphdua extends Graph<Node> {
         this.sgn4 = sg4;
         this.sgn5 = sg5;
 
-
-        //System.out.println(sg1);
-//        createNodesEdgesGraphDua(sg1);
-//        //System.out.println(sg2);
-//        createNodesEdgesGraphDua(sg2);
-//        //System.out.println(sg3);
-//        createNodesEdgesGraphDua(sg3);
-//        //System.out.println(sg4);
-//        createNodesEdgesGraphDua(sg4);
-//        //System.out.println(sg5);
-//        createNodesEdgesGraphDua(sg5);
-
-//        calculateGraphDuaSize();
-
         mapNodesFromSubgraph(sgn1);
 
         mapNodesFromSubgraph(sgn2);
@@ -52,7 +38,6 @@ public class Graphdua extends Graph<Node> {
         mapNodesFromSubgraph(sgn4);
 
         mapNodesFromSubgraph(sg5);
-
 
         connectSubgraphs(sgn1, sgn2);
         connectSubgraphs(sgn1, sgn3);
@@ -74,7 +59,6 @@ public class Graphdua extends Graph<Node> {
 
         findReversePostOrder();
     }
-
 
     private void mapNodesFromSubgraph(Subgraph<Node> sg) {
         if (sg == null) return;
@@ -237,6 +221,7 @@ public class Graphdua extends Graph<Node> {
         return null;
     }
 
+
     public Node[] getrPostOrderArray() {
         return rPostOrderArray;
     }
@@ -395,6 +380,19 @@ public class Graphdua extends Graph<Node> {
         return sb.toString();
     }
 
+    public BitSet getAllDuasSubsumedNode(SubsumptionAnalyzer analyzer) {
+        BitSet allSubsumed = new BitSet(entryNode.getCovered().size());
+        allSubsumed.clear();
+
+        Iterator<Node> i = this.iterator();
+
+        while (i.hasNext()) {
+            Node k = i.next();
+            allSubsumed.or(k.getCovered());
+        }
+        return allSubsumed;
+    }
+
     public BitSet getDuasSubsumedEdge(Node org, Node trg) {
         BitSet subsumed = new BitSet(org.getCovered().size());
         subsumed.clear();
@@ -413,8 +411,28 @@ public class Graphdua extends Graph<Node> {
 
         }
 
-
         return subsumed;
+    }
+
+    public BitSet getAllDuasSubsumedEdge(SubsumptionAnalyzer analyzer) {
+        BitSet allSubsumed = new BitSet(entryNode.getCovered().size());
+        allSubsumed.clear();
+
+        Iterator<Node> i = this.iterator();
+
+        while (i.hasNext()) {
+            Node k = i.next();
+
+            Set<Node> neighbors = this.neighbors(k.id());
+            for (Node kn : neighbors) {
+                BitSet coveredInEdge = getDuasSubsumedEdge(k, kn);
+                if (!coveredInEdge.isEmpty()) {
+                    allSubsumed.or(coveredInEdge);
+                }
+            }
+        }
+
+        return allSubsumed;
     }
 
     public String toDotEdgeSubsumption(SubsumptionAnalyzer analyzer) {

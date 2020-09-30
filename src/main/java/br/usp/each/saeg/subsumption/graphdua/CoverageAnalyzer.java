@@ -308,7 +308,8 @@ public class CoverageAnalyzer {
             Set<Block> successors = getSuccessors(n);
 
             for (Block wsuc : successors) {
-                if (!wsuc.equals(ni) && !wsuc.equals(nj) && wsuc.isDef(x)) {
+                // x == -2 indicates a fake dua
+                if (!wsuc.equals(ni) && !wsuc.equals(nj) && (x != -2 && wsuc.isDef(x))) {
                     if (wsuc.isDef(x))
                         toBeChecked.set(n.id()); // n should be checked for dangling paths
                     continue;
@@ -383,7 +384,8 @@ public class CoverageAnalyzer {
             Set<Block> predecessors = getPredecessors(n);
 
             for (Block wpred : predecessors) {
-                if (!wpred.equals(ni) && !wpred.equals(nj) && wpred.isDef(x)) {
+                // x == -2 indicates a fake dua
+                if (!wpred.equals(ni) && !wpred.equals(nj) && (x != -2 && wpred.isDef(x))) {
                     continue;
                 }
 

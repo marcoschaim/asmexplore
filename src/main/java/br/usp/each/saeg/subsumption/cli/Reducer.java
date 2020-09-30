@@ -33,6 +33,8 @@ public class Reducer {
                 if (mi.getDuas().isEmpty())
                     continue;
 
+                // Create a name for the files based on the class and method names
+
                 String methodname = ci.getName().replace(File.separator, ".") + "." + mi.getName();
 
                 if (mi.getHasIncomingEdges()) {
@@ -45,7 +47,6 @@ public class Reducer {
                     continue;
                 }
 
-                // Create a name for the files based on the class and method names
 
                 final TimeWatch tw = TimeWatch.start();
                 sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
@@ -59,6 +60,7 @@ public class Reducer {
 
                 mi.setSubsumptionGraph(sg);
                 mi.setReductionGraph(rg);
+
                 System.out.println("\n#" + ci.getName() + File.separator + mi.getName() + ":");
 
                 if (printReductionInfo) {
