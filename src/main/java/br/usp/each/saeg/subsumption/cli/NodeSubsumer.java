@@ -19,7 +19,7 @@ public class NodeSubsumer {
 
     public static int nodeSubsumeAll(File src, InputStream input, String path) {
         int n = 0; // # of methods analyzed
-        boolean printLocalDuaNodeFile = true;
+        boolean printLocalDuaNodeFile = false;
         try {
             ClassInfo ci = new ClassInfo(input);
             path = path + File.separator;
@@ -67,7 +67,7 @@ public class NodeSubsumer {
 
                 System.out.println("\n#" + ci.getName() + File.separator + mi.getName() + ":");
                 System.out.println(MessageFormat.format(
-                        "Local DUA-Node subsumption of method {0}  calculated in {1} minutes, {2} seconds, and {3} milliseconds", methodname, (milliseconds / 1000) / 60, (milliseconds / 1000) % 60, milliseconds));
+                        "Local DUA-Node subsumption of method {0} calculated in {1} minutes, {2} seconds, and {3} milliseconds", methodname, (milliseconds / 1000) / 60, (milliseconds / 1000) % 60, milliseconds));
                 n++;
             }
         } catch (Exception e) {

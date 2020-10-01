@@ -92,13 +92,14 @@ public class Reduce {
         }
 
         try {
-            System.out.println("@@ Method, Nodes, Nduas, Uduas, Rduas, UduaPerc, RduaPerc, Time_s, Time_ms\n");
+            System.out.println("DUA-DUA subsumption");
+            System.out.println("@@ Method, Nodes, Edges, DUAs, UDUAs, RDUAs, UPerc, RPerc, Time_s, Time_ms\n");
             final TimeWatch tw = TimeWatch.start();
             final int total = new Reduce(options).reduce();
             final long seconds = tw.time(TimeUnit.SECONDS);
 
             System.out.println(MessageFormat.format(
-                    "{0} methods analyzed in {1} minutes and {2} seconds", total, seconds/60, seconds % 60));
+                    "{0} methods analyzed in {1} minutes and {2} seconds", total, seconds / 60, seconds % 60));
 
         } catch (final IOException e) {
             System.err.println("Failed: " + e.getLocalizedMessage());

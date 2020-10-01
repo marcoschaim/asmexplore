@@ -20,7 +20,7 @@ public class Reducer {
     public static int reduceAll(File src, InputStream input, String path) {
         int n = 0; // # of methods analyzed
         StringBuffer sb = new StringBuffer();
-        boolean printReductionInfo = false;
+        boolean printReductionInfoFile = false;
 
         try {
             ClassInfo ci = new ClassInfo(input);
@@ -63,21 +63,21 @@ public class Reducer {
 
                 System.out.println("\n#" + ci.getName() + File.separator + mi.getName() + ":");
 
-                if (printReductionInfo) {
+                if (!printReductionInfoFile) {
 
                     System.out.println(MessageFormat.format(
                             "Method {0} reduced in {1} minutes and {2} seconds. Total em milliseconds {3}", mi.getName(), (milliseconds / 1000) / 60, (milliseconds / 1000) % 60, milliseconds));
+                    System.out.println("## nodes: " + mi.getProgram().getGraph().size());
+                    System.out.println("## edges: " + mi.getProgram().getGraph().sizeEdges());
                     System.out.println("## duas: " + mi.getDuas().size());
                     System.out.println("## Unconstrained duas: " + rg.unconstrainedNodes().size());
                     System.out.println("## Reduction nodes: " + rg.size());
-                    System.out.println("@@ " + methodname + mi.getProgram().getGraph().size() + "," + mi.getDuas().size() + "," + rg.unconstrainedNodes().size() + "," + rg.size() + "," + ((double) rg.unconstrainedNodes().size() / mi.getDuas().size()) * 100 + "," + ((double) rg.size() / mi.getDuas().size()) * 100 + "," + milliseconds / 1000 + "," + milliseconds + "\n");
-                    sb.append(methodname + ";" + mi.getDuas().size() + ";" + rg.unconstrainedNodes().size() + ";" + rg.size() + ";" + milliseconds + ";\n");
-                    System.out.println("sb:" + sb.toString());
-
+                    System.out.println("@@ " + methodname + "," + mi.getProgram().getGraph().size() + "," + mi.getProgram().getGraph().sizeEdges() + "," + mi.getDuas().size() + "," + rg.unconstrainedNodes().size() + "," + rg.size() + "," + ((double) rg.unconstrainedNodes().size() / mi.getDuas().size()) * 100 + "," + ((double) rg.size() / mi.getDuas().size()) * 100 + "," + milliseconds / 1000 + "," + milliseconds + "\n");
+                    System.out.println(methodname + ";" + mi.getDuas().size() + ";" + rg.unconstrainedNodes().size() + ";" + rg.size() + ";" + milliseconds + ";\n");
                 }
                 n++;
             }
-            if (!printReductionInfo) {
+            if (!printReductionInfoFile) {
                 writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".duas.json", ci.toJsonDuas());
                 writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".sub.json", ci.toJsonSubsumption());
             }
