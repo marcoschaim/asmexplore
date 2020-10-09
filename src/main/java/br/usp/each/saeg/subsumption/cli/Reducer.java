@@ -77,7 +77,7 @@ public class Reducer {
                 }
                 n++;
             }
-            if (!printReductionInfoFile) {
+            if (printReductionInfoFile) {
                 writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".duas.json", ci.toJsonDuas());
                 writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".sub.json", ci.toJsonSubsumption());
             }

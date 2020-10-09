@@ -103,9 +103,9 @@ public class ClassInfoTest extends TestCase {
     }
 
     public void test2_2() {
-        System.out.println("RandomDataGenerator");
-        String dir = "/Users/marcoschaim/projetos/data/RandomDataGenerator/";
-        String clazzname = "RandomDataGenerator.class";
+        System.out.println("CollectionUtils");
+        String dir = "/Users/marcoschaim/projetos/data/CollectionUtils/";
+        String clazzname = "CollectionUtils.class";
         try {
             cl = new ClassInfo(dir, clazzname);
             cl.genAllMethodInfo();

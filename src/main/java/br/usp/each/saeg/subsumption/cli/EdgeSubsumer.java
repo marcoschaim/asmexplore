@@ -68,7 +68,6 @@ public class EdgeSubsumer {
                 System.out.println("\n#" + ci.getName() + File.separator + mi.getName() + ":");
                 System.out.println(MessageFormat.format(
                         "Local DUA-Edge subsumption of method {0}  calculated in {1} minutes, {2} seconds, and {3} milliseconds", methodname, (milliseconds / 1000) / 60, (milliseconds / 1000) % 60, milliseconds));
-
                 n++;
             }
         } catch (Exception e) {

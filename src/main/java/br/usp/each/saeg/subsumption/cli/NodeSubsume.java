@@ -77,10 +77,11 @@ public class NodeSubsume {
             final TimeWatch tw = TimeWatch.start();
             final int total = new NodeSubsume(options).nodeSubsume();
             final long seconds = tw.time(TimeUnit.SECONDS);
+            final long milliseconds = tw.time(TimeUnit.MILLISECONDS);
 
             System.out.println(MessageFormat.format(
                     "{0} methods had the node subsumption relationship calculated in {1} minutes and {2} seconds", total, seconds / 60, seconds % 60));
-
+            System.out.println("Local DUA-Node subsumption time (ms):" + milliseconds);
         } catch (final IOException e) {
             System.err.println("Failed: " + e.getLocalizedMessage());
             System.exit(1);

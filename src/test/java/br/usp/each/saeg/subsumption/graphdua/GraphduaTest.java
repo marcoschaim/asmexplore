@@ -219,6 +219,7 @@ public class GraphduaTest extends TestCase {
         }
     }
 
+
     static void writeBufferToFile(String dir, String name, String s) {
         // Convert the string to a
         // byte array.

@@ -71,7 +71,9 @@ public class NodeSubsumer {
                 n++;
             }
         } catch (Exception e) {
-            System.err.println("Failed to analyze: " + path);
+            String failfile = src.getPath();
+            if (failfile.contains(".class"))
+                System.out.println("Fail to analyze: " + failfile);
         }
         return n;
     }
