@@ -65,9 +65,9 @@ public class NodeDominanceTest extends TestCase {
     }
 
     public void test2() {
-        System.out.println("DoubleMetaphone");
-        String dir = "/Users/marcoschaim/projetos/data/DoubleMetaphone/";
-        String clazzname = "DoubleMetaphone.class";
+        System.out.println("SingularValueDecomposition");
+        String dir = "/Users/marcoschaim/projetos/data/SingularValueDecomposition/";
+        String clazzname = "SingularValueDecomposition.class";
         int backarcs, retreatarcs;
         try {
             cl = new ClassInfo(dir, clazzname);
@@ -104,6 +104,7 @@ public class NodeDominanceTest extends TestCase {
                         }
                     }
                 }
+                System.out.println(mi.getName() + ":# of DUAs:" + mi.getDuas().size());
                 System.out.println(mi.getName() + ":# of Backarcs:" + backarcs);
                 System.out.println(mi.getName() + ":# of Retreatarcs:" + retreatarcs);
             }
