@@ -247,6 +247,10 @@ public class Graphdua extends Graph<Node> {
         return exitNode;
     }
 
+    public Node exitSG3() {
+        return sgn3.exit();
+    }
+
     @Override
     public int size() {
         return size;

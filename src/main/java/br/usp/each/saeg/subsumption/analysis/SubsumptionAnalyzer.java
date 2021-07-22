@@ -285,6 +285,21 @@ public class SubsumptionAnalyzer {
         return graphdua.exit().getCovered();
     }
 
+    public BitSet findLocalDua2DuasSubsumption(Dua d) {
+        analyzer = new CoverageAnalyzer(program.getGraph(), program.getInvGraph(), d);
+        Graphdua graphdua = analyzer.findGraphdua();
+
+        computeNodeSets(graphdua);
+
+        NodeDominance<Node> dominanceGraphdua = new NodeDominance<Node>(graphdua, null);
+        dominanceGraphdua.findDominanceGraphdua();
+
+        computeInAndOutSubmission(graphdua, dominanceGraphdua);
+        computeCoveredSets(graphdua, dominanceGraphdua);
+
+        return graphdua.exitSG3().getCovered();
+    }
+
     public Graphdua findNode2DuasSubsumption() {
         Block entry, exit;
 
@@ -346,6 +361,17 @@ public class SubsumptionAnalyzer {
         while (itDua.hasNext()) {
             Dua d = itDua.next();
             id2Subsumed[getDuaId(d)] = findDua2DuasSubsumption(d);
+        }
+
+        return id2Subsumed;
+    }
+
+    BitSet[] findAllLocalDuaSubsumption() {
+        Iterator<Dua> itDua = duas.iterator();
+
+        while (itDua.hasNext()) {
+            Dua d = itDua.next();
+            id2Subsumed[getDuaId(d)] = findLocalDua2DuasSubsumption(d);
         }
 
         return id2Subsumed;

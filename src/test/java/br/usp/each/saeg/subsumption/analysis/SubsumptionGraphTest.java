@@ -21,6 +21,7 @@ public class SubsumptionGraphTest extends TestCase {
     //@Test
     public void test1() {
         System.out.println("Sort");
+        StringBuffer sb = new StringBuffer();
         try {
             cl = new ClassInfo("/Users/marcoschaim/projetos/data/sort/", "Sort.class");
             cl.genAllMethodInfo();
@@ -32,12 +33,13 @@ public class SubsumptionGraphTest extends TestCase {
                 if (mi.getDuas().isEmpty())
                     continue;
 
-                mi.printMethodCFG();
+                //mi.printMethodCFG();
                 mi.toDuasCSV();
-                subduagraph = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
+                System.out.println(mi.toJsonEdges(sb));
+                subduagraph = new SubsumptionGraph(mi.getProgram(), mi.getDuas(), false);
                 System.out.println(subduagraph);
             }
-
+            System.out.println(cl.toJsonNodes());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -116,14 +118,81 @@ public class SubsumptionGraphTest extends TestCase {
 
                 mi.printMethodCFG();
                 mi.toDuasCSV();
-                subduagraph = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
+
+                subduagraph = new SubsumptionGraph(mi.getProgram(), mi.getDuas(), false);
                 System.out.println(subduagraph);
             }
 
-
+            System.out.println(cl.toJsonNodes());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    @Test
+    public void test4() {
+        System.out.println("RegEx");
+        String dir = "/Users/marcoschaim/docencia/ach2003/exemplos/exemplo9/src/br/usp/each/si/ach2003/";
+        String classname = "Main.class";
+
+        try {
+            cl = new ClassInfo(dir, classname);
+            cl.genAllMethodInfo();
+
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+
+                if (mi.getDuas().isEmpty())
+                    continue;
+
+                if (mi.getHasDanglingNodes()) {
+                    System.out.println("Method " + mi.getName() + " has dangling nodes.");
+                    continue;
+                }
+
+                BitSet totalSubsumed = new BitSet(mi.getDuas().size());
+
+//                SubsumptionAnalyzer duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(),mi.getDuas());
+                subduagraph = new SubsumptionGraph(mi.getProgram(), mi.getDuas(), false);
+                System.out.println(subduagraph);
+//                Graphdua grd = duaSubAnalyzer.findEdge2DuasSubsumption();
+//                System.out.println("CFG(" + mi.getName() + "):");
+//                System.out.println("Edges:");
+//
+//                final Iterator<Node> it = grd.iterator();
+//
+//                while (it.hasNext()) {
+//                    Node pred = it.next();
+//                    if(grd.neighbors(pred.id()).size() == 0)
+//                        continue;
+//
+//                    duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(),mi.getDuas());
+//                    totalSubsumed.clear();
+//
+//                    for (Node suc : grd.neighbors(pred.id())) {
+//                        System.out.println("Edge(" + pred.block().id() + ","+suc.block().id()+ "):");
+//                        BitSet subsumed = grd.getDuasSubsumedEdge(pred,suc);
+//                        totalSubsumed.or(subsumed);
+//
+//                        if (!subsumed.isEmpty()) {
+//                            int idDua = -1;
+//                            while ((idDua = subsumed.nextSetBit(idDua + 1)) != -1) {
+//                                Dua subDua = duaSubAnalyzer.getDuaFromId(idDua);
+//                                System.out.println("\t" + subDua.toString());
+//                            }
+//
+//                        }
+//                        System.out.println();
+//                    }
+//                }
+//                System.out.println("Total of duas covered by edges: " + totalSubsumed.cardinality());
+            }
+
+            System.out.println(cl.toJsonDuas());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

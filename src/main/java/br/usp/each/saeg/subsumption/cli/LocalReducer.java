@@ -13,11 +13,11 @@ import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.concurrent.TimeUnit;
 
-public class Reducer {
+public class LocalReducer {
     static private SubsumptionGraph sg;
     static private ReductionGraph rg;
 
-    public static int reduceAll(File src, InputStream input, String path) {
+    public static int localReduceAll(File src, InputStream input, String path) {
         int n = 0; // # of methods analyzed
         StringBuffer sb = new StringBuffer();
         boolean printReductionInfoFile = true;
@@ -47,13 +47,9 @@ public class Reducer {
                     continue;
                 }
 
-                if (mi.getHasDanglingNodes()) {
-                    System.out.println("Warning: Method:" + methodname + " has dangling nodes.");
-                    continue;
-                }
 
                 final TimeWatch tw = TimeWatch.start();
-                sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas(), false);
+                sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas(), true);
 
                 rg = new ReductionGraph(sg);
                 rg.setDua2DefUseChains(mi.getDefChainsMap());

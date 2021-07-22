@@ -42,6 +42,7 @@ public class MethodInfo {
 
     boolean hasIncomingEdges = false;
     boolean hasAutoEdge = false;
+    boolean hasDanglingNodes = false;
     String owner;
 
 
@@ -110,6 +111,9 @@ public class MethodInfo {
         if (!p.getGraph().revNeighbors(0).isEmpty()) {
             hasIncomingEdges = true;
         }
+
+        if (!checkNodeReachability(p))
+            hasDanglingNodes = true;
     }
 
     void visitInstruction(Program p, int ins, boolean[] vis) {
@@ -127,6 +131,26 @@ public class MethodInfo {
         }
     }
 
+    boolean checkNodeReachability(Program p) {
+        boolean vis = true;
+        Iterator<Block> it = p.getGraph().iterator();
+        while (it.hasNext()) {
+            Block b = it.next();
+            if (p.getGraph().entry().id() != b.id()) {
+                if (p.getGraph().revNeighbors(b.id()).isEmpty()) {
+                    vis = false;
+                    break;
+                }
+            }
+            if (p.getGraph().exit().id() != b.id()) {
+                if (p.getGraph().neighbors(b.id()).isEmpty()) {
+                    vis = false;
+                    break;
+                }
+            }
+        }
+        return vis;
+    }
 
     void connectNewExitNode(Block node, boolean[] vis) {
         vis[node.id()] = true;
@@ -420,6 +444,10 @@ public class MethodInfo {
         return this.hasAutoEdge;
     }
 
+    public boolean getHasDanglingNodes() {
+        return this.hasDanglingNodes;
+    }
+
     public void setReductionGraph(ReductionGraph rg) {
         this.rg = rg;
     }
@@ -537,6 +565,77 @@ public class MethodInfo {
         return sb.toString();
     }
 
+    public String toJsonNodes(StringBuffer sb) {
+        Set<Integer> nodeLines = new HashSet<>();
+        sb.append("{ \"Name\" : \"" + getName() + "\" ,\n");
+        sb.append("\"Nodes\" : " + p.getGraph().size() + ",\n");
+
+        Iterator<Block> itblk = p.getGraph().iterator();
+
+        while (itblk.hasNext()) {
+            Block suc = itblk.next();
+            sb.append("\"" + suc.id() + "\" : [ ");
+            nodeLines.clear();
+
+            for (int l : suc.lines()) {
+                if (!nodeLines.contains((lines[l]))) {
+                    nodeLines.add(lines[l]);
+                }
+            }
+
+            Iterator<Integer> it = nodeLines.iterator();
+
+            while (it.hasNext()) {
+                int line = it.next();
+                if (it.hasNext())
+                    sb.append(line + ",");
+                else
+                    sb.append(line);
+            }
+            if (itblk.hasNext())
+                sb.append(" ],\n");
+            else
+                sb.append(" ]\n");
+        }
+        sb.append("}");
+        return sb.toString();
+    }
+
+    public String toJsonEdges(StringBuffer sb) {
+        Set<Integer> nodeLines = new HashSet<>();
+        sb.append("{ \"Name\" : \"" + getName() + "\" ,\n");
+        sb.append("\"Edges\" : " + p.getGraph().sizeEdges() + ",\n");
+
+        Iterator<Block> itblk = p.getGraph().iterator();
+
+        while (itblk.hasNext()) {
+            Block suc = itblk.next();
+            sb.append("\"" + suc.id() + "\" : [ ");
+            nodeLines.clear();
+
+            for (int l : suc.lines()) {
+                if (!nodeLines.contains((lines[l]))) {
+                    nodeLines.add(lines[l]);
+                }
+            }
+
+            Iterator<Integer> it = nodeLines.iterator();
+
+            while (it.hasNext()) {
+                int line = it.next();
+                if (it.hasNext())
+                    sb.append(line + ",");
+                else
+                    sb.append(line);
+            }
+            if (itblk.hasNext())
+                sb.append(" ],\n");
+            else
+                sb.append(" ]\n");
+        }
+        sb.append("}");
+        return sb.toString();
+    }
 
     public String graphDefUseToDot() {
         final StringBuilder sb = new StringBuilder();

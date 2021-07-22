@@ -201,7 +201,7 @@ public class ReductionGraph extends Graph<ReductionNode> {
     public String toDot() {
         final StringBuilder sb = new StringBuilder();
         Iterator<ReductionNode> it = this.iterator();
-        final boolean nodePrint = true;
+        final boolean nodePrint = false;
 
         sb.append("digraph { \n");
         while(it.hasNext()) {

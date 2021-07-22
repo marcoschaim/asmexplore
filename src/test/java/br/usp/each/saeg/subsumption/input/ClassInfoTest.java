@@ -53,9 +53,9 @@ public class ClassInfoTest extends TestCase {
 
     //@Test
     public void test2() {
-        System.out.println("Fibonacci");
-        String dir = "/Users/marcoschaim/projetos/Fibonacci/";
-        String clazzname = "Fibonacci.class";
+        System.out.println("IR");
+        String dir = "/Users/marcoschaim/projetos/data/IR/";
+        String clazzname = "IR.class";
         try {
             cl = new ClassInfo(dir, clazzname);
             cl.genAllMethodInfo();
@@ -129,9 +129,9 @@ public class ClassInfoTest extends TestCase {
 
     //@Test
     public void test3() {
-        System.out.println("AggregateSummaryStatistics");
-        String dir = "/Users/marcoschaim/projetos/data/AggregateSummaryStatistics/";
-        String clazzname = "AggregateSummaryStatistics.class";
+        System.out.println("Compiler");
+        String dir = "/Users/marcoschaim/projetos/data/Compiler/";
+        String clazzname = "Compiler.class";
         try {
             cl = new ClassInfo(dir, clazzname);
             cl.genAllMethodInfo();
@@ -139,7 +139,7 @@ public class ClassInfoTest extends TestCase {
             for (MethodInfo mi : cl.getMethodsInfo()) {
                 mi.createMethodCFG();
                 mi.createMethodDuas();
-//              mi.printMethodCFG();
+                System.out.println(mi.graphDefUseToDot());
 //              writeBufferToFile(dir, mi.getName() + ".csv", mi.printMethodDuas());
             }
 //            System.out.println(cl.toJsonSubsumption());

@@ -4,15 +4,6 @@ import java.util.Arrays;
 
 public class Main {
 
-    private enum Command {
-        analyze,
-        edgesubsume,
-        graphdua,
-        nodesubsume ,
-        reduce,
-        subsume
-    }
-
     public static void main(final String[] args) {
         if (args.length == 0) {
             exit("no command specified");
@@ -38,6 +29,9 @@ public class Main {
                 case reduce:
                     Reduce.main(commandArgs);
                     break;
+                case localreduce:
+                    LocalReduce.main(commandArgs);
+                    break;
                 case subsume:
                     Subsume.main(commandArgs);
                     break;
@@ -45,6 +39,16 @@ public class Main {
         } catch (final IllegalArgumentException e) {
             exit("no such command: " + command);
         }
+    }
+
+    private enum Command {
+        analyze,
+        edgesubsume,
+        graphdua,
+        localreduce,
+        nodesubsume,
+        reduce,
+        subsume
     }
 
     private static void exit(final String message) {

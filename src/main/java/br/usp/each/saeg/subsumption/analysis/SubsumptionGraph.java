@@ -16,9 +16,14 @@ public class SubsumptionGraph extends Graph<SubsumptionNode> {
     public SubsumptionGraph() {
 
     }
-    public SubsumptionGraph(Program p, List<Dua> listDuas) {
+
+    public SubsumptionGraph(Program p, List<Dua> listDuas, boolean local) {
         analyzer = new SubsumptionAnalyzer(p, listDuas);
-        subsumptionVector = analyzer.findAllDuaSubsumption();
+
+        if (local)
+            subsumptionVector = analyzer.findAllLocalDuaSubsumption();
+        else
+            subsumptionVector = analyzer.findAllDuaSubsumption();
 
         Iterator<Dua> itDua = listDuas.iterator();
 

@@ -96,8 +96,8 @@ public class GraphduaTest extends TestCase {
                 while (itdua.hasNext()) {
                     d = itdua.next();
                     analyzer = new CoverageAnalyzer(mi.getProgram().getGraph(), d);
-                    System.out.println(counter+":" + d.toString());
-                    System.out.println(analyzer.findGraphdua());
+                    System.out.println(counter + ":" + d.toString());
+                    System.out.println(analyzer.findGraphdua().toDot());
                     ++counter;
                 }
             }
@@ -390,10 +390,10 @@ public class GraphduaTest extends TestCase {
 
     @Test
     public void test5() {
-        System.out.println("Max");
+        System.out.println("MaxRogue");
 
         try {
-            cl = new ClassInfo("/Users/marcoschaim/projetos/data/max/", "Max.class");
+            cl = new ClassInfo("/Users/marcoschaim/projetos/data/max/", "MaxRogue.class");
             cl.genAllMethodInfo();
 
             for (MethodInfo mi : cl.getMethodsInfo()) {

@@ -15,6 +15,7 @@ br/usp/each/saeg/subsumption/graphdua/Flowgraph.class
 br/usp/each/saeg/subsumption/analysis/ReductionNode.class
 br/usp/each/saeg/subsumption/input/ClassInfo.class
 br/usp/each/saeg/subsumption/graphdua/Node.class
+br/usp/each/saeg/subsumption/cli/LocalReducer.class
 br/usp/each/saeg/subsumption/graphdua/Dua.class
 br/usp/each/saeg/subsumption/cli/GraphDuaGenerator.class
 br/usp/each/saeg/opal/Program.class
@@ -25,7 +26,9 @@ br/usp/each/saeg/subsumption/cli/EdgeSubsume$1.class
 br/usp/each/saeg/subsumption/cli/Reduce$1.class
 br/usp/each/saeg/subsumption/analysis/ReductionGraph.class
 br/usp/each/saeg/subsumption/cli/NodeSubsume$1.class
+br/usp/each/saeg/subsumption/cli/LocalReduce.class
 br/usp/each/saeg/subsumption/cli/Analyzer.class
+br/usp/each/saeg/subsumption/cli/LocalReduce$1.class
 br/usp/each/saeg/subsumption/cli/EdgeSubsumer.class
 br/usp/each/saeg/subsumption/cli/NodeSubsume.class
 br/usp/each/saeg/subsumption/cli/Main$1.class

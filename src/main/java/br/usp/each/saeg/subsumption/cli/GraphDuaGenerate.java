@@ -96,10 +96,11 @@ public class GraphDuaGenerate {
             final TimeWatch tw = TimeWatch.start();
             final int total = new GraphDuaGenerate(options).generate();
             final long seconds = tw.time(TimeUnit.SECONDS);
+            final long milliseconds = tw.time(TimeUnit.MILLISECONDS);
 
             System.out.println(MessageFormat.format(
-                    "{0} methods have their graphdua generated in {1} minutes and {2} seconds", total, seconds/60, seconds % 60));
-
+                    "{0} methods have their graphdua generated in {1} minutes and {2} seconds", total, seconds / 60, seconds % 60));
+            System.out.println("Graphduas time (ms):" + milliseconds);
         } catch (final IOException e) {
             System.err.println("Failed: " + e.getLocalizedMessage());
             System.exit(1);

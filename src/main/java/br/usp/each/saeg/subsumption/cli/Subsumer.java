@@ -32,7 +32,7 @@ public class Subsumer {
                 String methodname = ci.getName().replace(File.separator, ".") + "." + mi.getName();
 
                 final TimeWatch tw = TimeWatch.start();
-                sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas());
+                sg = new SubsumptionGraph(mi.getProgram(), mi.getDuas(), false);
                 final long seconds = tw.time(TimeUnit.SECONDS);
 
                 System.out.println("\n#"+ ci.getName() + File.separator +mi.getName() + ":");
