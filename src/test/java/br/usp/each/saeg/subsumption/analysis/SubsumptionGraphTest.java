@@ -35,12 +35,12 @@ public class SubsumptionGraphTest extends TestCase {
 
                 //mi.printMethodCFG();
                 mi.toDuasCSV();
-                System.out.println(mi.toJsonEdges(sb));
+                //System.out.println(mi.toJsonEdges(sb));
                 subduagraph = new SubsumptionGraph(mi.getProgram(), mi.getDuas(), false);
                 System.out.println(subduagraph);
             }
             System.out.println(cl.toJsonNodes());
-
+            System.out.println(cl.toJsonEdges());
         } catch (Exception e) {
             e.printStackTrace();
         }

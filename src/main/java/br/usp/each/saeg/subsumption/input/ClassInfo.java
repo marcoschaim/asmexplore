@@ -158,6 +158,26 @@ public class ClassInfo {
         return sb.toString();
     }
 
+    public String toJsonEdges() {
+        StringBuffer sb = new StringBuffer();
+
+        String methodname = getName().replace(File.separator, ".");
+
+        sb.append("{\n\"Class\" : " + "\"" + methodname + "\", \n\"Methods\" : [");
+
+        boolean first = true;
+        for (MethodInfo mi : getMethodsInfo()) {
+            if (mi.getDuas().isEmpty()) continue;
+            if (first) {
+                first = false;
+            } else
+                sb.append(",");
+            mi.toJsonEdges(sb);
+        }
+        sb.append("]\n}");
+        return sb.toString();
+    }
+
     public List<MethodInfo> getMethodsInfo() {
         return methods;
     }

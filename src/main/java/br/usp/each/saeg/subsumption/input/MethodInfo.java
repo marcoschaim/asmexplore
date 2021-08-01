@@ -8,6 +8,7 @@ import br.usp.each.saeg.subsumption.analysis.ReductionNode;
 import br.usp.each.saeg.subsumption.analysis.SubsumptionAnalyzer;
 import br.usp.each.saeg.subsumption.analysis.SubsumptionGraph;
 import br.usp.each.saeg.subsumption.graphdua.Dua;
+import br.usp.each.saeg.subsumption.graphdua.Edge;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.LocalVariableNode;
@@ -37,6 +38,8 @@ public class MethodInfo {
     HashMap<Integer, List<DefUseChain>> dua2DefUseChains = new HashMap<>();
     HashMap<DefUseChain, Integer> idDefUseChain = new HashMap<>();
     HashMap<Integer, List<Integer>> dua2idDefUseChains = new HashMap<>();
+    Map<Integer, Edge> idEdgesMap = new HashMap<>();
+
     ReductionGraph rg = null;
     SubsumptionGraph sg = null;
 
@@ -114,6 +117,23 @@ public class MethodInfo {
 
         if (!checkNodeReachability(p))
             hasDanglingNodes = true;
+
+        // Create map of edges
+
+        Iterator<Block> itblk = p.getGraph().iterator();
+        idEdgesMap.clear();
+        int idedge = 0;
+
+        while (itblk.hasNext()) {
+            Block pred = itblk.next();
+            for (Block suc : p.getGraph().neighbors(pred.id)) {
+                Edge e = new Edge(pred, suc);
+                if (!idEdgesMap.containsValue(e)) {
+                    idEdgesMap.put(idedge, e);
+                    idedge++;
+                }
+            }
+        }
     }
 
     void visitInstruction(Program p, int ins, boolean[] vis) {
@@ -602,37 +622,22 @@ public class MethodInfo {
     }
 
     public String toJsonEdges(StringBuffer sb) {
-        Set<Integer> nodeLines = new HashSet<>();
         sb.append("{ \"Name\" : \"" + getName() + "\" ,\n");
         sb.append("\"Edges\" : " + p.getGraph().sizeEdges() + ",\n");
 
-        Iterator<Block> itblk = p.getGraph().iterator();
+        for (int i = 0; i < p.getGraph().sizeEdges(); ++i) {
+            if (idEdgesMap.containsKey(i)) {
+                Edge e = idEdgesMap.get(i);
 
-        while (itblk.hasNext()) {
-            Block suc = itblk.next();
-            sb.append("\"" + suc.id() + "\" : [ ");
-            nodeLines.clear();
-
-            for (int l : suc.lines()) {
-                if (!nodeLines.contains((lines[l]))) {
-                    nodeLines.add(lines[l]);
-                }
-            }
-
-            Iterator<Integer> it = nodeLines.iterator();
-
-            while (it.hasNext()) {
-                int line = it.next();
-                if (it.hasNext())
-                    sb.append(line + ",");
+                sb.append("\"" + i + "\" : [ " + e.getOrg().id() + "," + e.getTrg().id());
+                if (i + 1 < p.getGraph().sizeEdges())
+                    sb.append(" ],\n");
                 else
-                    sb.append(line);
+                    sb.append(" ]\n");
+
             }
-            if (itblk.hasNext())
-                sb.append(" ],\n");
-            else
-                sb.append(" ]\n");
         }
+
         sb.append("}");
         return sb.toString();
     }
