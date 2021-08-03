@@ -384,6 +384,55 @@ public class Graphdua extends Graph<Node> {
         return sb.toString();
     }
 
+    public String toJsonNodeSubsumption(SubsumptionAnalyzer analyzer, String method_name, int noNodes) {
+        final StringBuilder sb = new StringBuilder();
+        BitSet allSubsumed = new BitSet(entryNode.getCovered().size());
+        allSubsumed.clear();
+
+        Set<Integer> subDuas = new HashSet<>();
+
+        Iterator<Node> i = this.iterator();
+
+        sb.append("{ \"Name\" : \"" + method_name + "\" ,\n");
+        sb.append("\"Nodes\" : " + noNodes + ",\n");
+
+
+        while (i.hasNext()) {
+            Node k = i.next();
+            BitSet coveredInNode = k.getCovered();
+            sb.append("\"" + k.block().id() + "\" : [ ");
+
+            if (!coveredInNode.isEmpty()) {
+                subDuas.clear();
+
+                int idDua = -1;
+                while ((idDua = coveredInNode.nextSetBit(idDua + 1)) != -1) {
+                    subDuas.add(idDua);
+                }
+
+                Iterator<Integer> itsub = subDuas.iterator();
+
+                while (itsub.hasNext()) {
+                    idDua = itsub.next();
+
+                    if (itsub.hasNext())
+                        sb.append(idDua + ", ");
+                    else
+                        sb.append(idDua);
+                }
+                allSubsumed.or(coveredInNode);
+            }
+            sb.append("],");
+            sb.append("\n");
+        }
+
+        sb.append("\"CoveredDUAsByNodes\" : ");
+        sb.append(allSubsumed.cardinality());
+        sb.append("\n}");
+
+        return sb.toString();
+    }
+
     public BitSet getAllDuasSubsumedNode(SubsumptionAnalyzer analyzer) {
         BitSet allSubsumed = new BitSet(entryNode.getCovered().size());
         allSubsumed.clear();
@@ -444,6 +493,63 @@ public class Graphdua extends Graph<Node> {
         BitSet allSubsumed = new BitSet(entryNode.getCovered().size());
         allSubsumed.clear();
 
+        Iterator<Node> i = this.iterator();
+
+        sb.append("digraph { /* ");
+        sb.append("Duas covered at edges");
+        sb.append(" */\n");
+
+        while (i.hasNext()) {
+            Node k = i.next();
+
+            sb.append(k.id());
+            sb.append(" [label=\"");
+            sb.append(k.block().id());
+            sb.append("\"];");
+            sb.append("\n");
+        }
+
+        i = this.iterator();
+        while (i.hasNext()) {
+            Node k = i.next();
+
+            Set<Node> neighbors = this.neighbors(k.id());
+            for (Node kn : neighbors) {
+                BitSet coveredInEdge = getDuasSubsumedEdge(k, kn);
+                sb.append(" ");
+                sb.append(k.id());
+                sb.append(" -> ");
+                sb.append(kn.id());
+                if (!coveredInEdge.isEmpty()) {
+                    sb.append(" [label=\"");
+                    int idDua = -1;
+                    while ((idDua = coveredInEdge.nextSetBit(idDua + 1)) != -1) {
+                        Dua subDua = analyzer.getDuaFromId(idDua);
+                        sb.append(subDua.toString());
+                        sb.append("\\n");
+                    }
+                    sb.append("\"];\n");
+                    allSubsumed.or(coveredInEdge);
+                } else
+                    sb.append(";\n");
+            }
+        }
+        sb.append('}');
+
+        sb.append("\n/*\n");
+        sb.append("#Covered Duas by edges: ");
+        sb.append(allSubsumed.cardinality());
+        sb.append("\n*/");
+
+        return sb.toString();
+    }
+
+
+    public String toJsonEdgeSubsumption(SubsumptionAnalyzer analyzer, String method_name, Map<Integer, Edge> edges) {
+        final StringBuilder sb = new StringBuilder();
+        BitSet allSubsumed = new BitSet(entryNode.getCovered().size());
+        allSubsumed.clear();
+        
         Iterator<Node> i = this.iterator();
 
         sb.append("digraph { /* ");

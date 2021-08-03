@@ -124,6 +124,7 @@ public class SubsumptionGraphTest extends TestCase {
             }
 
             System.out.println(cl.toJsonNodes());
+            System.out.println(cl.toJsonEdges());
         } catch (Exception e) {
             e.printStackTrace();
         }
