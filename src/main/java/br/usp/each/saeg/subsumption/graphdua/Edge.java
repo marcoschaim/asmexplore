@@ -24,17 +24,23 @@ public class Edge implements Identifiable {
     @Override
 
     public int hashCode() {
-        return (org.hashCode() + 1031 * trg.hashCode()) / 511;
+        return (org.id() + 1031 * trg.id()) / 511;
     }
 
     @Override
     public boolean equals(Object o) {
+
         Edge e = (Edge) o;
         if (o == null)
             return false;
         else
-            return org.equals(e.getOrg()) &&
-                    trg.equals(e.getTrg());
+            return org.id() == e.getOrg().id() &&
+                    trg.id() == e.getTrg().id();
+    }
+
+    @Override
+    public String toString() {
+        return "(" + org.id() + "," + trg.id() + ")";
     }
 
     public Block getOrg() {

@@ -39,6 +39,7 @@ public class MethodInfo {
     HashMap<DefUseChain, Integer> idDefUseChain = new HashMap<>();
     HashMap<Integer, List<Integer>> dua2idDefUseChains = new HashMap<>();
     Map<Integer, Edge> idEdgesMap = new HashMap<>();
+    Map<Edge, Integer> edgesIdMap = new HashMap<>();
 
     ReductionGraph rg = null;
     SubsumptionGraph sg = null;
@@ -122,6 +123,8 @@ public class MethodInfo {
 
         Iterator<Block> itblk = p.getGraph().iterator();
         idEdgesMap.clear();
+        edgesIdMap.clear();
+
         int idedge = 0;
 
         while (itblk.hasNext()) {
@@ -130,6 +133,7 @@ public class MethodInfo {
                 Edge e = new Edge(pred, suc);
                 if (!idEdgesMap.containsValue(e)) {
                     idEdgesMap.put(idedge, e);
+                    edgesIdMap.put(e, idedge);
                     idedge++;
                 }
             }
@@ -474,6 +478,10 @@ public class MethodInfo {
 
     public ReductionGraph getReductionGraph() {
         return this.rg;
+    }
+
+    public Map<Edge, Integer> getEdgesId() {
+        return edgesIdMap;
     }
 
     public void setSubsumptionGraph(SubsumptionGraph sg) {

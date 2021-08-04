@@ -265,6 +265,8 @@ public class DuaSubsumptionTest extends TestCase {
 //                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".es",graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
 
                 System.out.println(graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
+                System.out.println(graphdua.toJsonEdgeSubsumption(duaSubAnalyzer, mi.getName(), mi.getEdgesId()));
+
                 Iterator<Node> itNode = graphdua.iterator();
 
                 while (itNode.hasNext()) {
