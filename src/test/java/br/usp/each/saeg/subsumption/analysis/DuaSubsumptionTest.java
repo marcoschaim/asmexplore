@@ -245,6 +245,7 @@ public class DuaSubsumptionTest extends TestCase {
         try {
             cl = new ClassInfo("/Users/marcoschaim/projetos/data/sort/", "Sort.class");
             cl.genAllMethodInfo();
+            StringBuffer sb = new StringBuffer();
 
             for (MethodInfo mi : cl.getMethodsInfo()) {
                 mi.createMethodCFG();
@@ -262,10 +263,13 @@ public class DuaSubsumptionTest extends TestCase {
                 System.out.println(graphdua.toDotNodeSubsumption(duaSubAnalyzer));
                 System.out.println(graphdua.toJsonNodeSubsumption(duaSubAnalyzer, mi.getName(), mi.getProgram().getGraph().size()));
                 graphdua = duaSubAnalyzer.findEdge2DuasSubsumption();
+
+                mi.setGraphDua(graphdua);
+                mi.setSubsumptionAnalyzer(duaSubAnalyzer);
 //                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".es",graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
 
                 System.out.println(graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
-                System.out.println(graphdua.toJsonEdgeSubsumption(duaSubAnalyzer, mi.getName(), mi.getEdgesId()));
+                System.out.println(mi.toJsonEdgeSubsumption(sb));
 
                 Iterator<Node> itNode = graphdua.iterator();
 
@@ -287,6 +291,7 @@ public class DuaSubsumptionTest extends TestCase {
                 System.out.println();
             }
 
+            System.out.println(cl.toJsonDuas());
 
         } catch (Exception e) {
             e.printStackTrace();

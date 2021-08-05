@@ -49,6 +49,10 @@ public class EdgeSubsumer {
                 SubsumptionAnalyzer duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(), mi.getDuas());
                 Graphdua grd = duaSubAnalyzer.findEdge2DuasSubsumption();
                 final long milliseconds;
+
+                mi.setGraphDua(grd);
+                mi.setSubsumptionAnalyzer(duaSubAnalyzer);
+
                 System.out.println("\n#" + ci.getName() + File.separator + mi.getName() + ":");
 
                 if (printLocalDuaEdgeFile) {
