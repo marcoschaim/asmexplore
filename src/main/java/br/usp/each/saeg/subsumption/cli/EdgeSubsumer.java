@@ -19,7 +19,8 @@ public class EdgeSubsumer {
 
     public static int edgeSubsumeAll(File src, InputStream input, String path) {
         int n = 0; // # of methods analyzed
-        boolean printLocalDuaEdgeFile = true;
+        boolean printLocalDuaEdgeFile = false;
+        boolean printDuaJsonEdgeFile = true;
         try {
             ClassInfo ci = new ClassInfo(input);
             path = path + File.separator;
@@ -49,30 +50,36 @@ public class EdgeSubsumer {
                 SubsumptionAnalyzer duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(), mi.getDuas());
                 Graphdua grd = duaSubAnalyzer.findEdge2DuasSubsumption();
                 final long milliseconds;
+                milliseconds = tw.time(TimeUnit.MILLISECONDS);
 
                 mi.setGraphDua(grd);
                 mi.setSubsumptionAnalyzer(duaSubAnalyzer);
 
                 System.out.println("\n#" + ci.getName() + File.separator + mi.getName() + ":");
 
-                if (printLocalDuaEdgeFile) {
+                if (printLocalDuaEdgeFile && !printDuaJsonEdgeFile) {
                     writeBufferToFile(path, methodname + ".es", grd.toDotEdgeSubsumption(duaSubAnalyzer));
-                    milliseconds = tw.time(TimeUnit.MILLISECONDS);
                 } else {
-                    int noSubmedDuas = grd.getAllDuasSubsumedEdge(duaSubAnalyzer).cardinality();
-                    milliseconds = tw.time(TimeUnit.MILLISECONDS);
-                    System.out.println("## nodes: " + mi.getProgram().getGraph().size());
-                    System.out.println("## edges: " + mi.getProgram().getGraph().sizeEdges());
-                    System.out.println("## DUAs: " + mi.getDuas().size());
-                    System.out.println("## Subsumed DUAs: " + noSubmedDuas);
-                    System.out.println("## Edge DUA coverage: " + ((double) noSubmedDuas / mi.getDuas().size()) * 100);
-                    System.out.println("@@ " + methodname + "," + mi.getProgram().getGraph().size() + "," + mi.getProgram().getGraph().sizeEdges() + "," + mi.getDuas().size() + "," + noSubmedDuas + "," + ((double) noSubmedDuas / mi.getDuas().size()) * 100 + "," + milliseconds / 1000 + "," + milliseconds + "\n");
+                    if (!printLocalDuaEdgeFile && !printDuaJsonEdgeFile) {
+                        int noSubmedDuas = grd.getAllDuasSubsumedEdge(duaSubAnalyzer).cardinality();
+//                        milliseconds = tw.time(TimeUnit.MILLISECONDS);
+                        System.out.println("## nodes: " + mi.getProgram().getGraph().size());
+                        System.out.println("## edges: " + mi.getProgram().getGraph().sizeEdges());
+                        System.out.println("## DUAs: " + mi.getDuas().size());
+                        System.out.println("## Subsumed DUAs: " + noSubmedDuas);
+                        System.out.println("## Edge DUA coverage: " + ((double) noSubmedDuas / mi.getDuas().size()) * 100);
+                        System.out.println("@@ " + methodname + "," + mi.getProgram().getGraph().size() + "," + mi.getProgram().getGraph().sizeEdges() + "," + mi.getDuas().size() + "," + noSubmedDuas + "," + ((double) noSubmedDuas / mi.getDuas().size()) * 100 + "," + milliseconds / 1000 + "," + milliseconds + "\n");
+                    }
                 }
 
                 System.out.println("\n#" + ci.getName() + File.separator + mi.getName() + ":");
                 System.out.println(MessageFormat.format(
                         "Local DUA-Edge subsumption of method {0}  calculated in {1} minutes, {2} seconds, and {3} milliseconds", methodname, (milliseconds / 1000) / 60, (milliseconds / 1000) % 60, milliseconds));
                 n++;
+            }
+            if (printDuaJsonEdgeFile) {
+                writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".edges.json", ci.toJsonEdges());
+                writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".edgesub.json", ci.toJsonEdgeSubsumption());
             }
         } catch (Exception e) {
             String failfile = src.getPath();

@@ -608,6 +608,68 @@ public class MethodInfo {
         return sb.toString();
     }
 
+    public String toJsonNodeSubsumption(StringBuffer sb) {
+        if (sne == null)
+            return sb.toString();
+
+        BitSet allSubsumed = new BitSet(sne.entry().getCovered().size());
+        allSubsumed.clear();
+        Set<Integer> subDuas = new HashSet<>();
+        Set<Integer> allsubDuas = new HashSet<>();
+
+        Iterator<Node> i = sne.iterator();
+
+        sb.append("{ \"Name\" : \"" + this.getName() + "\" ,\n");
+        sb.append("\"Nodes\" : " + this.getProgram().getGraph().size() + ",\n");
+
+
+        while (i.hasNext()) {
+            Node k = i.next();
+            BitSet coveredInNode = k.getCovered();
+            sb.append("\"" + k.block().id() + "\" : [ ");
+
+            if (!coveredInNode.isEmpty()) {
+                subDuas.clear();
+                int idDua = -1;
+                while ((idDua = coveredInNode.nextSetBit(idDua + 1)) != -1) {
+                    Dua subDua = sa.getDuaFromId(idDua);
+                    Iterator<Integer> itDfc = dua2idDefUseChains.get(subDua.hashCode()).iterator();
+                    while (itDfc.hasNext()) {
+                        subDuas.add(itDfc.next());
+                    }
+                }
+                allSubsumed.or(coveredInNode);
+            }
+
+            if (!coveredInNode.isEmpty()) {
+                Iterator<Integer> itsub = subDuas.iterator();
+
+                while (itsub.hasNext()) {
+                    int dfc = itsub.next();
+//                        DefUseChain d = globalChains[dfc];
+//                        if (d.isComputationalChain())
+//                            sb.append(" \"(" + lines[d.def] + "," + lines[d.use] + ", " + getVar(d, vars) + ")\"");
+//                        else
+//                            sb.append(" \"(" + lines[d.def] + ",(" + lines[d.use] + "," + lines[d.target] + "), " + getVar(d, vars) + ")\"");
+
+                    if (itsub.hasNext())
+                        sb.append(dfc + ", ");
+                    else
+                        sb.append(dfc);
+                }
+            }
+            allsubDuas.addAll(subDuas);
+            sb.append("],\n");
+        }
+
+        sb.append("\"CoveredDUAsByNodes\" : ");
+//        sb.append(allSubsumed.cardinality());
+        sb.append(allsubDuas.size());
+        sb.append("\n}");
+
+        return sb.toString();
+    }
+
     public String toJsonNodes(StringBuffer sb) {
         Set<Integer> nodeLines = new HashSet<>();
         sb.append("{ \"Name\" : \"" + getName() + "\" ,\n");
@@ -640,6 +702,7 @@ public class MethodInfo {
             else
                 sb.append(" ]\n");
         }
+
         sb.append("}");
         return sb.toString();
     }
@@ -652,7 +715,7 @@ public class MethodInfo {
         BitSet allSubsumed = new BitSet(sne.entry().getCovered().size());
         allSubsumed.clear();
         Set<Integer> subDuas = new HashSet<>();
-
+        Set<Integer> allsubDuas = new HashSet<>();
 
         sb.append("{ \"Name\" : \"" + this.getName() + "\" ,\n");
         sb.append("\"Edges\" : " + this.edgesIdMap.size() + ",\n");
@@ -677,8 +740,8 @@ public class MethodInfo {
                     continue;
                 }
 
-                sb.append("\"" + ide + e + "\" : [ ");
-
+//                sb.append("\"" + ide + e + "\" : [ ");
+                sb.append("\"" + ide + "\" : [ ");
                 if (!coveredInEdge.isEmpty()) {
                     subDuas.clear();
                     int idDua = -1;
@@ -697,11 +760,11 @@ public class MethodInfo {
 
                     while (itsub.hasNext()) {
                         int dfc = itsub.next();
-                        DefUseChain d = globalChains[dfc];
-                        if (d.isComputationalChain())
-                            sb.append(" \"(" + lines[d.def] + "," + lines[d.use] + ", " + getVar(d, vars) + ")\"");
-                        else
-                            sb.append(" \"(" + lines[d.def] + ",(" + lines[d.use] + "," + lines[d.target] + "), " + getVar(d, vars) + ")\"");
+//                        DefUseChain d = globalChains[dfc];
+//                        if (d.isComputationalChain())
+//                            sb.append(" \"(" + lines[d.def] + "," + lines[d.use] + ", " + getVar(d, vars) + ")\"");
+//                        else
+//                            sb.append(" \"(" + lines[d.def] + ",(" + lines[d.use] + "," + lines[d.target] + "), " + getVar(d, vars) + ")\"");
 
                         if (itsub.hasNext())
                             sb.append(dfc + ", ");
@@ -709,12 +772,14 @@ public class MethodInfo {
                             sb.append(dfc);
                     }
                 }
+                allsubDuas.addAll(subDuas);
                 sb.append("],\n");
             }
         }
 
         sb.append("\"CoveredDUAsByEdges\" : ");
-        sb.append(allSubsumed.cardinality());
+//        sb.append(allSubsumed.cardinality());
+        sb.append(allsubDuas.size());
         sb.append("\n}");
 
         return sb.toString();

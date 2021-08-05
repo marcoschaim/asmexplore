@@ -241,11 +241,11 @@ public class DuaSubsumptionTest extends TestCase {
     @Test
     public void test32() {
         System.out.println("Sort");
-
+        StringBuffer sb = new StringBuffer();
         try {
             cl = new ClassInfo("/Users/marcoschaim/projetos/data/sort/", "Sort.class");
             cl.genAllMethodInfo();
-            StringBuffer sb = new StringBuffer();
+
 
             for (MethodInfo mi : cl.getMethodsInfo()) {
                 mi.createMethodCFG();
@@ -258,18 +258,20 @@ public class DuaSubsumptionTest extends TestCase {
 
                 duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(), mi.getDuas());
                 Graphdua graphdua = duaSubAnalyzer.findNode2DuasSubsumption();
-                writeBufferToFile("/Users/marcoschaim/projetos/data/sort/", mi.getName() + ".ns", graphdua.toDotNodeSubsumption(duaSubAnalyzer));
-
-                System.out.println(graphdua.toDotNodeSubsumption(duaSubAnalyzer));
-                System.out.println(graphdua.toJsonNodeSubsumption(duaSubAnalyzer, mi.getName(), mi.getProgram().getGraph().size()));
-                graphdua = duaSubAnalyzer.findEdge2DuasSubsumption();
-
                 mi.setGraphDua(graphdua);
                 mi.setSubsumptionAnalyzer(duaSubAnalyzer);
+                writeBufferToFile("/Users/marcoschaim/projetos/data/sort/", mi.getName() + ".ns", graphdua.toDotNodeSubsumption(duaSubAnalyzer));
+                System.out.println(mi.toJsonNodes(sb));
+                System.out.println(mi.toJsonNodeSubsumption(sb));
+                System.out.println(graphdua.toDotNodeSubsumption(duaSubAnalyzer));
+//                graphdua = duaSubAnalyzer.findEdge2DuasSubsumption();
+
+//                mi.setGraphDua(graphdua);
+//                mi.setSubsumptionAnalyzer(duaSubAnalyzer);
 //                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".es",graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
 
-                System.out.println(graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
-                System.out.println(mi.toJsonEdgeSubsumption(sb));
+//                System.out.println(graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
+//                System.out.println(mi.toJsonEdgeSubsumption(sb));
 
                 Iterator<Node> itNode = graphdua.iterator();
 
@@ -291,8 +293,8 @@ public class DuaSubsumptionTest extends TestCase {
                 System.out.println();
             }
 
-            System.out.println(cl.toJsonDuas());
-
+            System.out.println(cl.toJsonNodes());
+            System.out.println(cl.toJsonNodeSubsumption());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -304,6 +306,7 @@ public class DuaSubsumptionTest extends TestCase {
         System.out.println("SortMod");
         String dir = "/Users/marcoschaim/projetos/data/sort-mod/";
         String clazzname = "SortMod.class";
+
         try {
             cl = new ClassInfo(dir, clazzname);
             cl.genAllMethodInfo();

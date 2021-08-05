@@ -48,6 +48,8 @@ public class NodeSubsumer {
                 final TimeWatch tw = TimeWatch.start();
                 SubsumptionAnalyzer duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(), mi.getDuas());
                 Graphdua grd = duaSubAnalyzer.findNode2DuasSubsumption();
+                mi.setGraphDua(grd);
+                mi.setSubsumptionAnalyzer(duaSubAnalyzer);
 
                 final long milliseconds;
                 milliseconds = tw.time(TimeUnit.MILLISECONDS);
@@ -74,7 +76,8 @@ public class NodeSubsumer {
                 n++;
             }
             if (printDuaJsonNodeFile) {
-
+                writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".nodes.json", ci.toJsonNodes());
+                writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".nodesub.json", ci.toJsonNodeSubsumption());
             }
         } catch (Exception e) {
             String failfile = src.getPath();
