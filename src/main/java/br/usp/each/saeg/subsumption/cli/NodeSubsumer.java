@@ -20,7 +20,7 @@ public class NodeSubsumer {
     public static int nodeSubsumeAll(File src, InputStream input, String path) {
         int n = 0; // # of methods analyzed
         boolean printLocalDuaNodeFile = false;
-        boolean printDuaJsonNodeFile = false;
+        boolean printDuaJsonNodeFile = true;
         try {
             ClassInfo ci = new ClassInfo(input);
             path = path + File.separator;
@@ -76,6 +76,7 @@ public class NodeSubsumer {
                 n++;
             }
             if (printDuaJsonNodeFile) {
+                
                 writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".nodes.json", ci.toJsonNodes());
                 writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".nodesub.json", ci.toJsonNodeSubsumption());
             }

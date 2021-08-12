@@ -295,6 +295,11 @@ public class DuaSubsumptionTest extends TestCase {
 
             System.out.println(cl.toJsonNodes());
             System.out.println(cl.toJsonNodeSubsumption());
+            System.out.println(cl.toJsonEdges());
+            System.out.println(cl.toJsonNodeSubsumption());
+            System.out.println(cl.toJsonDuas());
+            System.out.println(cl.toJsonDuas2Edges());
+            System.out.println(cl.toJsonDuas2Nodes());
         } catch (Exception e) {
             e.printStackTrace();
         }

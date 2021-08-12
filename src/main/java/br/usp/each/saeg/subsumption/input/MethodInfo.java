@@ -40,6 +40,8 @@ public class MethodInfo {
     HashMap<Integer, List<DefUseChain>> dua2DefUseChains = new HashMap<>();
     HashMap<DefUseChain, Integer> idDefUseChain = new HashMap<>();
     HashMap<Integer, List<Integer>> dua2idDefUseChains = new HashMap<>();
+    Map<DefUseChain, Dua> defUseChain2Dua = new HashMap<>();
+
     Map<Integer, Edge> idEdgesMap = new HashMap<>();
     Map<Edge, Integer> edgesIdMap = new HashMap<>();
 
@@ -256,6 +258,7 @@ public class MethodInfo {
 
         Dua d;
         int idDfc = 0;
+        dua2DefUseChains.clear();
 
         for (final DefUseChain c : globalChains) {
 
@@ -303,6 +306,7 @@ public class MethodInfo {
                 dua2DefUseChains.get(d.hashCode()).add(c);
                 dua2idDefUseChains.get(d.hashCode()).add(idDfc);
             }
+            defUseChain2Dua.put(c, d);
             idDfc++;
         }
 
@@ -608,6 +612,85 @@ public class MethodInfo {
         return sb.toString();
     }
 
+    public String toJsonDuas2Nodes(StringBuffer sb) {
+        sb.append("{ \"Name\" : \"" + getName() + "\" ,\n");
+        sb.append("\"Nodes\" : " + p.getGraph().size() + ",\n");
+        sb.append("\"Duas\" : " + idDefUseChain.size() + ",\n");
+
+        int idDfc = 0;
+        for (DefUseChain dfc : globalChains) {
+
+            if (getVar(dfc, vars) == null)
+                continue;
+
+            if (idDfc != 0)
+                sb.append(",\n");
+
+            sb.append("\"" + idDfc + "\" : ");
+
+            Dua d = defUseChain2Dua.get(dfc);
+
+            if (dfc.isComputationalChain()) {
+                if (d.def().id() != d.use().id())
+                    sb.append(" [ " + d.def().id() + "," + d.use().id() + " ]");
+                else
+                    sb.append(" [ " + d.def().id() + " ]");
+            } else {
+                if (d.def().id() == d.from().id() && d.def().id() == d.use().id())
+                    sb.append(" [ " + d.def().id() + " ]");
+                else if (d.def().id() == d.from().id())
+                    sb.append(" [ " + d.def().id() + "," + d.use().id() + " ]");
+                else if (d.def().id() == d.use().id())
+                    sb.append(" [ " + d.def().id() + "," + d.from().id() + " ]");
+                else
+                    sb.append(" [ " + d.def().id() + "," + d.from().id() + "," + d.use().id() + " ]");
+            }
+
+            idDfc++;
+        }
+
+        sb.append("}");
+        return sb.toString();
+    }
+
+    public String toJsonDuas2Edges(StringBuffer sb) {
+
+        Map<Integer, Integer> mapDuas2Edges = new TreeMap<Integer, Integer>();
+
+        sb.append("{ \"Name\" : \"" + getName() + "\" ,\n");
+        sb.append("\"Edges\" : " + this.edgesIdMap.size() + ",\n");
+        sb.append("\"Duas\" : " + idDefUseChain.size() + ",\n");
+
+        int idDfc = 0;
+
+        for (DefUseChain dfc : globalChains) {
+            Dua d = defUseChain2Dua.get(dfc);
+            if (getVar(dfc, vars) == null)
+                continue;
+
+            if (!dfc.isComputationalChain()) {
+                Edge e = new Edge(new Block(d.from().id()), new Block(d.use().id()));
+                mapDuas2Edges.put(idDfc, edgesIdMap.get(e));
+            }
+
+            idDfc++;
+        }
+
+        boolean first = true;
+
+        for (Map.Entry<Integer, Integer> e : mapDuas2Edges.entrySet()) {
+            if (first) {
+                first = false;
+                sb.append("\"" + e.getKey() + "\" : " + e.getValue());
+            } else
+                sb.append(", \n \"" + e.getKey() + "\" : " + e.getValue());
+        }
+
+        sb.append("}");
+        return sb.toString();
+    }
+
+
     public String toJsonNodeSubsumption(StringBuffer sb) {
         if (sne == null)
             return sb.toString();
@@ -664,7 +747,8 @@ public class MethodInfo {
 
         sb.append("\"CoveredDUAsByNodes\" : ");
 //        sb.append(allSubsumed.cardinality());
-        sb.append(allsubDuas.size());
+        sb.append(allsubDuas.size() + ",\n");
+        sb.append("\"Duas\" : " + idDefUseChain.size());
         sb.append("\n}");
 
         return sb.toString();
@@ -672,13 +756,21 @@ public class MethodInfo {
 
     public String toJsonNodes(StringBuffer sb) {
         Set<Integer> nodeLines = new HashSet<>();
+        Set<Integer> idNodes = new TreeSet<>();
+
         sb.append("{ \"Name\" : \"" + getName() + "\" ,\n");
         sb.append("\"Nodes\" : " + p.getGraph().size() + ",\n");
 
         Iterator<Block> itblk = p.getGraph().iterator();
 
-        while (itblk.hasNext()) {
-            Block suc = itblk.next();
+        while (itblk.hasNext())
+            idNodes.add(itblk.next().id());
+
+        Iterator<Integer> itid = idNodes.iterator();
+
+        while (itid.hasNext()) {
+            Block suc = p.getGraph().get(itid.next());
+
             sb.append("\"" + suc.id() + "\" : [ ");
             nodeLines.clear();
 
@@ -779,7 +871,8 @@ public class MethodInfo {
 
         sb.append("\"CoveredDUAsByEdges\" : ");
 //        sb.append(allSubsumed.cardinality());
-        sb.append(allsubDuas.size());
+        sb.append(allsubDuas.size() + ",\n");
+        sb.append("\"Duas\" : " + idDefUseChain.size());
         sb.append("\n}");
 
         return sb.toString();

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="11" failures="0" name="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" time="50.527" errors="0" skipped="0">
+<testsuite tests="11" failures="0" name="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" time="53.814" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="12+33"/>
@@ -21,6 +21,7 @@
     <property name="java.io.tmpdir" value="/var/folders/qb/c1x095pj6l71q2ks8lclbbrr0000gn/T/"/>
     <property name="line.separator" value="
 "/>
+    <property name="socksProxyPort" value="8080"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="os.name" value="Mac OS X"/>
     <property name="classworlds.conf" value="/usr/local/Cellar/maven/3.6.2/libexec/bin/m2.conf"/>
@@ -39,6 +40,7 @@
     <property name="java.specification.version" value="12"/>
     <property name="user.name" value="marcoschaim"/>
     <property name="java.class.path" value="/usr/local/Cellar/maven/3.6.2/libexec/boot/plexus-classworlds-2.6.0.jar"/>
+    <property name="socksProxyHost" value="localhost"/>
     <property name="java.vm.specification.version" value="12"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher package"/>
@@ -56,15 +58,15 @@
     <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
     <property name="sun.cpu.endian" value="little"/>
   </properties>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5_1" time="9.781"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5_2" time="0.014"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5_3" time="1.302"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5_1" time="10.64"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5_2" time="0.009"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5_3" time="1.111"/>
   <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test01" time="0.019"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test0" time="0.025"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test1" time="0.038"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test0" time="0.019"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test1" time="0.139"/>
   <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test2" time="0.001"/>
   <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test3" time="0.003"/>
   <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test4" time="0.017"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5" time="39.252"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test6" time="0.075"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5" time="41.791"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test6" time="0.065"/>
 </testsuite>

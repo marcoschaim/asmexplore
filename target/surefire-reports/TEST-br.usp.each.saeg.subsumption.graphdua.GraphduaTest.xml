@@ -21,6 +21,7 @@
     <property name="java.io.tmpdir" value="/var/folders/qb/c1x095pj6l71q2ks8lclbbrr0000gn/T/"/>
     <property name="line.separator" value="
 "/>
+    <property name="socksProxyPort" value="8080"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="os.name" value="Mac OS X"/>
     <property name="classworlds.conf" value="/usr/local/Cellar/maven/3.6.2/libexec/bin/m2.conf"/>
@@ -39,6 +40,7 @@
     <property name="java.specification.version" value="12"/>
     <property name="user.name" value="marcoschaim"/>
     <property name="java.class.path" value="/usr/local/Cellar/maven/3.6.2/libexec/boot/plexus-classworlds-2.6.0.jar"/>
+    <property name="socksProxyHost" value="localhost"/>
     <property name="java.vm.specification.version" value="12"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher package"/>
@@ -58,9 +60,9 @@
   </properties>
   <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test3_1" time="0.076"/>
   <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test21" time="0.001"/>
-  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test1" time="0.017"/>
-  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test2" time="0.021"/>
-  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test3" time="0.18"/>
-  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test4" time="0"/>
-  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test5" time="0.007"/>
+  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test1" time="0.02"/>
+  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test2" time="0.018"/>
+  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test3" time="0.166"/>
+  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test4" time="0.004"/>
+  <testcase classname="br.usp.each.saeg.subsumption.graphdua.GraphduaTest" name="test5" time="0.017"/>
 </testsuite>

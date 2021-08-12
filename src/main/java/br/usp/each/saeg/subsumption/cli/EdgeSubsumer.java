@@ -78,6 +78,7 @@ public class EdgeSubsumer {
                 n++;
             }
             if (printDuaJsonEdgeFile) {
+
                 writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".edges.json", ci.toJsonEdges());
                 writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".edgesub.json", ci.toJsonEdgeSubsumption());
             }
