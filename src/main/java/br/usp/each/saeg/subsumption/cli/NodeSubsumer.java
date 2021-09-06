@@ -78,6 +78,7 @@ public class NodeSubsumer {
             if (printDuaJsonNodeFile) {
                 
                 writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".nodes.json", ci.toJsonNodes());
+                writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".duas2nodes.json", ci.toJsonDuas2Nodes());
                 writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".nodesub.json", ci.toJsonNodeSubsumption());
             }
         } catch (Exception e) {

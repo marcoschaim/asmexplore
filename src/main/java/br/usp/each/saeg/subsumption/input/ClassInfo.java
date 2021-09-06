@@ -231,18 +231,24 @@ public class ClassInfo {
     public String toJsonEdgeSubsumption() {
         StringBuffer sb = new StringBuffer();
 
-        String methodname = getName().replace(File.separator, ".");
+        String classname = getName().replace(File.separator, ".");
 
-        sb.append("{\n\"Class\" : " + "\"" + methodname + "\", \n\"Methods\" : [");
+        sb.append("{\n\"Class\" : " + "\"" + classname + "\", \n\"Methods\" : [");
 
         boolean first = true;
-        System.out.println(methodname + ":");
-
+//        System.out.println(classname + ":");
+//        int noMethod = 0;
         Iterator<MethodInfo> it = getMethodsInfo().iterator();
         while (it.hasNext()) {
             MethodInfo mi = it.next();
-            if (mi.getDuas().isEmpty())
+
+            if (mi.getDuas().isEmpty()) {
+//                System.out.println("Method("+noMethod+") WITHOUT duas: "+mi.getName());
                 continue;
+            }
+//            else
+//                System.out.println("Method("+noMethod+") with duas: "+mi.getName());
+//            ++noMethod;
 
             if (first)
                 first = false;

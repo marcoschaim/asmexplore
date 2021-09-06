@@ -32,23 +32,27 @@ public class EdgeSubsumer {
                 // Create a name for the files based on the class and method names
 
                 String methodname = ci.getName().replace(File.separator, ".") + "." + mi.getName();
-
+//                System.out.println(methodname+":");
                 if (mi.getDuas().isEmpty())
                     continue;
 
                 if (mi.getHasIncomingEdges()) {
                     System.out.println("Warning: Method:" + methodname + " has incoming edges.");
+//                    System.out.println(mi.graphDefUseToDot());
                     continue;
                 }
 
                 if (mi.getHasAutoEdge()) {
                     System.out.println("Warning: Method:" + methodname + " has auto edges.");
+                    //System.out.println(mi.graphDefUseToDot());
+                    //System.out.println(mi.toJsonDuas(new StringBuffer()));
                     continue;
                 }
 
                 final TimeWatch tw = TimeWatch.start();
                 SubsumptionAnalyzer duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(), mi.getDuas());
                 Graphdua grd = duaSubAnalyzer.findEdge2DuasSubsumption();
+//                System.out.println(grd.toDot());
                 final long milliseconds;
                 milliseconds = tw.time(TimeUnit.MILLISECONDS);
 
@@ -80,6 +84,7 @@ public class EdgeSubsumer {
             if (printDuaJsonEdgeFile) {
 
                 writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".edges.json", ci.toJsonEdges());
+                writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".duas2edges.json", ci.toJsonDuas2Edges());
                 writeBufferToFile(path, ci.getName().replace(File.separator, ".") + ".edgesub.json", ci.toJsonEdgeSubsumption());
             }
         } catch (Exception e) {

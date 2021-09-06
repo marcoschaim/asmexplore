@@ -293,12 +293,21 @@ public class DuaSubsumptionTest extends TestCase {
                 System.out.println();
             }
 
+            System.out.println("Nodes");
             System.out.println(cl.toJsonNodes());
+            System.out.println("Duas2Nodes0");
             System.out.println(cl.toJsonNodeSubsumption());
+            System.out.println("Edges");
             System.out.println(cl.toJsonEdges());
+            System.out.println("Duas2edges");
+            System.out.println(cl.toJsonEdgeSubsumption());
+            System.out.println("Duas2nodes0");
             System.out.println(cl.toJsonNodeSubsumption());
+            System.out.println("Duas");
             System.out.println(cl.toJsonDuas());
+            System.out.println("Duas2Edges1");
             System.out.println(cl.toJsonDuas2Edges());
+            System.out.println("Duas2Nodes1");
             System.out.println(cl.toJsonDuas2Nodes());
         } catch (Exception e) {
             e.printStackTrace();
@@ -374,9 +383,9 @@ public class DuaSubsumptionTest extends TestCase {
 
     @Test
     public void test5() {
-        System.out.println("SortMod");
-        String dir = "/Users/marcoschaim/projetos/data/sort-mod/";
-        String clazzname = "SortMod.class";
+        System.out.println("PiePlot");
+        String dir = "/Users/marcoschaim/projetos/data/PiePlot/";
+        String clazzname = "PiePlot.class";
         try {
             cl = new ClassInfo(dir, clazzname);
             cl.genAllMethodInfo();
@@ -401,6 +410,7 @@ public class DuaSubsumptionTest extends TestCase {
                 System.out.println("Transitive Clousure:");
 
                 rg.findTransitiveClosure();
+                System.out.println(mi.getName() + ":");
                 System.out.println(rg.toDot());
                 writeBufferToFile(dir, mi.getName() + ".red", rg.toDot());
 
@@ -524,6 +534,82 @@ public class DuaSubsumptionTest extends TestCase {
             }
 
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void test8() {
+        System.out.println("PiePlot");
+        StringBuffer sb = new StringBuffer();
+        try {
+            cl = new ClassInfo("/Users/marcoschaim/projetos/data/PiePlot/", "PiePlot.class");
+            cl.genAllMethodInfo();
+
+
+            for (MethodInfo mi : cl.getMethodsInfo()) {
+                mi.createMethodCFG();
+                mi.createMethodDuas();
+                if (mi.getDuas().isEmpty())
+                    continue;
+
+                mi.printMethodCFG();
+                mi.toDuasCSV();
+
+                duaSubAnalyzer = new SubsumptionAnalyzer(mi.getProgram(), mi.getDuas());
+                Graphdua graphdua = duaSubAnalyzer.findNode2DuasSubsumption();
+                mi.setGraphDua(graphdua);
+                mi.setSubsumptionAnalyzer(duaSubAnalyzer);
+                writeBufferToFile("/Users/marcoschaim/projetos/data/sort/", mi.getName() + ".ns", graphdua.toDotNodeSubsumption(duaSubAnalyzer));
+//                System.out.println(mi.toJsonNodes(sb));
+//                System.out.println(mi.toJsonNodeSubsumption(sb));
+//                System.out.println(graphdua.toDotNodeSubsumption(duaSubAnalyzer));
+//                graphdua = duaSubAnalyzer.findEdge2DuasSubsumption();
+
+//                mi.setGraphDua(graphdua);
+//                mi.setSubsumptionAnalyzer(duaSubAnalyzer);
+//                writeBufferToFile("/Users/marcoschaim/projetos/data/max/", mi.getName() + ".es",graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
+
+//                System.out.println(graphdua.toDotEdgeSubsumption(duaSubAnalyzer));
+//                System.out.println(mi.toJsonEdgeSubsumption(sb));
+
+                Iterator<Node> itNode = graphdua.iterator();
+
+                while (itNode.hasNext()) {
+                    Node n = itNode.next();
+
+                    BitSet coveredInNode = n.getCovered();
+                    System.out.println("Duas covered in node " + n.block().id() + ":");
+                    if (!coveredInNode.isEmpty()) {
+                        int idDua = -1;
+                        while ((idDua = coveredInNode.nextSetBit(idDua + 1)) != -1) {
+                            Dua subDua = duaSubAnalyzer.getDuaFromId(idDua);
+                            System.out.println("\t" + subDua.toString());
+                        }
+                    } else
+                        System.out.println("\tNo dua is mandatorily covered in node " + n.block().id() + ".");
+                }
+
+                System.out.println();
+            }
+
+//            System.out.println("Nodes");
+            System.out.println(cl.toJsonNodes());
+//            System.out.println("Duas2Nodes0");
+            System.out.println(cl.toJsonNodeSubsumption());
+//            System.out.println("Edges");
+            System.out.println(cl.toJsonEdges());
+//            System.out.println("Duas2edges");
+            System.out.println(cl.toJsonEdgeSubsumption());
+//            System.out.println("Duas2nodes0");
+//            System.out.println(cl.toJsonNodeSubsumption());
+//            System.out.println("Duas");
+//            System.out.println(cl.toJsonDuas());
+//            System.out.println("Duas2Edges1");
+//            System.out.println(cl.toJsonDuas2Edges());
+//            System.out.println("Duas2Nodes1");
+//            System.out.println(cl.toJsonDuas2Nodes());
         } catch (Exception e) {
             e.printStackTrace();
         }
