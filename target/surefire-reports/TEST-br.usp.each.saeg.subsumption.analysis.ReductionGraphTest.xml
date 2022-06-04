@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="11" failures="0" name="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" time="69.279" errors="0" skipped="0">
+<testsuite tests="11" failures="0" name="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" time="67.676" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="12+33"/>
@@ -58,15 +58,15 @@
     <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
     <property name="sun.cpu.endian" value="little"/>
   </properties>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5_1" time="10.384"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5_2" time="0.015"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5_3" time="1.14"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test01" time="0.021"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test0" time="0.024"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test1" time="0.031"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test2" time="0.002"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test3" time="0.004"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test4" time="0.102"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5" time="57.498"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test6" time="0.058"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5_1" time="12.869"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5_2" time="0.03"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5_3" time="0.963"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test01" time="0.02"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test0" time="0.022"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test1" time="0.037"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test2" time="0.001"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test3" time="0.001"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test4" time="0.029"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test5" time="53.624"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.ReductionGraphTest" name="test6" time="0.08"/>
 </testsuite>

@@ -541,10 +541,10 @@ public class DuaSubsumptionTest extends TestCase {
 
     @Test
     public void test8() {
-        System.out.println("PiePlot");
+        System.out.println("CollectionUtils");
         StringBuffer sb = new StringBuffer();
         try {
-            cl = new ClassInfo("/Users/marcoschaim/projetos/data/PiePlot/", "PiePlot.class");
+            cl = new ClassInfo("/Users/marcoschaim/projetos/data/AbstractReferenceMap/", "CollectionUtils.class");
             cl.genAllMethodInfo();
 
 
@@ -561,7 +561,7 @@ public class DuaSubsumptionTest extends TestCase {
                 Graphdua graphdua = duaSubAnalyzer.findNode2DuasSubsumption();
                 mi.setGraphDua(graphdua);
                 mi.setSubsumptionAnalyzer(duaSubAnalyzer);
-                writeBufferToFile("/Users/marcoschaim/projetos/data/sort/", mi.getName() + ".ns", graphdua.toDotNodeSubsumption(duaSubAnalyzer));
+                writeBufferToFile("/Users/marcoschaim/projetos/data/AbstractReferenceMap/", mi.getName() + ".ns", graphdua.toDotNodeSubsumption(duaSubAnalyzer));
 //                System.out.println(mi.toJsonNodes(sb));
 //                System.out.println(mi.toJsonNodeSubsumption(sb));
 //                System.out.println(graphdua.toDotNodeSubsumption(duaSubAnalyzer));
@@ -604,12 +604,12 @@ public class DuaSubsumptionTest extends TestCase {
             System.out.println(cl.toJsonEdgeSubsumption());
 //            System.out.println("Duas2nodes0");
 //            System.out.println(cl.toJsonNodeSubsumption());
-//            System.out.println("Duas");
-//            System.out.println(cl.toJsonDuas());
-//            System.out.println("Duas2Edges1");
-//            System.out.println(cl.toJsonDuas2Edges());
-//            System.out.println("Duas2Nodes1");
-//            System.out.println(cl.toJsonDuas2Nodes());
+            System.out.println("Duas");
+            System.out.println(cl.toJsonDuas());
+            System.out.println("Duas2Edges1");
+            System.out.println(cl.toJsonDuas2Edges());
+            System.out.println("Duas2Nodes1");
+            System.out.println(cl.toJsonDuas2Nodes());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="4" failures="0" name="br.usp.each.saeg.subsumption.analysis.SubsumptionGraphTest" time="0.131" errors="0" skipped="0">
+<testsuite tests="4" failures="0" name="br.usp.each.saeg.subsumption.analysis.SubsumptionGraphTest" time="0.161" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="12+33"/>
@@ -58,8 +58,8 @@
     <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
     <property name="sun.cpu.endian" value="little"/>
   </properties>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.SubsumptionGraphTest" name="test1" time="0.002"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.SubsumptionGraphTest" name="test2" time="0.001"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.SubsumptionGraphTest" name="test3" time="0.125"/>
-  <testcase classname="br.usp.each.saeg.subsumption.analysis.SubsumptionGraphTest" name="test4" time="0.003"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.SubsumptionGraphTest" name="test1" time="0.021"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.SubsumptionGraphTest" name="test2" time="0.003"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.SubsumptionGraphTest" name="test3" time="0.131"/>
+  <testcase classname="br.usp.each.saeg.subsumption.analysis.SubsumptionGraphTest" name="test4" time="0.006"/>
 </testsuite>
